@@ -4,7 +4,6 @@ let previousName = "Type ign to search";
 let matchCount = 20;
 let ign = "Type ign to search";
 let uuid = "";
-let matchesParsed = 0;
 
 const matchCountLimit = 50;
 
@@ -57,10 +56,24 @@ const PrivateButton = document.getElementById("Private");
 const MatchCount = document.getElementById("MatchCount");
 const MatchCountSlider = document.getElementById("matchCountSlider");
 
+const OverworldSplit = document.getElementById("overworldSplit");
+const NetherSplit = document.getElementById("netherSplit");
+const BastionSplit = document.getElementById("bastionSplit");
+const FortressSplit = document.getElementById("fortressSplit");
+const BlindSplit = document.getElementById("blindSplit");
+const StrongholdSplit = document.getElementById("strongholdSplit");
+const EndSplit = document.getElementById("endSplit");
+const CompletionSplits = document.getElementById("completionSplits");
+
 // Misc functions
 function msToMinSecs(ms) {
     let mins = ms / 60000;
     let secs = parseInt(60 * (mins - parseInt(mins)));
+
+    if (isNaN(mins) || isNaN(secs)) {
+        return "N/A";
+    }
+
     if (secs < 10) {
         return String(parseInt(mins)) + ":0" + String(secs);
     }
@@ -159,7 +172,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timestamps["enter_end"] = timeline["time"];
                     timings["end"]["timestamps"][0] += timeline["time"] - latestReset;
                     timings["end"]["timestamps"][1] += 1;
-                    timings["stronghold"]["splits"][0] += timeline["time"] - timestamps["blind"];
+                    timings["stronghold"]["splits"][0] += timeline["time"] - timestamps["enter_stronghold"];
                     timings["stronghold"]["splits"][1] += 1;        
                     break;
             }
@@ -169,10 +182,6 @@ async function call_Ranked_GetMatch(matchID) {
             timings["end"]["splits"][0] += finalTime - timestamps["enter_end"];
             timings["end"]["splits"][1] += 1;
         }
-
-        console.log("Enter end time: " + timestamps["enter_end"] + " Final time: " + finalTime);
-
-        matchesParsed += 1;
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetMatch': ", error);
     }
@@ -185,6 +194,38 @@ async function call_Ranked_GetUserMatches() {
 
         promises = [];
 
+        timings = {
+            "overworld": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "nether": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "bastion": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "fortress": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "blind": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "stronghold": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "end": {
+                "splits": [0, 0],
+                "timestamps": [0, 0],
+            },
+            "completions": [0, 0]
+        };
+
         if (statusCode != 200) {
             return;
         }
@@ -196,10 +237,16 @@ async function call_Ranked_GetUserMatches() {
             promises.push(call_Ranked_GetMatch(matchID));
         }
 
-
         await Promise.all(promises);
-        console.log("FINISHED");
-        console.log(timings);
+        
+        OverworldSplit.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
+        NetherSplit.textContent = msToMinSecs(timings["nether"]["splits"][0] / timings["nether"]["splits"][1]) + " (" + timings["nether"]["splits"][1] + ")";
+        BastionSplit.textContent = msToMinSecs(timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1]) + " (" + timings["bastion"]["splits"][1] + ")";
+        FortressSplit.textContent = msToMinSecs(timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1]) + " (" + timings["fortress"]["splits"][1] + ")";
+        BlindSplit.textContent = msToMinSecs(timings["blind"]["splits"][0] / timings["blind"]["splits"][1]) + " (" + timings["blind"]["splits"][1] + ")";
+        StrongholdSplit.textContent = msToMinSecs(timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1]) + " (" + timings["stronghold"]["splits"][1] + ")";
+        EndSplit.textContent = msToMinSecs(timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (" + timings["end"]["splits"][1] + ")";
+        CompletionSplits.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]);
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches': ", error);
     }
