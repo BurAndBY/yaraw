@@ -254,6 +254,14 @@ async function call_Ranked_GetUserMatches() {
 
         promises = [];
 
+        overworlds = {
+            "BURIED_TREASURE": [0, 0],
+            "VILLAGE": [0, 0],
+            "SHIPWRECK": [0, 0],
+            "DESERT_TEMPLE": [0, 0],
+            "RUINED_PORTAL": [0, 0],
+        }
+
         timings = {
             "overworld": {
                 "splits": [0, 0],
