@@ -7,6 +7,14 @@ let uuid = "";
 
 const matchCountLimit = 50;
 
+let overworlds = {
+    "BURIED_TREASURE": [0, 0],
+    "VILLAGE": [0, 0],
+    "SHIPWRECK": [0, 0],
+    "DESERT_TEMPLE": [0, 0],
+    "RUINED_PORTAL": [0, 0],
+}
+
 let timings = {
     "overworld": {
         "splits": [0, 0],
@@ -80,6 +88,20 @@ const BlindDeaths = document.getElementById("blindDeaths");
 const StrongholdDeaths = document.getElementById("strongholdDeaths");
 const EndDeaths = document.getElementById("endDeaths");
 
+const NetherTimestamp = document.getElementById("netherTimestamp");
+const BastionTimestamp = document.getElementById("bastionTimestamp");
+const FortressTimestamp = document.getElementById("fortressTimestamp");
+const BlindTimestamp = document.getElementById("blindTimestamp");
+const StrongholdTimestamp = document.getElementById("strongholdTimestamp");
+const EndTimestamp = document.getElementById("endTimestamp");
+const AverageCompletion = document.getElementById("avgCompletion");
+
+const BuriedTreasure = document.getElementById("bt");
+const Village = document.getElementById("village");
+const Shipwreck = document.getElementById("shipwreck");
+const DesertTemple = document.getElementById("dt");
+const RuinedPortal = document.getElementById("rp");
+
 // Misc functions
 function msToMinSecs(ms) {
     let mins = ms / 60000;
@@ -96,6 +118,15 @@ function msToMinSecs(ms) {
     return String(parseInt(mins)) + ":" + String(secs);
 }
 
+function percentageCalc(e1, e2) {
+    let result = e1 / e2 * 100;
+    if (isNaN(result)) {
+        return "N/A";
+    }
+
+    return result.toFixed(1) + "%";
+}
+
 // Calling APIs
 async function call_Ranked_GetMatch(matchID) {
     try {
@@ -108,6 +139,7 @@ async function call_Ranked_GetMatch(matchID) {
 
         const data = await response.json();
         const timelines = data["data"]["timelines"];
+        const overworldType = data["data"]["seed"]["overworld"];
 
         let latestReset = 0;
         let finished = false;
@@ -154,6 +186,8 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["overworld"]["splits"][1] += 1;
                     timings["nether"]["timestamps"][0] += timeline["time"] - latestReset;
                     timings["nether"]["timestamps"][1] += 1;
+                    overworlds[overworldType][0] += timeline["time"] - latestReset;
+                    overworlds[overworldType][1] += 1;
                     latestSplit = "nether";
                     break;
                 
@@ -281,13 +315,27 @@ async function call_Ranked_GetUserMatches() {
         EndSplit.textContent = msToMinSecs(timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (" + timings["end"]["splits"][1] + ")";
         CompletionSplits.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (Splits)";
     
-        OverworldDeaths.textContent = (timings["overworld"]["deaths"] / timings["overworld"]["splits"][1] * 100).toFixed(1) + "%";
-        NetherDeaths.textContent = (timings["nether"]["deaths"] / timings["nether"]["splits"][1] * 100).toFixed(1) + "%";
-        BastionDeaths.textContent = (timings["bastion"]["deaths"] / timings["bastion"]["splits"][1] * 100).toFixed(1) + "%";
-        FortressDeaths.textContent = (timings["fortress"]["deaths"] / timings["fortress"]["splits"][1] * 100).toFixed(1) + "%";
-        BlindDeaths.textContent = (timings["blind"]["deaths"] / timings["blind"]["splits"][1] * 100).toFixed(1) + "%";
-        StrongholdDeaths.textContent = (timings["stronghold"]["deaths"] / timings["stronghold"]["splits"][1] * 100).toFixed(1) + "%";
-        EndDeaths.textContent = (timings["end"]["deaths"] / timings["end"]["splits"][1] * 100).toFixed(1) + "%";
+        OverworldDeaths.textContent = percentageCalc(timings["overworld"]["deaths"], timings["overworld"]["splits"][1]);
+        NetherDeaths.textContent = percentageCalc(timings["nether"]["deaths"], timings["nether"]["splits"][1]);
+        BastionDeaths.textContent = percentageCalc(timings["bastion"]["deaths"], timings["bastion"]["splits"][1]);
+        FortressDeaths.textContent = percentageCalc(timings["fortress"]["deaths"], timings["fortress"]["splits"][1]);
+        BlindDeaths.textContent = percentageCalc(timings["blind"]["deaths"], timings["blind"]["splits"][1]);
+        StrongholdDeaths.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["splits"][1]);
+        EndDeaths.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["splits"][1]);
+
+        NetherTimestamp.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
+        BastionTimestamp.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
+        FortressTimestamp.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
+        BlindTimestamp.textContent = msToMinSecs(timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1]) + " (" + timings["blind"]["timestamps"][1] + ")";
+        StrongholdTimestamp.textContent = msToMinSecs(timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1]) + " (" + timings["stronghold"]["timestamps"][1] + ")";
+        EndTimestamp.textContent = msToMinSecs(timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1]) + " (" + timings["end"]["timestamps"][1] + ")";
+        AverageCompletion.textContent = msToMinSecs(timings["completions"][0] / timings["completions"][1]) + " (" + timings["completions"][1] + ")";
+    
+        BuriedTreasure.textContent = msToMinSecs(overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1]) + " (" + overworlds["BURIED_TREASURE"][1] + ")";
+        Village.textContent = msToMinSecs(overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1]) + " (" + overworlds["VILLAGE"][1] + ")";
+        Shipwreck.textContent = msToMinSecs(overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1]) + " (" + overworlds["SHIPWRECK"][1] + ")";
+        DesertTemple.textContent = msToMinSecs(overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1]) + " (" + overworlds["DESERT_TEMPLE"][1] + ")";
+        RuinedPortal.textContent = msToMinSecs(overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1]) + " (" + overworlds["RUINED_PORTAL"][1] + ")";
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches': ", error);
     }
@@ -307,9 +355,11 @@ async function call_Ranked_GetUser() {
         const wins = data["data"]["statistics"]["season"]["wins"]["ranked"];
         const losses = data["data"]["statistics"]["season"]["loses"]["ranked"];
 
-        WinRateLabel.textContent = "W/L%: " + (wins / (wins + losses) * 100).toFixed(1) + "%";
-        PbLabel.textContent = "PB: " + msToMinSecs(pb);
+        WinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         uuid = data["data"]["uuid"];
+        PbLabel.textContent = "PB: " + msToMinSecs(pb);
+
+        if (pb == null) PbLabel.textContent = "PB: N/A";
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUser': ", error);
     }
