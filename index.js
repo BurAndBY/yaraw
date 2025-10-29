@@ -72,6 +72,14 @@ const StrongholdSplit = document.getElementById("strongholdSplit");
 const EndSplit = document.getElementById("endSplit");
 const CompletionSplits = document.getElementById("completionSplits");
 
+const OverworldDeaths = document.getElementById("overworldDeaths");
+const NetherDeaths = document.getElementById("netherDeaths");
+const BastionDeaths = document.getElementById("bastionDeaths");
+const FortressDeaths = document.getElementById("fortressDeaths");
+const BlindDeaths = document.getElementById("blindDeaths");
+const StrongholdDeaths = document.getElementById("strongholdDeaths");
+const EndDeaths = document.getElementById("endDeaths");
+
 // Misc functions
 function msToMinSecs(ms) {
     let mins = ms / 60000;
@@ -216,30 +224,37 @@ async function call_Ranked_GetUserMatches() {
             "overworld": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "nether": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "bastion": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "fortress": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "blind": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "stronghold": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "end": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
+                "deaths": 0
             },
             "completions": [0, 0]
         };
@@ -264,7 +279,15 @@ async function call_Ranked_GetUserMatches() {
         BlindSplit.textContent = msToMinSecs(timings["blind"]["splits"][0] / timings["blind"]["splits"][1]) + " (" + timings["blind"]["splits"][1] + ")";
         StrongholdSplit.textContent = msToMinSecs(timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1]) + " (" + timings["stronghold"]["splits"][1] + ")";
         EndSplit.textContent = msToMinSecs(timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (" + timings["end"]["splits"][1] + ")";
-        CompletionSplits.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]);
+        CompletionSplits.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (Splits)";
+    
+        OverworldDeaths.textContent = (timings["overworld"]["deaths"] / timings["overworld"]["splits"][1] * 100).toFixed(1) + "%";
+        NetherDeaths.textContent = (timings["nether"]["deaths"] / timings["nether"]["splits"][1] * 100).toFixed(1) + "%";
+        BastionDeaths.textContent = (timings["bastion"]["deaths"] / timings["bastion"]["splits"][1] * 100).toFixed(1) + "%";
+        FortressDeaths.textContent = (timings["fortress"]["deaths"] / timings["fortress"]["splits"][1] * 100).toFixed(1) + "%";
+        BlindDeaths.textContent = (timings["blind"]["deaths"] / timings["blind"]["splits"][1] * 100).toFixed(1) + "%";
+        StrongholdDeaths.textContent = (timings["stronghold"]["deaths"] / timings["stronghold"]["splits"][1] * 100).toFixed(1) + "%";
+        EndDeaths.textContent = (timings["end"]["deaths"] / timings["end"]["splits"][1] * 100).toFixed(1) + "%";
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches': ", error);
     }
