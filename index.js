@@ -11,30 +11,37 @@ let timings = {
     "overworld": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "nether": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "bastion": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "fortress": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "blind": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "stronghold": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "end": {
         "splits": [0, 0],
         "timestamps": [0, 0],
+        "deaths": 0
     },
     "completions": [0, 0]
 };
@@ -97,6 +104,7 @@ async function call_Ranked_GetMatch(matchID) {
         let latestReset = 0;
         let finished = false;
         let finalTime = 0;
+        let latestSplit = "overworld";
 
         let timestamps = {
             "enter_nether": 0,
@@ -127,6 +135,10 @@ async function call_Ranked_GetMatch(matchID) {
                 case "projectelo.timeline.reset":
                     latestReset = timeline["time"];
                     break;
+
+                case "projectelo.timeline.death":
+                    timings[latestSplit]["deaths"] += 1;
+                    break;
                 
                 case "story.enter_the_nether":
                     timestamps["enter_nether"] = timeline["time"];
@@ -134,6 +146,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["overworld"]["splits"][1] += 1;
                     timings["nether"]["timestamps"][0] += timeline["time"] - latestReset;
                     timings["nether"]["timestamps"][1] += 1;
+                    latestSplit = "nether";
                     break;
                 
                 case "nether.find_bastion":
@@ -142,6 +155,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["bastion"]["timestamps"][1] += 1;
                     timings["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     timings["nether"]["splits"][1] += 1;
+                    latestSplit = "bastion";
                     break;
                 
                 case "nether.find_fortress":
@@ -150,6 +164,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["fortress"]["timestamps"][1] += 1;
                     timings["bastion"]["splits"][0] += timeline["time"] - timestamps["enter_bastion"];
                     timings["bastion"]["splits"][1] += 1;
+                    latestSplit = "fortress";
                     break;
 
                 case "projectelo.timeline.blind_travel":
@@ -158,6 +173,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["blind"]["timestamps"][1] += 1;
                     timings["fortress"]["splits"][0] += timeline["time"] - timestamps["enter_fortress"];
                     timings["fortress"]["splits"][1] += 1;
+                    latestSplit = "blind";
                     break;
 
                 case "story.follow_ender_eye":
@@ -166,6 +182,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["stronghold"]["timestamps"][1] += 1;
                     timings["blind"]["splits"][0] += timeline["time"] - timestamps["blind"];
                     timings["blind"]["splits"][1] += 1;
+                    latestSplit = "stronghold";
                     break;
 
                 case "story.enter_the_end":
@@ -174,6 +191,7 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["end"]["timestamps"][1] += 1;
                     timings["stronghold"]["splits"][0] += timeline["time"] - timestamps["enter_stronghold"];
                     timings["stronghold"]["splits"][1] += 1;        
+                    latestSplit = "end";
                     break;
             }
         }
@@ -274,15 +292,17 @@ async function call_Ranked_GetUser() {
     }
 }
 
-// Nameplate
+// On Page load (if in a subdirectory)
 const currentPath = window.location.pathname.slice(1);
 if (currentPath) {
     ign = currentPath;
     PlayerName.textContent = decodeURIComponent(currentPath);
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.textContent + "/face";
     call_Ranked_GetUser();
+    call_Ranked_GetUserMatches();
 }
 
+// Nameplate
 PlayerName.addEventListener("blur", function() {
     const text = PlayerName.innerText.trim();
     if (text == previousName) return;
