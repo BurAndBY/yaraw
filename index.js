@@ -15,6 +15,13 @@ let overworlds = {
     "RUINED_PORTAL": [0, 0],
 }
 
+let bastions = {
+    "BRIDGE": [0, 0, 0],
+    "HOUSING": [0, 0, 0],
+    "STABLES": [0, 0, 0],
+    "TREASURE": [0, 0, 0]
+}
+
 let timings = {
     "overworld": {
         "splits": [0, 0],
@@ -102,6 +109,16 @@ const Shipwreck = document.getElementById("shipwreck");
 const DesertTemple = document.getElementById("dt");
 const RuinedPortal = document.getElementById("rp");
 
+const Bridge = document.getElementById("bridge");
+const Housing = document.getElementById("housing");
+const Stables = document.getElementById("stables");
+const Treasure = document.getElementById("treasure");
+
+const BridgeDeaths = document.getElementById("bridgeDeaths");
+const HousingDeaths = document.getElementById("housingDeaths");
+const StablesDeaths = document.getElementById("stablesDeaths");
+const TreasureDeaths = document.getElementById("treasureDeaths");
+
 // Misc functions
 function msToMinSecs(ms) {
     let mins = ms / 60000;
@@ -140,6 +157,7 @@ async function call_Ranked_GetMatch(matchID) {
         const data = await response.json();
         const timelines = data["data"]["timelines"];
         const overworldType = data["data"]["seed"]["overworld"];
+        const bastionType = data["data"]["seed"]["nether"];
 
         let latestReset = 0;
         let finished = false;
@@ -178,6 +196,9 @@ async function call_Ranked_GetMatch(matchID) {
 
                 case "projectelo.timeline.death":
                     timings[latestSplit]["deaths"] += 1;
+                    if (latestSplit == "bastion") {
+                        bastions[bastionType][2] += 1;
+                    }
                     break;
                 
                 case "story.enter_the_nether":
@@ -197,6 +218,8 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["bastion"]["timestamps"][1] += 1;
                     timings["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     timings["nether"]["splits"][1] += 1;
+                    bastions[bastionType][0] += timeline["time"] - latestReset;
+                    bastions[bastionType][1] += 1;
                     latestSplit = "bastion";
                     break;
                 
@@ -260,6 +283,13 @@ async function call_Ranked_GetUserMatches() {
             "SHIPWRECK": [0, 0],
             "DESERT_TEMPLE": [0, 0],
             "RUINED_PORTAL": [0, 0],
+        }
+
+        bastions = {
+            "BRIDGE": [0, 0, 0],
+            "HOUSING": [0, 0, 0],
+            "STABLES": [0, 0, 0],
+            "TREASURE": [0, 0, 0]
         }
 
         timings = {
@@ -344,6 +374,16 @@ async function call_Ranked_GetUserMatches() {
         Shipwreck.textContent = msToMinSecs(overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1]) + " (" + overworlds["SHIPWRECK"][1] + ")";
         DesertTemple.textContent = msToMinSecs(overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1]) + " (" + overworlds["DESERT_TEMPLE"][1] + ")";
         RuinedPortal.textContent = msToMinSecs(overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1]) + " (" + overworlds["RUINED_PORTAL"][1] + ")";
+    
+        Bridge.textContent = msToMinSecs(bastions["BRIDGE"][0] / bastions["BRIDGE"][1]) + " (" + bastions["BRIDGE"][1] + ")";
+        Housing.textContent = msToMinSecs(bastions["HOUSING"][0] / bastions["HOUSING"][1]) + " (" + bastions["HOUSING"][1] + ")";
+        Stables.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
+        Treasure.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
+
+        BridgeDeaths.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
+        HousingDeaths.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
+        StablesDeaths.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
+        TreasureDeaths.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches': ", error);
     }
