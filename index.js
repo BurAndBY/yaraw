@@ -450,9 +450,13 @@ PlayerName.addEventListener("keydown", function(event) {
 RankedButton.style.backgroundColor = "#507699";
 
 RankedButton.addEventListener("click", function() {
-    RankedButton.style.backgroundColor = "#507699";
-    PrivateButton.style.backgroundColor = "#202F3D";
-    gamemode = 2;
+    if (gamemode == 3) {
+        RankedButton.style.backgroundColor = "#507699";
+        PrivateButton.style.backgroundColor = "#202F3D";
+        gamemode = 2;
+        call_Ranked_GetUser();
+        call_Ranked_GetUserMatches();
+    }
 })
 
 RankedButton.addEventListener("mouseover", function() {
@@ -480,9 +484,13 @@ PrivateButton.addEventListener("mouseout", function() {
 })
 
 PrivateButton.addEventListener("click", function() {
-    PrivateButton.style.backgroundColor = "#507699";
-    RankedButton.style.backgroundColor = "#202F3D";
-    gamemode = 3;
+    if (gamemode == 2) {
+        PrivateButton.style.backgroundColor = "#507699";
+        RankedButton.style.backgroundColor = "#202F3D";
+        gamemode = 3;
+        call_Ranked_GetUser();
+        call_Ranked_GetUserMatches();
+    }
 })
 
 // Match Count Slider
