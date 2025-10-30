@@ -374,7 +374,6 @@ async function call_Ranked_GetUserMatches() {
         if (statusCode == 429) console.error("TOO MANY REQUESTS AHHH");
 
         if (statusCode != 200) {
-
             return;
         }
 
@@ -397,12 +396,12 @@ async function call_Ranked_GetUserMatches() {
         CompletionSplits.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (Splits)";
     
         OverworldDeaths.textContent = percentageCalc(timings["overworld"]["deaths"], timings["overworld"]["splits"][1]);
-        NetherDeaths.textContent = percentageCalc(timings["nether"]["deaths"], timings["nether"]["splits"][1]);
-        BastionDeaths.textContent = percentageCalc(timings["bastion"]["deaths"], timings["bastion"]["splits"][1]);
-        FortressDeaths.textContent = percentageCalc(timings["fortress"]["deaths"], timings["fortress"]["splits"][1]);
-        BlindDeaths.textContent = percentageCalc(timings["blind"]["deaths"], timings["blind"]["splits"][1]);
-        StrongholdDeaths.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["splits"][1]);
-        EndDeaths.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["splits"][1]);
+        NetherDeaths.textContent = percentageCalc(timings["nether"]["deaths"], timings["nether"]["timestamps"][1]);
+        BastionDeaths.textContent = percentageCalc(timings["bastion"]["deaths"], timings["bastion"]["timestamps"][1]);
+        FortressDeaths.textContent = percentageCalc(timings["fortress"]["deaths"], timings["fortress"]["timestamps"][1]);
+        BlindDeaths.textContent = percentageCalc(timings["blind"]["deaths"], timings["blind"]["timestamps"][1]);
+        StrongholdDeaths.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
+        EndDeaths.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
 
         NetherTimestamp.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
         BastionTimestamp.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
@@ -619,7 +618,12 @@ MatchCountSlider.addEventListener("input", function() {
     matchCount = matchCountSlider.value;
 })
 
-MatchCountSlider.onmouseup = function() {
+MatchCountSlider.addEventListener("mouseup", function() {
     if (matchCountSlider.value == previousMatchCount) return;
     call_Ranked_GetUserMatches();
-}
+})
+
+MatchCountSlider.addEventListener("touchend", function() {
+    if (matchCountSlider.value == previousMatchCount) return;
+    call_Ranked_GetUserMatches();
+})
