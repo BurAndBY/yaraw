@@ -1,11 +1,19 @@
 // Variables
 let gamemode = 2; // 2 = ranked, 3 = private
-let previousName = "Type ign to search";
-let matchCount = 10;
-let ign = "Type ign to search";
+let previousName = "(Search for player)";
+let previousMatchCount = 20;
+let matchCount = 20;
+let ign = "(Search for player)";
 let uuid = "";
 
 const matchCountLimit = 50;
+
+const parrots = [
+    "gifs/BlueParrotDancing.gif",
+    "gifs/CyanParrotDancing.gif",
+    "gifs/GreyParrotDancing.gif",
+    "gifs/RedParrotDancing.gif"
+]
 
 let overworlds = {
     "BURIED_TREASURE": [0, 0],
@@ -61,22 +69,32 @@ let timings = {
     "completions": [0, 0]
 };
 
-// API urls
-const Ranked_GetUser = "https://api.mcsrranked.com/users/";
-const Ranked_GetUserMatches = "/matches?type=" + gamemode + "&count=";
-const Ranked_GetMatch = "https://api.mcsrranked.com/matches/";
-
 // Elements
+const PageTitle = document.getElementById("pageTitle");
+
 const PlayerName = document.getElementById("playerName");
 const PbLabel = document.getElementById("pbLabel");
 const WinRateLabel = document.getElementById("winRateLabel");
 const PlayerModel = document.getElementById("playerModel");
+const NameplateParrot = document.getElementById("nameplateParrot");
+
+const PlayerNameContainer = document.getElementById("playerNameContainer");
+const PlayerModelContainer = document.getElementById("playerModelContainer");
+const PlayerInfoContainer = document.getElementById("playerInfoContainer");
+const NameplateLoading = document.getElementById("nameplateLoading");
+
+const configUI = document.getElementById("configUI");
 
 const RankedButton = document.getElementById("Ranked");
 const PrivateButton = document.getElementById("Private");
 
 const MatchCount = document.getElementById("MatchCount");
 const MatchCountSlider = document.getElementById("matchCountSlider");
+
+const LoadingText = document.getElementById("loadingText");
+const LoadingParrot = document.getElementById("loadingParrot");
+
+const dataSection = document.getElementById("data");
 
 const OverworldSplit = document.getElementById("overworldSplit");
 const NetherSplit = document.getElementById("netherSplit");
@@ -144,11 +162,21 @@ function percentageCalc(e1, e2) {
     return result.toFixed(1) + "%";
 }
 
+function randomiseParrot(parrot) {
+    if (parrot == 0) { // Loading Parrot
+        LoadingParrot.src = parrots[Math.floor(Math.random() * (3 + 1) )];
+    } else { // Nameplate Parrot
+        NameplateParrot.src = parrots[Math.floor(Math.random() * (3 + 1) )];
+    }
+}
+
 // Calling APIs
 async function call_Ranked_GetMatch(matchID) {
     try {
-        const response = await fetch(Ranked_GetMatch + matchID);
+        const response = await fetch("https://api.mcsrranked.com/matches/" + matchID);
         const statusCode = response.status;
+
+        if (statusCode == 429) console.error("TOO MANY REQUESTS AHHH");
 
         if (statusCode != 200) {
             return;
@@ -276,6 +304,14 @@ async function call_Ranked_GetMatch(matchID) {
 
 async function call_Ranked_GetUserMatches() {
     try {
+        randomiseParrot(0);
+        loadingText.textContent = "Loading . .";
+
+        dataSection.style.visibility = "hidden";
+        configUI.style.visibility = "hidden";
+        LoadingText.style.display = "block";
+        LoadingParrot.style.display = "inline";
+
         const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount);
         const statusCode = response.status;
 
@@ -335,7 +371,10 @@ async function call_Ranked_GetUserMatches() {
             "completions": [0, 0]
         };
 
+        if (statusCode == 429) console.error("TOO MANY REQUESTS AHHH");
+
         if (statusCode != 200) {
+
             return;
         }
 
@@ -388,6 +427,16 @@ async function call_Ranked_GetUserMatches() {
         HousingDeaths.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
         StablesDeaths.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
         TreasureDeaths.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
+
+        loadingText.style.display = "none";
+        LoadingParrot.style.display = "none";
+        dataSection.style.visibility = "visible";
+        configUI.style.visibility = "visible";
+
+        playerModel.style.visibility = "visible";
+        PlayerNameContainer.style.display = "inline";
+        playerInfoContainer.style.display = "inline";
+        NameplateLoading.style.display = "none";
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches': ", error);
     }
@@ -395,10 +444,29 @@ async function call_Ranked_GetUserMatches() {
 
 async function call_Ranked_GetUser() {
     try {
-        const response = await fetch(Ranked_GetUser + ign);
+        randomiseParrot(1);
+
+        playerModel.style.visibility = "hidden";
+        PlayerNameContainer.style.display = "none";
+        playerInfoContainer.style.display = "none";
+        NameplateLoading.style.display = "inline";
+
+        const response = await fetch("https://api.mcsrranked.com/users/" + ign);
         const statusCode = response.status;
 
-        if (statusCode != 200) {
+        if (statusCode == 400) {
+            loadingText.textContent = "Invalid IGN!"
+            playerModel.style.visibility = "visible";
+            PlayerNameContainer.style.display = "inline";
+            playerInfoContainer.style.display = "inline";
+            NameplateLoading.style.display = "none";
+            return;
+        } else if (statusCode == 429) {
+            loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
+            playerModel.style.visibility = "visible";
+            PlayerNameContainer.style.display = "inline";
+            playerInfoContainer.style.display = "inline";
+            NameplateLoading.style.display = "none";
             return;
         }
 
@@ -410,6 +478,8 @@ async function call_Ranked_GetUser() {
         WinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         uuid = data["data"]["uuid"];
         PbLabel.textContent = "PB: " + msToMinSecs(pb);
+        PageTitle.textContent = data["data"]["nickname"] + " | Ranked Analysis";
+        PlayerName.textContent = data["data"]["nickname"];
 
         if (pb == null) PbLabel.textContent = "PB: N/A";
     } catch (error) {
@@ -421,10 +491,17 @@ async function call_Ranked_GetUser() {
 const currentPath = window.location.pathname.slice(1);
 if (currentPath) {
     ign = currentPath;
+    previousName = ign;
     PlayerName.textContent = decodeURIComponent(currentPath);
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.textContent + "/face";
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches();
+} else {
+    dataSection.style.visibility = "hidden";
+    configUI.style.visibility = "hidden";
+    LoadingText.style.display = "block";
+    LoadingText.textContent = "Type ign in (search for player) field to search";
+    PageTitle.textContent = "Home | Ranked Analysis";
 }
 
 // Nameplate
@@ -450,6 +527,14 @@ PlayerName.addEventListener("keydown", function(event) {
     }  
 })
 
+PlayerName.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(PlayerName);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+})
+
 // Gamemode buttons
 RankedButton.style.backgroundColor = "#507699";
 
@@ -458,7 +543,6 @@ RankedButton.addEventListener("click", function() {
         RankedButton.style.backgroundColor = "#507699";
         PrivateButton.style.backgroundColor = "#202F3D";
         gamemode = 2;
-        call_Ranked_GetUser();
         call_Ranked_GetUserMatches();
     }
 })
@@ -492,7 +576,6 @@ PrivateButton.addEventListener("click", function() {
         PrivateButton.style.backgroundColor = "#507699";
         RankedButton.style.backgroundColor = "#202F3D";
         gamemode = 3;
-        call_Ranked_GetUser();
         call_Ranked_GetUserMatches();
     }
 })
@@ -500,12 +583,28 @@ PrivateButton.addEventListener("click", function() {
 // Match Count Slider
 MatchCount.addEventListener("blur", function() {
     let newText = this.textContent;
-    if (/^\d+$/.test(newText) == false || parseInt(newText) > matchCountLimit) {
+    if (parseInt(newText) == previousMatchCount) return;
+    if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
+    } else if (parseInt(newText) > matchCountLimit) {
+        newText = "50";
+    } else if (parseInt(newText) <= 0) {
+        newText = "1";
     }
+    console.log(parseInt(newText));
     MatchCountSlider.value = parseInt(newText);
     this.textContent = newText;
+    matchCount = parseInt(newText);
+    call_Ranked_GetUserMatches();
+})
+
+MatchCount.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(MatchCount);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
 })
 
 MatchCount.addEventListener("keydown", function(event) {
@@ -517,4 +616,10 @@ MatchCount.addEventListener("keydown", function(event) {
 
 MatchCountSlider.addEventListener("input", function() {
     MatchCount.textContent = MatchCountSlider.value;
+    matchCount = matchCountSlider.value;
 })
+
+MatchCountSlider.onmouseup = function() {
+    if (matchCountSlider.value == previousMatchCount) return;
+    call_Ranked_GetUserMatches();
+}

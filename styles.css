@@ -29,6 +29,7 @@ h3 {
     width: 480px;
     height: 150px;
     margin-bottom: 40px;
+    margin-top: 30px;
 }
 .bubble {
     background-color: #18232e;
@@ -72,7 +73,7 @@ hr {
     border-bottom-width: 4px;
     border-radius: 25px;
 }
-.configUI {
+#configUI {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -142,4 +143,11 @@ hr {
   background: white;
   border-radius: 50%;
   margin-top: -6px;
+}
+#loadingScreen {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    width: 50%;
+    margin: auto;
 }
