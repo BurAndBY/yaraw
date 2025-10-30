@@ -8,4 +8,4 @@ This was made with vanilla Javascript, HTML and CSS as a project to learn web de
 
 To run this project locally, you will need nodejs install onto your computer in order to run a nodejs server
 
-To run a nodejs server, run: ```npx serve . --single``` in terminal
+To run a nodejs server, run: ```npx serve . --single``` in your project directory terminal
