@@ -1,7 +1,7 @@
 // Variables
 let gamemode = 2; // 2 = ranked, 3 = private
 let previousName = "Type ign to search";
-let matchCount = 20;
+let matchCount = 10;
 let ign = "Type ign to search";
 let uuid = "";
 
@@ -207,9 +207,11 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["overworld"]["splits"][1] += 1;
                     timings["nether"]["timestamps"][0] += timeline["time"] - latestReset;
                     timings["nether"]["timestamps"][1] += 1;
-                    overworlds[overworldType][0] += timeline["time"] - latestReset;
-                    overworlds[overworldType][1] += 1;
                     latestSplit = "nether";
+                    if (overworldType != null) {
+                        overworlds[overworldType][0] += timeline["time"] - latestReset;
+                        overworlds[overworldType][1] += 1;
+                    }
                     break;
                 
                 case "nether.find_bastion":
@@ -218,8 +220,6 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["bastion"]["timestamps"][1] += 1;
                     timings["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     timings["nether"]["splits"][1] += 1;
-                    bastions[bastionType][0] += timeline["time"] - latestReset;
-                    bastions[bastionType][1] += 1;
                     latestSplit = "bastion";
                     break;
                 
@@ -230,6 +230,10 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["bastion"]["splits"][0] += timeline["time"] - timestamps["enter_bastion"];
                     timings["bastion"]["splits"][1] += 1;
                     latestSplit = "fortress";
+                    if (bastionType != null) {
+                        bastions[bastionType][0] += timeline["time"] - timestamps["enter_bastion"];
+                        bastions[bastionType][1] += 1;
+                    }
                     break;
 
                 case "projectelo.timeline.blind_travel":
@@ -272,7 +276,7 @@ async function call_Ranked_GetMatch(matchID) {
 
 async function call_Ranked_GetUserMatches() {
     try {
-        const response = await fetch(Ranked_GetUser + ign + Ranked_GetUserMatches + matchCount);
+        const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount);
         const statusCode = response.status;
 
         promises = [];
