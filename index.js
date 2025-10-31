@@ -453,19 +453,22 @@ async function call_Ranked_GetUser() {
         const response = await fetch("https://api.mcsrranked.com/users/" + ign);
         const statusCode = response.status;
 
-        if (statusCode == 400) {
-            loadingText.textContent = "Invalid IGN!"
+        if (statusCode != 200) {
             playerModel.style.visibility = "visible";
             PlayerNameContainer.style.display = "inline";
             playerInfoContainer.style.display = "inline";
             NameplateLoading.style.display = "none";
-            return;
-        } else if (statusCode == 429) {
-            loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-            playerModel.style.visibility = "visible";
-            PlayerNameContainer.style.display = "inline";
-            playerInfoContainer.style.display = "inline";
-            NameplateLoading.style.display = "none";
+            PbLabel.textContent = "PB: N/A";
+            WinRateLabel.textContent = "W/L%: N/A";
+            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
+            switch (statusCode) {
+                case 400:
+                    loadingText.textContent = "Invalid IGN!";
+                    break;
+                case 429:
+                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
+                    break;
+            }
             return;
         }
 
@@ -474,10 +477,10 @@ async function call_Ranked_GetUser() {
         const wins = data["data"]["statistics"]["season"]["wins"]["ranked"];
         const losses = data["data"]["statistics"]["season"]["loses"]["ranked"];
 
+        PageTitle.textContent = data["data"]["nickname"] + " | Ranked Analysis";
         WinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         uuid = data["data"]["uuid"];
         PbLabel.textContent = "PB: " + msToMinSecs(pb);
-        PageTitle.textContent = data["data"]["nickname"] + " | Ranked Analysis";
         PlayerName.textContent = data["data"]["nickname"];
 
         if (pb == null) PbLabel.textContent = "PB: N/A";
