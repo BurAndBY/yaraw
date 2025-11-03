@@ -5,6 +5,7 @@ let previousMatchCount = 20;
 let matchCount = 20;
 let ign = "(Search for player)";
 let uuid = "";
+let versusToggle = false;
 
 const matchCountLimit = 50;
 
@@ -91,6 +92,8 @@ const PrivateButton = document.getElementById("Private");
 const MatchCount = document.getElementById("MatchCount");
 const MatchCountSlider = document.getElementById("matchCountSlider");
 
+const VersusButton = document.getElementById("versusButton");
+
 const LoadingText = document.getElementById("loadingText");
 const LoadingParrot = document.getElementById("loadingParrot");
 
@@ -176,9 +179,16 @@ async function call_Ranked_GetMatch(matchID) {
         const response = await fetch("https://api.mcsrranked.com/matches/" + matchID);
         const statusCode = response.status;
 
-        if (statusCode == 429) console.error("TOO MANY REQUESTS AHHH");
-
         if (statusCode != 200) {
+            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
+            switch (statusCode) {
+                case 400:
+                    loadingText.textContent = "Invalid IGN!";
+                    break;
+                case 429:
+                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
+                    break;
+            }
             return;
         }
 
@@ -371,9 +381,16 @@ async function call_Ranked_GetUserMatches() {
             "completions": [0, 0]
         };
 
-        if (statusCode == 429) console.error("TOO MANY REQUESTS AHHH");
-
         if (statusCode != 200) {
+            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
+            switch (statusCode) {
+                case 400:
+                    loadingText.textContent = "Invalid IGN!";
+                    break;
+                case 429:
+                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
+                    break;
+            }
             return;
         }
 
@@ -629,4 +646,26 @@ MatchCountSlider.addEventListener("mouseup", function() {
 MatchCountSlider.addEventListener("touchend", function() {
     if (matchCountSlider.value == previousMatchCount) return;
     call_Ranked_GetUserMatches();
+})
+
+// Versus Button
+VersusButton.addEventListener("mouseover", function() {
+    if (!versusToggle) {
+        VersusButton.style.backgroundColor = "#354e66";
+    }
+})
+
+VersusButton.addEventListener("mouseout", function() {
+    if (!versusToggle) {
+        VersusButton.style.backgroundColor = "#202F3D";
+    }
+})
+
+VersusButton.addEventListener("click", function() {
+    versusToggle = !versusToggle;
+    if (versusToggle) {
+        VersusButton.style.backgroundColor = "#507699";
+    } else {
+        VersusButton.style.backgroundColor = "#202F3D";
+    }
 })
