@@ -207,6 +207,45 @@
                 <h2 contenteditable="true" id="versusSearchText">(Search for player 2)</h2>
             </div>
         </div>
+
+        <!--Nameplate player 1-->
+        <div class="bubble" id="nameplatePlayer1">
+            <div style="float: left; width: 34%;border: 2px;" id="playerModelContainer">
+                <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="versus_playerModel1">
+            </div>
+            <div style="float: left; width: 65%;height: 45%;" id="playerNameContainer">
+                <h1 style="float: left;" id="versus_playerName1" contenteditable="true">(Search for player)</h1>
+            </div>
+
+            <div style="float: left; width: 60%;" id="versus_playerInfoContainer1">
+                <h2 style="float: left;padding-right: 25px;" id="versus_pbLabel1">PB: N/A</h2>
+                <h2 id="versus_winRateLabel1">W/L%: N/A</h2>
+            </div>
+            
+            <div style="align-items: center; text-align: center; justify-content: center; width: 50%; margin: auto;display: none;" id="nameplateLoading">
+                <img id="nameplateParrot" src="gifs/BlueParrotDancing.gif" alt="Blue Parrot Dancing" style="width: 128px;height: 128px;">
+            </div>
+        </div>
+
+        <!--Nameplate player 2-->
+        <div class="bubble" id="nameplatePlayer2">
+            <div style="float: left; width: 65%;height: 45%;margin-left: 10px;" id="playerNameContainer">
+                <h1 style="float: left;" id="versus_playerName2" contenteditable="true">(Search for player)</h1>
+            </div>
+
+            <div style="float: left; width: 60%;margin-left: 10px;" id="versus_playerInfoContainer2">
+                <h2 style="float: left;padding-right: 25px;" id="versus_pbLabel2">PB: N/A</h2>
+                <h2 id="versus_winRateLabel2">W/L%: N/A</h2>
+            </div>
+
+            <div style="float: right; width: 34%;border: 2px;margin-top: -14%;" id="playerModelContainer">
+                <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="versus_playerModel2" style="-webkit-transform: scaleX(-1);transform: scaleX(-1);">
+            </div>
+            
+            <div style="align-items: center; text-align: center; justify-content: center; width: 50%; margin: auto;display: none;" id="nameplateLoading">
+                <img id="nameplateParrot" src="gifs/BlueParrotDancing.gif" alt="Blue Parrot Dancing" style="width: 128px;height: 128px;">
+            </div>
+        </div>
         <script src="index.js"></script>
     </body>
 </html>

@@ -34,6 +34,22 @@ h3 {
     margin-bottom: 40px;
     margin-top: 30px;
 }
+#nameplatePlayer1 {
+    width: 480px;
+    height: 150px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+    margin-left: 140px;
+    float: left;
+}
+#nameplatePlayer2 {
+    width: 480px;
+    height: 150px;
+    margin-bottom: 40px;
+    margin-top: 30px;
+    margin-right: 140px;
+    float: right;
+}
 .bubble {
     background-color: #18232e;
     margin: auto;

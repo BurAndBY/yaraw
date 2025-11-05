@@ -5,7 +5,9 @@ let previousMatchCount = 20;
 let matchCount = 20;
 let ign = "(Search for player)";
 let uuid = "";
+let versusUUID = "";
 let versusToggle = false;
+let versusIGN = "(Search for player2)"
 
 const matchCountLimit = 50;
 
@@ -73,6 +75,8 @@ let timings = {
 // Elements
 const PageTitle = document.getElementById("pageTitle");
 
+const Nameplate = document.getElementById("nameplate");
+
 const PlayerName = document.getElementById("playerName");
 const PbLabel = document.getElementById("pbLabel");
 const WinRateLabel = document.getElementById("winRateLabel");
@@ -95,6 +99,18 @@ const MatchCountSlider = document.getElementById("matchCountSlider");
 const VersusButton = document.getElementById("versusButton");
 const VersusSearch = document.getElementById("versusSearch");
 const VersusSearchText = document.getElementById("versusSearchText");
+
+const Versus_NameplatePlayer1 = document.getElementById("nameplatePlayer1");
+const Versus_WinRateLabel1 = document.getElementById("versus_winRateLabel1");
+const Versus_PbLabel1 = document.getElementById("versus_pbLabel1");
+const Versus_PlayerName1 = document.getElementById("versus_playerName1");
+const Versus_PlayerModel1 = document.getElementById("versus_playerModel1");
+
+const Versus_NameplatePlayer2 = document.getElementById("nameplatePlayer2");
+const Versus_WinRateLabel2 = document.getElementById("versus_winRateLabel2");
+const Versus_PbLabel2 = document.getElementById("versus_pbLabel2");
+const Versus_PlayerName2 = document.getElementById("versus_playerName2");
+const Versus_PlayerModel2 = document.getElementById("versus_playerModel2");
 
 const LoadingText = document.getElementById("loadingText");
 const LoadingParrot = document.getElementById("loadingParrot");
@@ -508,11 +524,46 @@ async function call_Ranked_GetUser() {
     }
 }
 
+async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versusWinRateLabel, playerNum, playerName) {
+    try {
+        const response = await fetch("https://api.mcsrranked.com/users/" + playerName);
+        const statusCode = response.status;
+
+        if (statusCode != 200) {
+            versusPbLabel.textContent = "PB: N/A";
+            versusWinRateLabel.textContent = "W/L%: N/A";
+            switch (statusCode) {
+                case 400:
+                    break;
+                case 429:
+                    break;
+            }
+            return;
+        }
+
+        const data = await response.json();
+        const pb = data["data"]["statistics"]["season"]["bestTime"]["ranked"];
+        const wins = data["data"]["statistics"]["season"]["wins"]["ranked"];
+        const losses = data["data"]["statistics"]["season"]["loses"]["ranked"];
+
+        versusWinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
+        versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
+        versusPlayerName.textContent = data["data"]["nickname"];
+
+        console.log("W");
+
+        if (playerNum == 1) versusUUID = data["data"]["uuid"];
+
+        if (pb == null) versusPbLabel.textContent = "PB: N/A";
+    } catch (error) {
+        console.error("ERROR IN 'call_Ranked_GetUser': ", error);
+    }
+}
+
 // On Page load (if in a subdirectory)
 const currentPath = window.location.pathname.slice(1);
 const p = window.location.pathname;
 
-console.log(p);
 if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
@@ -540,6 +591,10 @@ PlayerName.addEventListener("blur", function() {
     ign = text;
     previousName = text;
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    dataSection.style.display = "block";
+    versusToggle = false;
+    VersusSearch.style.display = "none";
+    VersusButton.style.backgroundColor = "#202F3D";
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches();
 })
@@ -694,4 +749,27 @@ VersusSearchText.addEventListener("focus", function() {
     const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
+})
+
+VersusSearchText.addEventListener("blur", function() {
+    const text = VersusSearchText.innerText.trim();
+    if (text) {
+        history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
+        Nameplate.style.display = "none";
+        configUI.style.display = "none";
+        VersusSearch.style.display = "none";
+        Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
+        Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+        call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
+        call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
+    } else {
+        history.pushState({}, '', '/' + ign);
+    }
+})
+
+VersusSearchText.addEventListener("keydown", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        VersusSearchText.blur();
+    }  
 })
