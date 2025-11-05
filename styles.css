@@ -18,6 +18,9 @@ h2 {
     color: white;
     font-family: "Lexend";
     font-size: 21px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 h3 {
     color: white;
@@ -167,4 +170,13 @@ button {
     justify-content: center;
     width: 50%;
     margin: auto;
+}
+#versusSearch {
+    margin-top: 7%;
+    height: 40px;
+    display: none;
+}
+#versusSearchText {
+    margin-top: 0%; 
+    height: 100%;
 }

@@ -93,6 +93,8 @@ const MatchCount = document.getElementById("MatchCount");
 const MatchCountSlider = document.getElementById("matchCountSlider");
 
 const VersusButton = document.getElementById("versusButton");
+const VersusSearch = document.getElementById("versusSearch");
+const VersusSearchText = document.getElementById("versusSearchText");
 
 const LoadingText = document.getElementById("loadingText");
 const LoadingParrot = document.getElementById("loadingParrot");
@@ -508,7 +510,10 @@ async function call_Ranked_GetUser() {
 
 // On Page load (if in a subdirectory)
 const currentPath = window.location.pathname.slice(1);
-if (currentPath) {
+const p = window.location.pathname;
+
+console.log(p);
+if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
     PlayerName.textContent = decodeURIComponent(currentPath);
@@ -665,7 +670,28 @@ VersusButton.addEventListener("click", function() {
     versusToggle = !versusToggle;
     if (versusToggle) {
         VersusButton.style.backgroundColor = "#507699";
+        history.pushState({}, '', '/' + encodeURIComponent("versus"));
+        VersusSearchText.textContent = "(Search for player 2)";
+        dataSection.style.display = "none";
+        VersusSearch.style.display = "block";
     } else {
+        VersusSearch.style.display = "none";
         VersusButton.style.backgroundColor = "#202F3D";
+        dataSection.style.display = "block";
+        const text = PlayerName.innerText.trim();
+        if (text) {
+            history.pushState({}, '', '/' + encodeURIComponent(text));
+        } else {
+            history.pushState({}, '', '/');
+        }
     }
+})
+
+//Versus Search
+VersusSearchText.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(VersusSearchText);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
 })

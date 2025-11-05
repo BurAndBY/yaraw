@@ -8,26 +8,26 @@
 
     <body>
         <!--Nameplate-->
-       <div class="bubble" id="nameplate">
-        <div style="float: left; width: 34%;border: 2px;" id="playerModelContainer">
-            <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="playerModel">
-        </div>
-        <div style="float: left; width: 65%;height: 45%;" id="playerNameContainer">
-            <h1 style="float: left;" id="playerName" contenteditable="true">(Search for player)</h1>
+        <div class="bubble" id="nameplate">
+            <div style="float: left; width: 34%;border: 2px;" id="playerModelContainer">
+                <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="playerModel">
+            </div>
+            <div style="float: left; width: 65%;height: 45%;" id="playerNameContainer">
+                <h1 style="float: left;" id="playerName" contenteditable="true">(Search for player)</h1>
+            </div>
+
+            <div style="float: left; width: 60%;" id="playerInfoContainer">
+                <h2 style="float: left;padding-right: 25px;" id="pbLabel">PB: N/A</h2>
+                <h2 id="winRateLabel">W/L%: N/A</h2>
+            </div>
+            
+            <div style="align-items: center; text-align: center; justify-content: center; width: 50%; margin: auto;display: none;" id="nameplateLoading">
+                <img id="nameplateParrot" src="gifs/BlueParrotDancing.gif" alt="Blue Parrot Dancing" style="width: 128px;height: 128px;">
+            </div>
         </div>
 
-        <div style="float: left; width: 60%;" id="playerInfoContainer">
-            <h2 style="float: left;padding-right: 25px;" id="pbLabel">PB: N/A</h2>
-            <h2 id="winRateLabel">W/L%: N/A</h2>
-        </div>
-        
-        <div style="align-items: center; text-align: center; justify-content: center; width: 50%; margin: auto;display: none;" id="nameplateLoading">
-            <img id="nameplateParrot" src="gifs/BlueParrotDancing.gif" alt="Blue Parrot Dancing" style="width: 128px;height: 128px;">
-        </div>
-       </div>
-
-       <!--Config UI-->
-       <div id="configUI">
+        <!--Config UI-->
+        <div id="configUI">
             <div class="gamemodeDiv">
                 <button class="gamemodeButton" style="margin-right: 10px;" id="Ranked">Ranked</button>
                 <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="Private">Private</button>
@@ -39,167 +39,174 @@
             <div id="versus">
                 <button id="versusButton">Versus</button>
             </div>
-       </div>
+        </div>
 
-       <!--Loading screen-->
-       <div id="loadingScreen">
+        <!--Loading screen-->
+        <div id="loadingScreen">
             <h1 id="loadingText" style="display: none;">Loading . .</h1>
             <img id="loadingParrot" src="gifs/BlueParrotDancing.gif" alt="Blue Parrot Dancing" style="width: 128px;height: 128px;display: none;">
-       </div>
+        </div>
 
-       <!--Data sections-->
-       <div style="margin-top: 25px;">
-        <ul id="data">
-            <!--Splits-->
-            <li>
-                <div class="bubble">
-                    <h1>Splits</h1>
-                    <hr>
-                    <div>
-                        <table>
-                            <tr>
-                                <td><img src="images/Grass_Block.webp" alt="Overworld" class="dataIcon"></td>
-                                <td><h3>Overworld<br><span id="overworldSplit">N/A (0)</span><br>Death%: <span id="overworldDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Netherrack.webp" alt="Nether Terrain" class="dataIcon"></td>
-                                <td><h3>Nether Terrain<br><span id="netherSplit">N/A (0)</span><br>Death%: <span id="netherDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Gold_Block.webp" alt="Bastion" class="dataIcon"></td>
-                                <td><h3>Bastion<br><span id="bastionSplit">N/A (0)</span><br>Death%: <span id="bastionDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Nether_Bricks.webp" alt="Fortress" class="dataIcon"></td>
-                                <td><h3>Fortress<br><span id="fortressSplit">N/A (0)</span><br>Death%: <span id="fortressDeaths">N/A</span></h3></td>
-                            </tr>
-                        </table>
-                        <table style="float: right;padding-right: 30px;">
-                            <tr>
-                                <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
-                                <td><h3>Blind<br><span id="blindSplit">N/A (0)</span><br>Death%: <span id="blindDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/End_Frame.webp" alt="Stronghold" class="dataIcon"></td>
-                                <td><h3>Stronghold<br><span id="strongholdSplit">N/A (0)</span><br>Death%: <span id="strongholdDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Endstone.webp" alt="End" class="dataIcon"></td>
-                                <td><h3>End<br><span id="endSplit">N/A (0)</span><br>Death%: <span id="endDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Dragon_Egg.webp" alt="Completion" class="dataIcon"></td>
-                                <td><h3>Completion<br><span id="completionSplits">N/A</span></h3></td>
-                            </tr>
-                        </table>
+        <!--Data sections-->
+        <div style="margin-top: 25px;">
+            <ul id="data">
+                <!--Splits-->
+                <li>
+                    <div class="bubble">
+                        <h1>Splits</h1>
+                        <hr>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td><img src="images/Grass_Block.webp" alt="Overworld" class="dataIcon"></td>
+                                    <td><h3>Overworld<br><span id="overworldSplit">N/A (0)</span><br>Death%: <span id="overworldDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Netherrack.webp" alt="Nether Terrain" class="dataIcon"></td>
+                                    <td><h3>Nether Terrain<br><span id="netherSplit">N/A (0)</span><br>Death%: <span id="netherDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Gold_Block.webp" alt="Bastion" class="dataIcon"></td>
+                                    <td><h3>Bastion<br><span id="bastionSplit">N/A (0)</span><br>Death%: <span id="bastionDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Nether_Bricks.webp" alt="Fortress" class="dataIcon"></td>
+                                    <td><h3>Fortress<br><span id="fortressSplit">N/A (0)</span><br>Death%: <span id="fortressDeaths">N/A</span></h3></td>
+                                </tr>
+                            </table>
+                            <table style="float: right;padding-right: 30px;">
+                                <tr>
+                                    <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
+                                    <td><h3>Blind<br><span id="blindSplit">N/A (0)</span><br>Death%: <span id="blindDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/End_Frame.webp" alt="Stronghold" class="dataIcon"></td>
+                                    <td><h3>Stronghold<br><span id="strongholdSplit">N/A (0)</span><br>Death%: <span id="strongholdDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Endstone.webp" alt="End" class="dataIcon"></td>
+                                    <td><h3>End<br><span id="endSplit">N/A (0)</span><br>Death%: <span id="endDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Dragon_Egg.webp" alt="Completion" class="dataIcon"></td>
+                                    <td><h3>Completion<br><span id="completionSplits">N/A</span></h3></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <!--Timestamps-->
-            <li>
-                <div class="bubble">
-                    <h1>Timestamps</h1>
-                    <hr>
-                    <div>
-                        <table>
-                            <tr>
-                                <td><img src="images/Netherrack.webp" alt="Enter Nether" class="dataIcon"></td>
-                                <td><h3>Enter Nether<br><span id="netherTimestamp">N/A (0)</span><br></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Gold_Block.webp" alt="Enter Bastion" class="dataIcon"></td>
-                                <td><h3>Enter Bastion<br><span id="bastionTimestamp">N/A (0)</span><br></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Nether_Bricks.webp" alt="Enter Fortress" class="dataIcon"></td>
-                                <td><h3>Enter Fortress<br><span id="fortressTimestamp">N/A (0)</span><br></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
-                                <td><h3>Blind<br><span id="blindTimestamp">N/A (0)</span><br></h3></td>
-                            </tr>
-                        </table>
-                        <table style="float: right;padding-right: 30px;">
-                            <tr>
-                                <td><img src="images/End_Frame.webp" alt="Enter Stronghold" class="dataIcon"></td>
-                                <td><h3>Enter Stronghold<br><span id="strongholdTimestamp">N/A (0)</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Endstone.webp" alt="Enter End" class="dataIcon"></td>
-                                <td><h3>Enter End<br><span id="endTimestamp">N/A (0)</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Dragon_Egg.webp" alt="Avg Completion" class="dataIcon"></td>
-                                <td><h3>Avg Completion<br><span id="avgCompletion">N/A (0)</span></h3></td>
-                            </tr>
-                        </table>
+                </li>
+                <!--Timestamps-->
+                <li>
+                    <div class="bubble">
+                        <h1>Timestamps</h1>
+                        <hr>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td><img src="images/Netherrack.webp" alt="Enter Nether" class="dataIcon"></td>
+                                    <td><h3>Enter Nether<br><span id="netherTimestamp">N/A (0)</span><br></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Gold_Block.webp" alt="Enter Bastion" class="dataIcon"></td>
+                                    <td><h3>Enter Bastion<br><span id="bastionTimestamp">N/A (0)</span><br></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Nether_Bricks.webp" alt="Enter Fortress" class="dataIcon"></td>
+                                    <td><h3>Enter Fortress<br><span id="fortressTimestamp">N/A (0)</span><br></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
+                                    <td><h3>Blind<br><span id="blindTimestamp">N/A (0)</span><br></h3></td>
+                                </tr>
+                            </table>
+                            <table style="float: right;padding-right: 30px;">
+                                <tr>
+                                    <td><img src="images/End_Frame.webp" alt="Enter Stronghold" class="dataIcon"></td>
+                                    <td><h3>Enter Stronghold<br><span id="strongholdTimestamp">N/A (0)</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Endstone.webp" alt="Enter End" class="dataIcon"></td>
+                                    <td><h3>Enter End<br><span id="endTimestamp">N/A (0)</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Dragon_Egg.webp" alt="Avg Completion" class="dataIcon"></td>
+                                    <td><h3>Avg Completion<br><span id="avgCompletion">N/A (0)</span></h3></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <!--Overworlds-->
-            <li>
-                <div class="bubble">
-                    <h1>Overworlds</h1>
-                    <hr>
-                    <div>
-                        <table>
-                            <tr>
-                                <td><img src="images/Chest.webp" alt="Buried Treasure" class="dataIcon"></td>
-                                <td><h3>Buried Treasure<br><span id="bt">N/A (0)</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Village.webp" alt="Village" class="dataIcon"></td>
-                                <td><h3>Village<br><span id="village">N/A (0)</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Shipwreck.webp" alt="Shipwreck" class="dataIcon"></td>
-                                <td><h3>Shipwreck<br><span id="shipwreck">N/A (0)</span></td>
-                            </tr>
-                        </table>
-                        <table style="float: right;padding-right: 30px;">
-                            <tr>
-                                <td><img src="images/Desert Temple.webp" alt="Desert Temple" width="56" height="48"></td>
-                                <td><h3>Desert Temple<br><span id="dt">N/A (0)</span></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Ruined Portal.webp" alt="Ruined Portal" width="48" height="56"></td>
-                                <td><h3>Ruined Portal<br><span id="rp">N/A (0)</span></td>
-                            </tr>
-                        </table>
+                </li>
+                <!--Overworlds-->
+                <li>
+                    <div class="bubble">
+                        <h1>Overworlds</h1>
+                        <hr>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td><img src="images/Chest.webp" alt="Buried Treasure" class="dataIcon"></td>
+                                    <td><h3>Buried Treasure<br><span id="bt">N/A (0)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Village.webp" alt="Village" class="dataIcon"></td>
+                                    <td><h3>Village<br><span id="village">N/A (0)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Shipwreck.webp" alt="Shipwreck" class="dataIcon"></td>
+                                    <td><h3>Shipwreck<br><span id="shipwreck">N/A (0)</span></td>
+                                </tr>
+                            </table>
+                            <table style="float: right;padding-right: 30px;">
+                                <tr>
+                                    <td><img src="images/Desert Temple.webp" alt="Desert Temple" width="56" height="48"></td>
+                                    <td><h3>Desert Temple<br><span id="dt">N/A (0)</span></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Ruined Portal.webp" alt="Ruined Portal" width="48" height="56"></td>
+                                    <td><h3>Ruined Portal<br><span id="rp">N/A (0)</span></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </li>
-            <!--Bastions-->
-            <li>
-                <div class="bubble">
-                    <h1>Bastions</h1>
-                    <hr>
-                    <div>
-                        <table>
-                            <tr>
-                                <td><img src="images/Bridge.webp" alt="Bridge" class="bastionDataIcon"></td>
-                                <td><h3>Bridge<br><span id="bridge">N/A (0)</span><br>Death%: <span id="bridgeDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Housing.webp" alt="Housing" class="bastionDataIcon"></td>
-                                <td><h3>Housing<br><span id="housing">N/A (0)</span><br>Death%: <span id="housingDeaths">N/A</span></h3></td>
-                            </tr>
-                        </table>
-                        <table style="float: right;padding-right: 30px;">
-                            <tr>
-                                <td><img src="images/Stables.webp" alt="Stables" class="bastionDataIcon"></td>
-                                <td><h3>Stables<br><span id="stables">N/A (0)</span><br>Death%: <span id="stablesDeaths">N/A</span></h3></td>
-                            </tr>
-                            <tr>
-                                <td><img src="images/Treasure.webp" alt="Treasure" class="bastionDataIcon"></td>
-                                <td><h3>Treasure<br><span id="treasure">N/A (0)</span><br>Death%: <span id="treasureDeaths">N/A</span></h3></td>
-                            </tr>
-                        </table>
+                </li>
+                <!--Bastions-->
+                <li>
+                    <div class="bubble">
+                        <h1>Bastions</h1>
+                        <hr>
+                        <div>
+                            <table>
+                                <tr>
+                                    <td><img src="images/Bridge.webp" alt="Bridge" class="bastionDataIcon"></td>
+                                    <td><h3>Bridge<br><span id="bridge">N/A (0)</span><br>Death%: <span id="bridgeDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Housing.webp" alt="Housing" class="bastionDataIcon"></td>
+                                    <td><h3>Housing<br><span id="housing">N/A (0)</span><br>Death%: <span id="housingDeaths">N/A</span></h3></td>
+                                </tr>
+                            </table>
+                            <table style="float: right;padding-right: 30px;">
+                                <tr>
+                                    <td><img src="images/Stables.webp" alt="Stables" class="bastionDataIcon"></td>
+                                    <td><h3>Stables<br><span id="stables">N/A (0)</span><br>Death%: <span id="stablesDeaths">N/A</span></h3></td>
+                                </tr>
+                                <tr>
+                                    <td><img src="images/Treasure.webp" alt="Treasure" class="bastionDataIcon"></td>
+                                    <td><h3>Treasure<br><span id="treasure">N/A (0)</span><br>Death%: <span id="treasureDeaths">N/A</span></h3></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            </li>
-       </ul>
-       </div>
-       <script src="index.js"></script>
+                </li>
+        </ul>
+        </div>
+
+        <!--Versus Search-->
+        <div>
+            <div class="bubble" id="versusSearch">
+                <h2 contenteditable="true" id="versusSearchText">(Search for player 2)</h2>
+            </div>
+        </div>
+        <script src="index.js"></script>
     </body>
 </html>
