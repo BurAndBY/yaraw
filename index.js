@@ -1,13 +1,24 @@
 // Variables
 let gamemode = 2; // 2 = ranked, 3 = private
+
 let previousName = "(Search for player)";
 let previousMatchCount = 20;
 let matchCount = 20;
+
 let ign = "(Search for player)";
 let uuid = "";
+
 let versusUUID = "";
 let versusToggle = false;
 let versusIGN = "(Search for player2)"
+
+let versus_gamemode1 = 2;
+let versus_gamemode2 = 2;
+
+let versus_matchCount1 = 20;
+let versus_matchCount2 = 20;
+let versus_previousMatchCount1 = 20;
+let versus_previousMatchCount2 = 20;
 
 const matchCountLimit = 50;
 
@@ -107,10 +118,14 @@ const Versus_PlayerName1 = document.getElementById("versus_playerName1");
 const Versus_PlayerModel1 = document.getElementById("versus_playerModel1");
 
 const Versus_RankedButton1 = document.getElementById("versus_ranked1");
+const Versus_RankedButton2 = document.getElementById("versus_ranked2");
 const Versus_PrivateButton1 = document.getElementById("versus_private1");
+const Versus_PrivateButton2 = document.getElementById("versus_private2");
 
 const Versus_MatchCount1 = document.getElementById("versus_matchCount1");
+const Versus_MatchCount2 = document.getElementById("versus_matchCount2");
 const Versus_MatchCountSlider1 = document.getElementById("versus_matchCountSlider1");
+const Versus_MatchCountSlider2 = document.getElementById("versus_matchCountSlider2");
 
 const Versus_NameplatePlayer2 = document.getElementById("nameplatePlayer2");
 const Versus_WinRateLabel2 = document.getElementById("versus_winRateLabel2");
@@ -119,6 +134,7 @@ const Versus_PlayerName2 = document.getElementById("versus_playerName2");
 const Versus_PlayerModel2 = document.getElementById("versus_playerModel2");
 
 const Versus_Config1 = document.getElementById("versus_config1");
+
 const Versus_Config2 = document.getElementById("versus_config2");
 
 const Versus_Data1 = document.getElementById("versus_data1");
@@ -529,6 +545,7 @@ async function call_Ranked_GetUser() {
         uuid = data["data"]["uuid"];
         PbLabel.textContent = "PB: " + msToMinSecs(pb);
         PlayerName.textContent = data["data"]["nickname"];
+        ign = data["data"]["nickname"];
 
         if (pb == null) PbLabel.textContent = "PB: N/A";
     } catch (error) {
@@ -562,7 +579,11 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
         versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
         versusPlayerName.textContent = data["data"]["nickname"];
 
-        if (playerNum == 1) versusUUID = data["data"]["uuid"];
+        if (playerNum == 1) {
+            versusUUID = data["data"]["uuid"];
+            versusIGN = data["data"]["nickname"];
+            PageTitle.textContent = ign + " vs " + data["data"]["nickname"] + " | Ranked Analysis";
+        }
 
         if (pb == null) versusPbLabel.textContent = "PB: N/A";
     } catch (error) {
@@ -572,7 +593,6 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
 
 // On Page load (if in a subdirectory)
 const currentPath = window.location.pathname.slice(1);
-const p = window.location.pathname;
 
 if (currentPath && currentPath != "versus") {
     ign = currentPath;
@@ -626,6 +646,8 @@ PlayerName.addEventListener("focus", function() {
 
 // Gamemode buttons
 RankedButton.style.backgroundColor = "#507699";
+Versus_RankedButton1.style.backgroundColor = "#507699";
+Versus_RankedButton2.style.backgroundColor = "#507699";
 
 RankedButton.addEventListener("click", function() {
     if (gamemode == 3) {
@@ -666,6 +688,47 @@ PrivateButton.addEventListener("click", function() {
         RankedButton.style.backgroundColor = "#202F3D";
         gamemode = 3;
         call_Ranked_GetUserMatches();
+    }
+})
+
+// Versus Gamemode Buttons
+Versus_RankedButton1.addEventListener("click", function() {
+    if (versus_gamemode1 == 3) {
+        Versus_RankedButton1.style.backgroundColor = "#507699";
+        Versus_PrivateButton1.style.backgroundColor = "#202F3D";
+        versus_gamemode1 = 2;
+    }
+})
+
+Versus_RankedButton1.addEventListener("mouseover", function() {
+    if (versus_gamemode1 == 3) {
+        Versus_RankedButton1.style.backgroundColor = "#354e66";
+    }
+})
+
+Versus_RankedButton1.addEventListener("mouseout", function() {
+    if (versus_gamemode1 == 3) {
+        Versus_RankedButton1.style.backgroundColor = "#202F3D";
+    }
+})
+
+Versus_PrivateButton1.addEventListener("mouseover", function() {
+    if (versus_gamemode1 == 2) {
+        Versus_PrivateButton1.style.backgroundColor = "#354e66";
+    }
+})
+
+Versus_PrivateButton1.addEventListener("mouseout", function() {
+    if (versus_gamemode1 == 2) {
+        Versus_PrivateButton1.style.backgroundColor = "#202F3D";
+    }
+})
+
+Versus_PrivateButton1.addEventListener("click", function() {
+    if (versus_gamemode1 == 2) {
+        Versus_PrivateButton1.style.backgroundColor = "#507699";
+        Versus_RankedButton1.style.backgroundColor = "#202F3D";
+        versus_gamemode1 = 3;
     }
 })
 
@@ -710,12 +773,111 @@ MatchCountSlider.addEventListener("input", function() {
 
 MatchCountSlider.addEventListener("mouseup", function() {
     if (matchCountSlider.value == previousMatchCount) return;
+    previousMatchCount = matchCountSlider.value;
     call_Ranked_GetUserMatches();
 })
 
 MatchCountSlider.addEventListener("touchend", function() {
     if (matchCountSlider.value == previousMatchCount) return;
+    previousMatchCount = matchCountSlider.value;
     call_Ranked_GetUserMatches();
+})
+
+// Versus Match Count Sliders
+Versus_MatchCount1.addEventListener("blur", function() {
+    let newText = this.textContent;
+    if (parseInt(newText) == versus_previousMatchCount1) return;
+    if (/^\d+$/.test(newText) == false) {
+        // Has letters or number exceeds limit
+        newText = "1";
+    } else if (parseInt(newText) > matchCountLimit) {
+        newText = "50";
+    } else if (parseInt(newText) <= 0) {
+        newText = "1";
+    }
+    console.log(parseInt(newText));
+    Versus_MatchCountSlider1.value = parseInt(newText);
+    this.textContent = newText;
+    versus_matchCount1 = parseInt(newText);
+    versus_previousMatchCount1 = parseInt(newText);
+})
+
+Versus_MatchCount1.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(Versus_MatchCount1);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+})
+
+Versus_MatchCount1.addEventListener("keydown", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        Versus_MatchCount1.blur();
+    }
+})
+
+Versus_MatchCountSlider1.addEventListener("input", function() {
+    Versus_MatchCount1.textContent = Versus_MatchCountSlider1.value;
+    versus_matchCount1 = Versus_MatchCountSlider1.value;
+})
+
+Versus_MatchCountSlider1.addEventListener("mouseup", function() {
+    if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
+    versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
+})
+
+Versus_MatchCountSlider1.addEventListener("touchend", function() {
+    if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
+    versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
+})
+
+Versus_MatchCount2.addEventListener("blur", function() {
+    let newText = this.textContent;
+    if (parseInt(newText) == versus_previousMatchCount2) return;
+    if (/^\d+$/.test(newText) == false) {
+        // Has letters or number exceeds limit
+        newText = "1";
+    } else if (parseInt(newText) > matchCountLimit) {
+        newText = "50";
+    } else if (parseInt(newText) <= 0) {
+        newText = "1";
+    }
+    console.log(parseInt(newText));
+    Versus_MatchCountSlider2.value = parseInt(newText);
+    this.textContent = newText;
+    versus_matchCount2 = parseInt(newText);
+    versus_previousMatchCount2 = parseInt(newText);
+})
+
+Versus_MatchCount2.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(Versus_MatchCount2);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+})
+
+Versus_MatchCount2.addEventListener("keydown", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        Versus_MatchCount2.blur();
+    }
+})
+
+Versus_MatchCountSlider2.addEventListener("input", function() {
+    Versus_MatchCount2.textContent = Versus_MatchCountSlider2.value;
+    versus_matchCount2 = Versus_MatchCountSlider2.value;
+})
+
+Versus_MatchCountSlider2.addEventListener("mouseup", function() {
+    if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
+    versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
+})
+
+Versus_MatchCountSlider2.addEventListener("touchend", function() {
+    if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
+    versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
 })
 
 // Versus Button
