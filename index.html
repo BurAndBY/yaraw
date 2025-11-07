@@ -33,7 +33,7 @@
                 <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="Private">Private</button>
             </div>
             <div style="width: 250px; flex: 1;display: flex; justify-content: center; align-items: center; gap: 20px">
-                <input type="range" min="1" max="50" value="20" id="matchCountSlider">
+                <input type="range" min="1" max="50" value="20" class="slider" id="matchCountSlider">
                 <h3 style="width: 100px;">Matches: <span id="MatchCount" contenteditable="true">20</span></h3>
             </div>
             <div id="versus">
@@ -208,8 +208,8 @@
             </div>
         </div>
 
-        <!--Nameplate player 1-->
-        <div class="bubble" id="nameplatePlayer1">
+        <!--Versus Nameplate player 1-->
+        <div class="bubble" id="nameplatePlayer1" style="display: none;">
             <div style="float: left; width: 34%;border: 2px;" id="playerModelContainer">
                 <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="versus_playerModel1">
             </div>
@@ -227,8 +227,8 @@
             </div>
         </div>
 
-        <!--Nameplate player 2-->
-        <div class="bubble" id="nameplatePlayer2">
+        <!--Versus Nameplate player 2-->
+        <div class="bubble" id="nameplatePlayer2" style="display: none;">
             <div style="float: left; width: 65%;height: 45%;margin-left: 10px;" id="playerNameContainer">
                 <h1 style="float: left;" id="versus_playerName2" contenteditable="true">(Search for player)</h1>
             </div>
@@ -244,6 +244,30 @@
             
             <div style="align-items: center; text-align: center; justify-content: center; width: 50%; margin: auto;display: none;" id="nameplateLoading">
                 <img id="nameplateParrot" src="gifs/BlueParrotDancing.gif" alt="Blue Parrot Dancing" style="width: 128px;height: 128px;">
+            </div>
+        </div>
+
+        <!--Versus Config player 1-->
+        <div id="versus_config1">
+            <div class="gamemodeDiv">
+                <button class="gamemodeButton" style="margin-right: 10px;" id="versus_ranked1">Ranked</button>
+                <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="versus_private1">Private</button>
+            </div>
+            <div style="width: 250px; flex: 1;display: flex; justify-content: center; align-items: center; gap: 20px">
+                <input type="range" min="1" max="50" value="20" class="slider" id="versus_matchCountSlider1">
+                <h3 style="width: 100px;">Matches: <span id="versus_matchCount1" contenteditable="true">20</span></h3>
+            </div>
+        </div>
+
+        <!--Versus Config player 2-->
+        <div id="versus_config2">
+            <div class="gamemodeDiv">
+                <button class="gamemodeButton" style="margin-right: 10px;" id="versus_ranked2">Ranked</button>
+                <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="versus_private2">Private</button>
+            </div>
+            <div style="width: 250px; flex: 1;display: flex; justify-content: center; align-items: center; gap: 20px">
+                <input type="range" min="1" max="50" value="20" class="slider" id="versus_matchCountSlider2">
+                <h3 style="width: 100px;">Matches: <span id="versus_matchCount1" contenteditable="true">20</span></h3>
             </div>
         </div>
         <script src="index.js"></script>

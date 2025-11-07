@@ -106,6 +106,12 @@ const Versus_PbLabel1 = document.getElementById("versus_pbLabel1");
 const Versus_PlayerName1 = document.getElementById("versus_playerName1");
 const Versus_PlayerModel1 = document.getElementById("versus_playerModel1");
 
+const Versus_RankedButton1 = document.getElementById("versus_ranked1");
+const Versus_PrivateButton1 = document.getElementById("versus_private1");
+
+const Versus_MatchCount1 = document.getElementById("versus_matchCount1");
+const Versus_MatchCountSlider1 = document.getElementById("versus_matchCountSlider1");
+
 const Versus_NameplatePlayer2 = document.getElementById("nameplatePlayer2");
 const Versus_WinRateLabel2 = document.getElementById("versus_winRateLabel2");
 const Versus_PbLabel2 = document.getElementById("versus_pbLabel2");
@@ -550,8 +556,6 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
         versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
         versusPlayerName.textContent = data["data"]["nickname"];
 
-        console.log("W");
-
         if (playerNum == 1) versusUUID = data["data"]["uuid"];
 
         if (pb == null) versusPbLabel.textContent = "PB: N/A";
@@ -760,6 +764,8 @@ VersusSearchText.addEventListener("blur", function() {
         VersusSearch.style.display = "none";
         Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
         Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+        Versus_NameplatePlayer1.style.display = "block";
+        Versus_NameplatePlayer2.style.display = "block";
         call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
     } else {

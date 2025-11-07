@@ -39,7 +39,7 @@ h3 {
     height: 150px;
     margin-bottom: 40px;
     margin-top: 30px;
-    margin-left: 140px;
+    margin-left: 160px;
     float: left;
 }
 #nameplatePlayer2 {
@@ -47,7 +47,7 @@ h3 {
     height: 150px;
     margin-bottom: 40px;
     margin-top: 30px;
-    margin-right: 140px;
+    margin-right: 160px;
     float: right;
 }
 .bubble {
@@ -100,6 +100,23 @@ hr {
     gap: 15px;
     width: 46%;
 }
+#versus_config1 {
+    display: inline-flex;
+    justify-content: left;
+    align-items: left;
+    gap: 15px;
+    width: 34%;
+    margin-left: 160px;
+}
+#versus_config2 {
+    display: inline-flex;
+    justify-content: right;
+    align-items: right;
+    gap: 15px;
+    width: 34%;
+    float:right;
+    margin-right: 160px;
+}
 .gamemodeDiv {
     background-color: #18232e;
     height: 30px;
@@ -141,7 +158,7 @@ button {
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
 }
-#matchCountSlider {
+.slider {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
@@ -152,17 +169,17 @@ button {
     border: none;
     outline: none;
 }
-#matchCountSlider::-webkit-slider-runnable-track {
+.slider::-webkit-slider-runnable-track {
     background: #18232e;
     height: 8px;
     border-radius: 5px;
 }
-#matchCountSlider::-moz-range-track {
+.slider::-moz-range-track {
     background: #18232e;
     height: 8px;
     border-radius: 5px;
 }
-#matchCountSlider::-webkit-slider-thumb {
+.slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
   height: 20px;
@@ -171,7 +188,7 @@ button {
   border-radius: 50%;
   margin-top: -6px;
 }
-#matchCountSlider::-moz-range-thumb {
+.slider::-moz-range-thumb {
   -webkit-appearance: none;
   appearance: none;
   height: 20px;
