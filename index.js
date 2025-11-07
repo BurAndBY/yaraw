@@ -118,6 +118,12 @@ const Versus_PbLabel2 = document.getElementById("versus_pbLabel2");
 const Versus_PlayerName2 = document.getElementById("versus_playerName2");
 const Versus_PlayerModel2 = document.getElementById("versus_playerModel2");
 
+const Versus_Config1 = document.getElementById("versus_config1");
+const Versus_Config2 = document.getElementById("versus_config2");
+
+const Versus_Data1 = document.getElementById("versus_data1");
+const Versus_Data2 = document.getElementById("versus_data2");
+
 const LoadingText = document.getElementById("loadingText");
 const LoadingParrot = document.getElementById("loadingParrot");
 
@@ -341,8 +347,8 @@ async function call_Ranked_GetUserMatches() {
         randomiseParrot(0);
         loadingText.textContent = "Loading . .";
 
-        dataSection.style.visibility = "hidden";
-        configUI.style.visibility = "hidden";
+        dataSection.style.display = "none";
+        configUI.style.display = "none";
         LoadingText.style.display = "block";
         LoadingParrot.style.display = "inline";
 
@@ -470,8 +476,8 @@ async function call_Ranked_GetUserMatches() {
 
         loadingText.style.display = "none";
         LoadingParrot.style.display = "none";
-        dataSection.style.visibility = "visible";
-        configUI.style.visibility = "visible";
+        dataSection.style.display = "block";
+        configUI.style.display = "flex";
 
         playerModel.style.visibility = "visible";
         PlayerNameContainer.style.display = "inline";
@@ -576,8 +582,8 @@ if (currentPath && currentPath != "versus") {
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches();
 } else {
-    dataSection.style.visibility = "hidden";
-    configUI.style.visibility = "hidden";
+    dataSection.style.display = "none";
+    configUI.style.display = "none";
     LoadingText.style.display = "block";
     LoadingText.textContent = "Type ign in (search for player) field to search";
     PageTitle.textContent = "Home | Ranked Analysis";
@@ -762,10 +768,18 @@ VersusSearchText.addEventListener("blur", function() {
         Nameplate.style.display = "none";
         configUI.style.display = "none";
         VersusSearch.style.display = "none";
+
         Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
         Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
         Versus_NameplatePlayer1.style.display = "block";
         Versus_NameplatePlayer2.style.display = "block";
+
+        Versus_Config1.style.display = "inline-flex";
+        Versus_Config2.style.display = "inline-flex";
+
+        Versus_Data1.style.display = "block";
+        Versus_Data2.style.display = "block";
+
         call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
     } else {

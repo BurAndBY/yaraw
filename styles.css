@@ -65,6 +65,25 @@ ul {
   overflow: hidden;
   text-align: center;
 }
+#versus_data1 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    overflow: none;
+    text-align: center;
+    width: 480px;
+    margin-left: 160px;
+    display: none;;
+}
+#versus_data2 {
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    overflow: none;
+    text-align: center;
+    width: 480px;
+    display: none;
+}
 li {
   padding: 5px;
   display: inline-block;
@@ -101,7 +120,7 @@ hr {
     width: 46%;
 }
 #versus_config1 {
-    display: inline-flex;
+    display: none;
     justify-content: left;
     align-items: left;
     gap: 15px;
@@ -109,7 +128,7 @@ hr {
     margin-left: 160px;
 }
 #versus_config2 {
-    display: inline-flex;
+    display: none;
     justify-content: right;
     align-items: right;
     gap: 15px;
