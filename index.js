@@ -2,8 +2,8 @@
 let gamemode = 2; // 2 = ranked, 3 = private
 
 let previousName = "(Search for player)";
-let previousMatchCount = 10;
-let matchCount = 10;
+let previousMatchCount = 20;
+let matchCount = 20;
 
 let ign = "(Search for player)";
 let uuid = "";
@@ -14,12 +14,11 @@ let versusIGN = "(Search for player2)"
 
 let versus_gamemode2 = 2;
 
-let versus_matchCount1 = 10;
-let versus_matchCount2 = 10;
-let versus_previousMatchCount1 = 10;
-let versus_previousMatchCount2 = 10;
+let versus_matchCount2 = 20;
+let versus_previousMatchCount1 = 20;
+let versus_previousMatchCount2 = 20;
 
-const matchCountLimit = 10;
+const matchCountLimit = 50;
 
 const parrots = [
     "gifs/BlueParrotDancing.gif",
@@ -950,7 +949,7 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
 
 async function versus_call_Ranked_GetUserMatches() {
     try {
-        const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + matchCount);
+        const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2);
         const statusCode = response.status;
         console.log("Versus");
 
@@ -1421,8 +1420,9 @@ Versus_MatchCount1.addEventListener("blur", function() {
     console.log(parseInt(newText));
     Versus_MatchCountSlider1.value = parseInt(newText);
     this.textContent = newText;
-    versus_matchCount1 = parseInt(newText);
+    matchCount = parseInt(newText); 
     versus_previousMatchCount1 = parseInt(newText);
+    versus1ChangeStats();
 })
 
 Versus_MatchCount1.addEventListener("focus", function() {
@@ -1442,17 +1442,19 @@ Versus_MatchCount1.addEventListener("keydown", function(event) {
 
 Versus_MatchCountSlider1.addEventListener("input", function() {
     Versus_MatchCount1.textContent = Versus_MatchCountSlider1.value;
-    versus_matchCount1 = Versus_MatchCountSlider1.value;
+    matchCount = Versus_MatchCountSlider1.value;
 })
 
 Versus_MatchCountSlider1.addEventListener("mouseup", function() {
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
+    versus1ChangeStats();
 })
 
 Versus_MatchCountSlider1.addEventListener("touchend", function() {
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
+    versus1ChangeStats();
 })
 
 Versus_MatchCount2.addEventListener("blur", function() {
@@ -1471,6 +1473,7 @@ Versus_MatchCount2.addEventListener("blur", function() {
     this.textContent = newText;
     versus_matchCount2 = parseInt(newText);
     versus_previousMatchCount2 = parseInt(newText);
+    versus_call_Ranked_GetUserMatches();
 })
 
 Versus_MatchCount2.addEventListener("focus", function() {
@@ -1496,11 +1499,13 @@ Versus_MatchCountSlider2.addEventListener("input", function() {
 Versus_MatchCountSlider2.addEventListener("mouseup", function() {
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
+    versus_call_Ranked_GetUserMatches();
 })
 
 Versus_MatchCountSlider2.addEventListener("touchend", function() {
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
+    versus_call_Ranked_GetUserMatches();
 })
 
 // Versus Button
@@ -1554,7 +1559,7 @@ VersusSearchText.addEventListener("blur", function() {
         configUI.style.display = "none";
         VersusSearch.style.display = "none";
 
-        versus_matchCount1 = 20;
+        matchCount = 20;
         versus_matchCount2 = 20;
         versus_previousMatchCount1 = 20;
         versus_previousMatchCount2 = 20;
