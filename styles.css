@@ -54,8 +54,8 @@ h3 {
     background-color: #18232e;
     margin: auto;
     border-radius: 25px;
-    padding: 8px;
-    width: 440px;
+    padding: 6px;
+    width: 450px;
     height: 500px;
 }
 ul {
@@ -71,7 +71,7 @@ ul {
     padding: 0px;
     overflow: none;
     text-align: center;
-    width: 480px;
+    width: 500px;
     margin-left: 160px;
     display: none;;
 }
@@ -81,11 +81,11 @@ ul {
     padding: 0px;
     overflow: none;
     text-align: center;
-    width: 480px;
+    width: 500px;
     display: none;
 }
 li {
-  padding: 5px;
+  padding: 2px;
   display: inline-block;
 }
 td {
@@ -101,7 +101,7 @@ td {
 }
 table {
     float: left;
-    padding-right: 30px;
+    padding-right: 25px;
 }
 hr {
     height: 0px;
