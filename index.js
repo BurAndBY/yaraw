@@ -1449,7 +1449,6 @@ Versus_PrivateButton2.addEventListener("click", function() {
 MatchCount.addEventListener("blur", function() {
     MatchCount.style.backgroundColor = "#18232e";
     let newText = this.textContent;
-    if (parseInt(newText) == previousMatchCount) return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1458,10 +1457,11 @@ MatchCount.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
+    this.textContent = newText;
+    if (parseInt(newText) == previousMatchCount) return;
     console.log(parseInt(newText));
     MatchCountSlider.value = parseInt(newText);
     previousMatchCount = parseInt(newText);
-    this.textContent = newText;
     matchCount = parseInt(newText);
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
@@ -1592,18 +1592,18 @@ Versus_PlayerName2.addEventListener("focus", function() {
 Versus_MatchCount1.addEventListener("blur", function() {
     Versus_MatchCount1.style.backgroundColor = "#18232e";
     let newText = this.textContent;
-    if (parseInt(newText) == versus_previousMatchCount1) return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
-    } else if (parseInt(newText) > matchCountLimit) {
-        newText = "50";
+    } else if (parseInt(newText) >= matchCountLimit) {
+        newText = String(matchCountLimit);
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
+    this.textContent = newText;
+    if (parseInt(newText) == versus_previousMatchCount1) return;
     console.log(parseInt(newText));
     Versus_MatchCountSlider1.value = parseInt(newText);
-    this.textContent = newText;
     matchCount = parseInt(newText); 
     versus_previousMatchCount1 = parseInt(newText);
     versus1ChangeStats();
@@ -1654,19 +1654,19 @@ Versus_MatchCountSlider1.addEventListener("touchend", function() {
 
 Versus_MatchCount2.addEventListener("blur", function() {
     Versus_MatchCount2.style.backgroundColor = "#18232e";
-    let newText = this.textContent;
-    if (parseInt(newText) == versus_previousMatchCount2) return;
+    let newText = this.textContent;    
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
     } else if (parseInt(newText) > matchCountLimit) {
-        newText = "50";
+        newText = String(matchCountLimit);
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
+    this.textContent = newText;
+    if (parseInt(newText) == versus_previousMatchCount2) return;
     console.log(parseInt(newText));
     Versus_MatchCountSlider2.value = parseInt(newText);
-    this.textContent = newText;
     versus_matchCount2 = parseInt(newText);
     versus_previousMatchCount2 = parseInt(newText);
     versus_call_Ranked_GetUserMatches();
