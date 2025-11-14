@@ -1,8 +1,8 @@
 // Variables
 let gamemode = 2; // 2 = ranked, 3 = private
 
-const defaultMatchCount = 20;
-const matchCountLimit = 50;
+const defaultMatchCount = 5;
+const matchCountLimit = 5;
 
 let previousName = "(Search for player)";
 let previousMatchCount = defaultMatchCount;
@@ -13,8 +13,8 @@ let uuid = "";
 
 let versusUUID = "";
 let versusToggle = false;
-let versusIGN = "(Search for player2)"
-let previousVersusIGN = "(Search for player2)";
+let versusIGN = "(Search for player 2)"
+let previousVersusIGN = "(Search for player 2)";
 
 let versus_gamemode2 = 2;
 
@@ -155,8 +155,12 @@ const NameplateLoading = document.getElementById("nameplateLoading");
 
 const configUI = document.getElementById("configUI");
 
+const GamemodeDiv = document.getElementById("gamemodeDiv");
+
 const RankedButton = document.getElementById("Ranked");
 const PrivateButton = document.getElementById("Private");
+
+const MatchCountChanger = document.getElementById("matchCountChanger");
 
 const MatchCount = document.getElementById("MatchCount");
 const MatchCountSlider = document.getElementById("matchCountSlider");
@@ -426,6 +430,20 @@ function calculateDiff(time1, time2, label) {
     } else {
         label.textContent = " (-" + converted + ")";
         label.style.color = "lime";
+    }
+}
+
+function configureInVersusMode() {
+    if (versusToggle) {
+        versusToggle = false;
+        VersusSearch.style.display = "none";
+        VersusButton.style.backgroundColor = "#202F3D";
+        const text = PlayerName.innerText.trim();
+        if (text) {
+            history.pushState({}, '', '/' + encodeURIComponent(text));
+        } else {
+            history.pushState({}, '', '/');
+        }
     }
 }
 
@@ -1241,6 +1259,7 @@ RankedButton.addEventListener("click", function() {
         RankedButton.style.backgroundColor = "#507699";
         PrivateButton.style.backgroundColor = "#202F3D";
         gamemode = 2;
+        configureInVersusMode()
         call_Ranked_GetUserMatches_External();
     }
 })
@@ -1274,6 +1293,7 @@ PrivateButton.addEventListener("click", function() {
         PrivateButton.style.backgroundColor = "#507699";
         RankedButton.style.backgroundColor = "#202F3D";
         gamemode = 3;
+        configureInVersusMode()
         call_Ranked_GetUserMatches_External();
     }
 })
@@ -1365,24 +1385,28 @@ Versus_PrivateButton2.addEventListener("click", function() {
 
 // Match Count Slider
 MatchCount.addEventListener("blur", function() {
+    MatchCount.style.backgroundColor = "#18232e";
     let newText = this.textContent;
     if (parseInt(newText) == previousMatchCount) return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
-    } else if (parseInt(newText) > matchCountLimit) {
-        newText = "50";
+    } else if (parseInt(newText) >= matchCountLimit) {
+        newText = String(matchCountLimit);
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
     console.log(parseInt(newText));
     MatchCountSlider.value = parseInt(newText);
+    previousMatchCount = parseInt(newText);
     this.textContent = newText;
     matchCount = parseInt(newText);
+    configureInVersusMode()
     call_Ranked_GetUserMatches_External();
 })
 
 MatchCount.addEventListener("focus", function() {
+    MatchCount.style.backgroundColor = "#507699";
     const range = document.createRange();
     range.selectNodeContents(MatchCount);
     const sel = window.getSelection();
@@ -1405,12 +1429,14 @@ MatchCountSlider.addEventListener("input", function() {
 MatchCountSlider.addEventListener("mouseup", function() {
     if (matchCountSlider.value == previousMatchCount) return;
     previousMatchCount = matchCountSlider.value;
+    configureInVersusMode()
     call_Ranked_GetUserMatches_External();
 })
 
 MatchCountSlider.addEventListener("touchend", function() {
     if (matchCountSlider.value == previousMatchCount) return;
     previousMatchCount = matchCountSlider.value;
+    configureInVersusMode()
     call_Ranked_GetUserMatches_External();
 })
 
@@ -1477,6 +1503,7 @@ Versus_PlayerName2.addEventListener("focus", function() {
 
 // Versus Match Count Sliders
 Versus_MatchCount1.addEventListener("blur", function() {
+    Versus_MatchCount1.style.backgroundColor = "#18232e";
     let newText = this.textContent;
     if (parseInt(newText) == versus_previousMatchCount1) return;
     if (/^\d+$/.test(newText) == false) {
@@ -1496,6 +1523,7 @@ Versus_MatchCount1.addEventListener("blur", function() {
 })
 
 Versus_MatchCount1.addEventListener("focus", function() {
+    Versus_MatchCount1.style.backgroundColor = "#507699";
     const range = document.createRange();
     range.selectNodeContents(Versus_MatchCount1);
     const sel = window.getSelection();
@@ -1528,6 +1556,7 @@ Versus_MatchCountSlider1.addEventListener("touchend", function() {
 })
 
 Versus_MatchCount2.addEventListener("blur", function() {
+    Versus_MatchCount2.style.backgroundColor = "#18232e";
     let newText = this.textContent;
     if (parseInt(newText) == versus_previousMatchCount2) return;
     if (/^\d+$/.test(newText) == false) {
@@ -1547,6 +1576,7 @@ Versus_MatchCount2.addEventListener("blur", function() {
 })
 
 Versus_MatchCount2.addEventListener("focus", function() {
+    Versus_MatchCount2.style.backgroundColor = "#507699";
     const range = document.createRange();
     range.selectNodeContents(Versus_MatchCount2);
     const sel = window.getSelection();
@@ -1623,21 +1653,21 @@ VersusSearchText.addEventListener("focus", function() {
 
 VersusSearchText.addEventListener("blur", function() {
     const text = VersusSearchText.innerText.trim();
+    if (versusIGN == "(Search for player 2)") return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
         Nameplate.style.display = "none";
         configUI.style.display = "none";
         VersusSearch.style.display = "none";
 
-        matchCount = defaultMatchCount;
         versus_matchCount2 = defaultMatchCount;
-        versus_previousMatchCount1 = defaultMatchCount;
+        versus_previousMatchCount1 = matchCount;
         versus_previousMatchCount2 = defaultMatchCount;
 
         Versus_MatchCount1.textContent = matchCount;
-        Versus_MatchCount2.textContent = matchCount;
+        Versus_MatchCount2.textContent = versus_matchCount2;
         Versus_MatchCountSlider1.value = matchCount;
-        Versus_MatchCountSlider2.value = matchCount;
+        Versus_MatchCountSlider2.value = versus_matchCount2;
 
         versus_gamemode1 = gamemode;
         versus_gamemode2 = gamemode;

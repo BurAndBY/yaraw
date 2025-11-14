@@ -58,6 +58,11 @@ h3 {
     width: 450px;
     height: 500px;
 }
+.matchCount {
+    background-color: #18232e;
+    border-radius: 5px;
+    padding: 4px;
+}
 ul {
   list-style-type: none;
   margin: 0;
