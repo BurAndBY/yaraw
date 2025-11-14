@@ -153,6 +153,8 @@ const PlayerModelContainer = document.getElementById("playerModelContainer");
 const PlayerInfoContainer = document.getElementById("playerInfoContainer");
 const NameplateLoading = document.getElementById("nameplateLoading");
 
+const HomeButton = document.getElementById("home");
+
 const configUI = document.getElementById("configUI");
 
 const GamemodeDiv = document.getElementById("gamemodeDiv");
@@ -448,6 +450,10 @@ function configureInVersusMode() {
 }
 
 async function versus1ChangeStats() {
+    randomiseParrot(0);
+
+    HomeButton.style.display = "none";
+
     Versus_NameplatePlayer1.style.display = "none";
     Versus_NameplatePlayer2.style.display = "none";
 
@@ -462,6 +468,9 @@ async function versus1ChangeStats() {
 
     await call_Ranked_GetMatches_Internal();
     versus_display_info();
+
+    HomeButton.style.display = "block";
+
     Versus_NameplatePlayer1.style.display = "block";
     Versus_NameplatePlayer2.style.display = "block";
 
@@ -1136,6 +1145,10 @@ function versus_display_info() {
 
 async function versus_call_Ranked_GetUserMatches() {
     try {
+        randomiseParrot(0);
+
+        HomeButton.style.display = "none";
+
         Versus_NameplatePlayer1.style.display = "none";
         Versus_NameplatePlayer2.style.display = "none";
 
@@ -1226,6 +1239,8 @@ async function versus_call_Ranked_GetUserMatches() {
         }
 
         await Promise.all(promises);
+
+        HomeButton.style.display = "block";
 
         Versus_NameplatePlayer1.style.display = "block";
         Versus_NameplatePlayer2.style.display = "block";
@@ -1474,27 +1489,42 @@ MatchCountSlider.addEventListener("input", function() {
 })
 
 MatchCountSlider.addEventListener("mouseup", function() {
-    if (MatchCountSlider.value == previousMatchCount) return;
     if (MatchCountSlider.value >= matchCountLimit) {
         MatchCountSlider.value = matchCountLimit;
         matchCount = matchCountLimit;
         MatchCount.textContent = String(matchCountLimit);
     }
+    if (MatchCountSlider.value == previousMatchCount) return;
     previousMatchCount = MatchCountSlider.value;
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
 })
 
 MatchCountSlider.addEventListener("touchend", function() {
-    if (MatchCountSlider.value == previousMatchCount) return;
     if (MatchCountSlider.value >= matchCountLimit) {
         MatchCountSlider.value = matchCountLimit;
         matchCount = matchCountLimit;
         MatchCount.textContent = String(matchCountLimit);
     }
+    if (MatchCountSlider.value == previousMatchCount) return;
     previousMatchCount = matchCountSlider.value;
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
+})
+
+// Home Button
+HomeButton.addEventListener("mouseover", function() {
+    HomeButton.style.backgroundColor = "#354e66";
+})
+
+HomeButton.addEventListener("mouseout", function() {
+    HomeButton.style.backgroundColor = "#18232e";
+})
+
+HomeButton.addEventListener("click", function() {
+    HomeButton.style.backgroundColor = "#507699";
+    history.pushState({}, '', '/');
+
 })
 
 // Versus Nameplate
@@ -1601,12 +1631,22 @@ Versus_MatchCountSlider1.addEventListener("input", function() {
 })
 
 Versus_MatchCountSlider1.addEventListener("mouseup", function() {
+    if (Versus_MatchCountSlider1.value >= matchCountLimit) {
+        Versus_MatchCountSlider1.value = matchCountLimit;
+        matchCount = matchCountLimit;
+        Versus_MatchCount1.textContent = String(matchCountLimit);
+    }
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
     versus1ChangeStats();
 })
 
 Versus_MatchCountSlider1.addEventListener("touchend", function() {
+    if (Versus_MatchCountSlider1.value >= matchCountLimit) {
+        Versus_MatchCountSlider1.value = matchCountLimit;
+        matchCount = matchCountLimit;
+        Versus_MatchCount1.textContent = String(matchCountLimit);
+    }
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
     versus1ChangeStats();
@@ -1654,12 +1694,22 @@ Versus_MatchCountSlider2.addEventListener("input", function() {
 })
 
 Versus_MatchCountSlider2.addEventListener("mouseup", function() {
+    if (Versus_MatchCountSlider2.value >= matchCountLimit) {
+        Versus_MatchCountSlider2.value = matchCountLimit;
+        versus_matchCount2 = matchCountLimit;
+        Versus_MatchCount2.textContent = String(matchCountLimit);
+    }
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
     versus_call_Ranked_GetUserMatches();
 })
 
 Versus_MatchCountSlider2.addEventListener("touchend", function() {
+    if (Versus_MatchCountSlider2.value >= matchCountLimit) {
+        Versus_MatchCountSlider2.value = matchCountLimit;
+        versus_matchCount2 = matchCountLimit;
+        Versus_MatchCount2.textContent = String(matchCountLimit);
+    }
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
     versus_call_Ranked_GetUserMatches();
@@ -1754,6 +1804,8 @@ VersusSearchText.addEventListener("blur", async function() {
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
         versusIGN = text;
         await versus_call_Ranked_GetUserMatches();
+
+        HomeButton.style.display = "block";
 
         Versus_NameplatePlayer1.style.display = "block";
         Versus_NameplatePlayer2.style.display = "block";
