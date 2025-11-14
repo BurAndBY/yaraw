@@ -1,9 +1,12 @@
 // Variables
 let gamemode = 2; // 2 = ranked, 3 = private
 
+const defaultMatchCount = 20;
+const matchCountLimit = 50;
+
 let previousName = "(Search for player)";
-let previousMatchCount = 20;
-let matchCount = 20;
+let previousMatchCount = defaultMatchCount;
+let matchCount = defaultMatchCount;
 
 let ign = "(Search for player)";
 let uuid = "";
@@ -11,14 +14,13 @@ let uuid = "";
 let versusUUID = "";
 let versusToggle = false;
 let versusIGN = "(Search for player2)"
+let previousVersusIGN = "(Search for player2)";
 
 let versus_gamemode2 = 2;
 
-let versus_matchCount2 = 20;
-let versus_previousMatchCount1 = 20;
-let versus_previousMatchCount2 = 20;
-
-const matchCountLimit = 50;
+let versus_matchCount2 = defaultMatchCount;
+let versus_previousMatchCount1 = defaultMatchCount;
+let versus_previousMatchCount2 = defaultMatchCount;
 
 const parrots = [
     "gifs/BlueParrotDancing.gif",
@@ -413,7 +415,9 @@ function calculateDiff(time1, time2, label) {
     converted = msToMinSecs(result);
 
     if (converted == "N/A") {
-        label.textContent = " (-0:00)";
+        label.textContent = " (N/A)";
+        label.style.color = "orange";
+        return;
     }
 
     if (time1 > time2) {
@@ -427,7 +431,7 @@ function calculateDiff(time1, time2, label) {
 
 async function versus1ChangeStats() {
     await call_Ranked_GetMatches_Internal();
-    versus_call_Ranked_GetUserMatches();
+    versus_display_info();
 }
 
 // Calling APIs
@@ -710,7 +714,7 @@ async function call_Ranked_GetMatches_Internal() {
     const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount);
     const statusCode = response.status;
 
-    console.log("INT");
+    console.log("INT: " + ign);
 
     promises = [];
 
@@ -939,6 +943,8 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
             versusUUID = data["data"]["uuid"];
             versusIGN = data["data"]["nickname"];
             PageTitle.textContent = ign + " vs " + data["data"]["nickname"] + " | Ranked Analysis";
+        } else {
+            uuid = data["data"]["uuid"];
         }
 
         if (pb == null) versusPbLabel.textContent = "PB: N/A";
@@ -947,11 +953,150 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
     }
 }
 
+function versus_display_info() {
+    Versus_OverworldSplit1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
+    Versus_NetherSplit1.textContent = msToMinSecs(timings["nether"]["splits"][0] / timings["nether"]["splits"][1]) + " (" + timings["nether"]["splits"][1] + ")";
+    Versus_BastionSplit1.textContent = msToMinSecs(timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1]) + " (" + timings["bastion"]["splits"][1] + ")";
+    Versus_FortressSplit1.textContent = msToMinSecs(timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1]) + " (" + timings["fortress"]["splits"][1] + ")";
+    Versus_BlindSplit1.textContent = msToMinSecs(timings["blind"]["splits"][0] / timings["blind"]["splits"][1]) + " (" + timings["blind"]["splits"][1] + ")";
+    Versus_StrongholdSplit1.textContent = msToMinSecs(timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1]) + " (" + timings["stronghold"]["splits"][1] + ")";
+    Versus_EndSplit1.textContent = msToMinSecs(timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (" + timings["end"]["splits"][1] + ")";
+    Versus_CompletionSplits1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (Splits)";
+        
+    Versus_OverworldDeaths1.textContent = percentageCalc(timings["overworld"]["deaths"], timings["overworld"]["splits"][1]);
+    Versus_NetherDeaths1.textContent = percentageCalc(timings["nether"]["deaths"], timings["nether"]["timestamps"][1]);
+    Versus_BastionDeaths1.textContent = percentageCalc(timings["bastion"]["deaths"], timings["bastion"]["timestamps"][1]);
+    Versus_FortressDeaths1.textContent = percentageCalc(timings["fortress"]["deaths"], timings["fortress"]["timestamps"][1]);
+    Versus_BlindDeaths1.textContent = percentageCalc(timings["blind"]["deaths"], timings["blind"]["timestamps"][1]);
+    Versus_StrongholdDeaths1.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
+    Versus_EndDeaths1.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
+
+    Versus_NetherTimestamp1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
+    Versus_BastionTimestamp1.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
+    Versus_FortressTimestamp1.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
+    Versus_BlindTimestamp1.textContent = msToMinSecs(timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1]) + " (" + timings["blind"]["timestamps"][1] + ")";
+    Versus_StrongholdTimestamp1.textContent = msToMinSecs(timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1]) + " (" + timings["stronghold"]["timestamps"][1] + ")";
+    Versus_EndTimestamp1.textContent = msToMinSecs(timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1]) + " (" + timings["end"]["timestamps"][1] + ")";
+    Versus_AverageCompletion1.textContent = msToMinSecs(timings["completions"][0] / timings["completions"][1]) + " (" + timings["completions"][1] + ")";
+        
+    Versus_BuriedTreasure1.textContent = msToMinSecs(overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1]) + " (" + overworlds["BURIED_TREASURE"][1] + ")";
+    Versus_Village1.textContent = msToMinSecs(overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1]) + " (" + overworlds["VILLAGE"][1] + ")";
+    Versus_Shipwreck1.textContent = msToMinSecs(overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1]) + " (" + overworlds["SHIPWRECK"][1] + ")";
+    Versus_DesertTemple1.textContent = msToMinSecs(overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1]) + " (" + overworlds["DESERT_TEMPLE"][1] + ")";
+    Versus_RuinedPortal1.textContent = msToMinSecs(overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1]) + " (" + overworlds["RUINED_PORTAL"][1] + ")";
+        
+    Versus_Bridge1.textContent = msToMinSecs(bastions["BRIDGE"][0] / bastions["BRIDGE"][1]) + " (" + bastions["BRIDGE"][1] + ")";
+    Versus_Housing1.textContent = msToMinSecs(bastions["HOUSING"][0] / bastions["HOUSING"][1]) + " (" + bastions["HOUSING"][1] + ")";
+    Versus_Stables1.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
+    Versus_Treasure1.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
+
+    Versus_BridgeDeaths1.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
+    Versus_HousingDeaths1.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
+    Versus_StablesDeaths1.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
+    Versus_TreasureDeaths1.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
+        
+    Versus_OverworldSplit2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
+    Versus_NetherSplit2.textContent = msToMinSecs(versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1]) + " (" + versus_timings2["nether"]["splits"][1] + ")";
+    Versus_BastionSplit2.textContent = msToMinSecs(versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1]) + " (" + versus_timings2["bastion"]["splits"][1] + ")";
+    Versus_FortressSplit2.textContent = msToMinSecs(versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1]) + " (" + versus_timings2["fortress"]["splits"][1] + ")";
+    Versus_BlindSplit2.textContent = msToMinSecs(versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1]) + " (" + versus_timings2["blind"]["splits"][1] + ")";
+    Versus_StrongholdSplit2.textContent = msToMinSecs(versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1]) + " (" + versus_timings2["stronghold"]["splits"][1] + ")";
+    Versus_EndSplit2.textContent = msToMinSecs(versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1]) + " (" + versus_timings2["end"]["splits"][1] + ")";
+    Versus_CompletionSplits2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1] + versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1] + versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1] + versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1] + versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1] + versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1] + versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1]) + " (Splits)";
+        
+    Versus_OverworldDeaths2.textContent = percentageCalc(versus_timings2["overworld"]["deaths"], versus_timings2["overworld"]["splits"][1]);
+    Versus_NetherDeaths2.textContent = percentageCalc(versus_timings2["nether"]["deaths"], versus_timings2["nether"]["timestamps"][1]);
+    Versus_BastionDeaths2.textContent = percentageCalc(versus_timings2["bastion"]["deaths"], versus_timings2["bastion"]["timestamps"][1]);
+    Versus_FortressDeaths2.textContent = percentageCalc(versus_timings2["fortress"]["deaths"], versus_timings2["fortress"]["timestamps"][1]);
+    Versus_BlindDeaths2.textContent = percentageCalc(versus_timings2["blind"]["deaths"], versus_timings2["blind"]["timestamps"][1]);
+    Versus_StrongholdDeaths2.textContent = percentageCalc(versus_timings2["stronghold"]["deaths"], versus_timings2["stronghold"]["timestamps"][1]);
+    Versus_EndDeaths2.textContent = percentageCalc(versus_timings2["end"]["deaths"], versus_timings2["end"]["timestamps"][1]);
+
+    Versus_NetherTimestamp2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
+    Versus_BastionTimestamp2.textContent = msToMinSecs(versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1]) + " (" + versus_timings2["bastion"]["timestamps"][1] + ")";
+    Versus_FortressTimestamp2.textContent = msToMinSecs(versus_timings2["fortress"]["timestamps"][0] / versus_timings2["fortress"]["timestamps"][1]) + " (" + versus_timings2["fortress"]["timestamps"][1] + ")";
+    Versus_BlindTimestamp2.textContent = msToMinSecs(versus_timings2["blind"]["timestamps"][0] / versus_timings2["blind"]["timestamps"][1]) + " (" + versus_timings2["blind"]["timestamps"][1] + ")";
+    Versus_StrongholdTimestamp2.textContent = msToMinSecs(versus_timings2["stronghold"]["timestamps"][0] / versus_timings2["stronghold"]["timestamps"][1]) + " (" + versus_timings2["stronghold"]["timestamps"][1] + ")";
+    Versus_EndTimestamp2.textContent = msToMinSecs(versus_timings2["end"]["timestamps"][0] / versus_timings2["end"]["timestamps"][1]) + " (" + versus_timings2["end"]["timestamps"][1] + ")";
+    Versus_AverageCompletion2.textContent = msToMinSecs(versus_timings2["completions"][0] / versus_timings2["completions"][1]) + " (" + versus_timings2["completions"][1] + ")";
+        
+    Versus_BuriedTreasure2.textContent = msToMinSecs(versus_overworlds2["BURIED_TREASURE"][0] / versus_overworlds2["BURIED_TREASURE"][1]) + " (" + versus_overworlds2["BURIED_TREASURE"][1] + ")";
+    Versus_Village2.textContent = msToMinSecs(versus_overworlds2["VILLAGE"][0] / versus_overworlds2["VILLAGE"][1]) + " (" + versus_overworlds2["VILLAGE"][1] + ")";
+    Versus_Shipwreck2.textContent = msToMinSecs(versus_overworlds2["SHIPWRECK"][0] / versus_overworlds2["SHIPWRECK"][1]) + " (" + versus_overworlds2["SHIPWRECK"][1] + ")";
+    Versus_DesertTemple2.textContent = msToMinSecs(versus_overworlds2["DESERT_TEMPLE"][0] / versus_overworlds2["DESERT_TEMPLE"][1]) + " (" + versus_overworlds2["DESERT_TEMPLE"][1] + ")";
+    Versus_RuinedPortal2.textContent = msToMinSecs(versus_overworlds2["RUINED_PORTAL"][0] / versus_overworlds2["RUINED_PORTAL"][1]) + " (" + versus_overworlds2["RUINED_PORTAL"][1] + ")";
+        
+    Versus_Bridge2.textContent = msToMinSecs(versus_bastions2["BRIDGE"][0] / versus_bastions2["BRIDGE"][1]) + " (" + versus_bastions2["BRIDGE"][1] + ")";
+    Versus_Housing2.textContent = msToMinSecs(versus_bastions2["HOUSING"][0] / versus_bastions2["HOUSING"][1]) + " (" + versus_bastions2["HOUSING"][1] + ")";
+    Versus_Stables2.textContent = msToMinSecs(versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1]) + " (" + versus_bastions2["STABLES"][1] + ")";
+    Versus_Treasure2.textContent = msToMinSecs(versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1]) + " (" + versus_bastions2["TREASURE"][1] + ")";
+
+    Versus_BridgeDeaths2.textContent = percentageCalc(versus_bastions2["BRIDGE"][2], versus_bastions2["BRIDGE"][1]);
+    Versus_HousingDeaths2.textContent = percentageCalc(versus_bastions2["HOUSING"][2], versus_bastions2["HOUSING"][1]);
+    Versus_StablesDeaths2.textContent = percentageCalc(versus_bastions2["STABLES"][2], versus_bastions2["STABLES"][1]);
+    Versus_TreasureDeaths2.textContent = percentageCalc(versus_bastions2["TREASURE"][2], versus_bastions2["TREASURE"][1]);
+
+    calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], Versus_OverworldSplitDiff1);
+    calculateDiff(timings["nether"]["splits"][0] / timings["nether"]["splits"][1], versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1], Versus_NetherSplitDiff1);
+    calculateDiff(timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1], versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1], Versus_BastionSplitDiff1);
+    calculateDiff(timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1], versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1], Versus_FortressSplitDiff1);
+    calculateDiff(timings["blind"]["splits"][0] / timings["blind"]["splits"][1], versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1], Versus_BlindSplitDiff1);
+    calculateDiff(timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1], versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1], Versus_StrongholdSplitDiff1);
+    calculateDiff(timings["end"]["splits"][0] / timings["end"]["splits"][1], versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], Versus_EndSplitDiff1);
+    calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1] + versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1] + versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1] + versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1] + versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1] + versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1] + versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], Versus_CompletionSplitDiff1);
+
+    calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], Versus_NetherEnterDiff1);
+    calculateDiff(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1], versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1], Versus_BastionEnterDiff1);
+    calculateDiff(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1], versus_timings2["fortress"]["timestamps"][0] / versus_timings2["fortress"]["timestamps"][1], Versus_FortressEnterDiff1);
+    calculateDiff(timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1], versus_timings2["blind"]["timestamps"][0] / versus_timings2["blind"]["timestamps"][1], Versus_BlindEnterDiff1);
+    calculateDiff(timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1], versus_timings2["stronghold"]["timestamps"][0] / versus_timings2["stronghold"]["timestamps"][1], Versus_StrongholdEnterDiff1);
+    calculateDiff(timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1], versus_timings2["end"]["timestamps"][0] / versus_timings2["end"]["timestamps"][1], Versus_EndEnterDiff1);
+    calculateDiff(timings["completions"][0] / timings["completions"][1], versus_timings2["completions"][0] / versus_timings2["completions"][1], Versus_AvgCompletionDiff1);
+
+    calculateDiff(overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1], versus_overworlds2["BURIED_TREASURE"][0] / versus_overworlds2["BURIED_TREASURE"][1], Versus_BuriedTreasureDiff1);
+    calculateDiff(overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1], versus_overworlds2["VILLAGE"][0] / versus_overworlds2["VILLAGE"][1], Versus_VillageDiff1);
+    calculateDiff(overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1], versus_overworlds2["SHIPWRECK"][0] / versus_overworlds2["SHIPWRECK"][1], Versus_ShipwreckDiff1);
+    calculateDiff(overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1], versus_overworlds2["DESERT_TEMPLE"][0] / versus_overworlds2["DESERT_TEMPLE"][1], Versus_DesertTempleDiff1);
+    calculateDiff(overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1], versus_overworlds2["RUINED_PORTAL"][0] / versus_overworlds2["RUINED_PORTAL"][1], Versus_RuinedPortalDiff1);
+
+    calculateDiff(bastions["BRIDGE"][0] / bastions["BRIDGE"][1], versus_bastions2["BRIDGE"][0] / versus_bastions2["BRIDGE"][1], Versus_BridgeDiff1);
+    calculateDiff(bastions["HOUSING"][0] / bastions["HOUSING"][1], versus_bastions2["HOUSING"][0] / versus_bastions2["HOUSING"][1], Versus_HousingDiff1);
+    calculateDiff(bastions["STABLES"][0] / bastions["STABLES"][1], versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1], Versus_StablesDiff1);
+    calculateDiff(bastions["TREASURE"][0] / bastions["TREASURE"][1], versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1], Versus_TreasureDiff1);
+
+    calculateDiff(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], Versus_OverworldSplitDiff2);
+    calculateDiff(versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1], timings["nether"]["splits"][0] / timings["nether"]["splits"][1], Versus_NetherSplitDiff2);
+    calculateDiff(versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1], timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1], Versus_BastionSplitDiff2);
+    calculateDiff(versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1], timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1], Versus_FortressSplitDiff2);
+    calculateDiff(versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1], timings["blind"]["splits"][0] / timings["blind"]["splits"][1], Versus_BlindSplitDiff2);
+    calculateDiff(versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1], timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1], Versus_StrongholdSplitDiff2);
+    calculateDiff(versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], timings["end"]["splits"][0] / timings["end"]["splits"][1], Versus_EndSplitDiff2);
+    calculateDiff(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1] + versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1] + versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1] + versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1] + versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1] + versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1] + versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1], Versus_CompletionSplitDiff2);
+
+    calculateDiff(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], Versus_NetherEnterDiff2);
+    calculateDiff(versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1], timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1], Versus_BastionEnterDiff2);
+    calculateDiff(versus_timings2["fortress"]["timestamps"][0] / versus_timings2["fortress"]["timestamps"][1], timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1], Versus_FortressEnterDiff2);
+    calculateDiff(versus_timings2["blind"]["timestamps"][0] / versus_timings2["blind"]["timestamps"][1], timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1], Versus_BlindEnterDiff2);
+    calculateDiff(versus_timings2["stronghold"]["timestamps"][0] / versus_timings2["stronghold"]["timestamps"][1], timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1], Versus_StrongholdEnterDiff2);
+    calculateDiff(versus_timings2["end"]["timestamps"][0] / versus_timings2["end"]["timestamps"][1], timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1], Versus_EndEnterDiff2);
+    calculateDiff(versus_timings2["completions"][0] / versus_timings2["completions"][1], timings["completions"][0] / timings["completions"][1], Versus_AvgCompletionDiff2);
+
+    calculateDiff(versus_overworlds2["BURIED_TREASURE"][0] / versus_overworlds2["BURIED_TREASURE"][1], overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1], Versus_BuriedTreasureDiff2);
+    calculateDiff(versus_overworlds2["VILLAGE"][0] / versus_overworlds2["VILLAGE"][1], overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1], Versus_VillageDiff2);
+    calculateDiff(versus_overworlds2["SHIPWRECK"][0] / versus_overworlds2["SHIPWRECK"][1], overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1], Versus_ShipwreckDiff2);
+    calculateDiff(versus_overworlds2["DESERT_TEMPLE"][0] / versus_overworlds2["DESERT_TEMPLE"][1], overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1], Versus_DesertTempleDiff2);
+    calculateDiff(versus_overworlds2["RUINED_PORTAL"][0] / versus_overworlds2["RUINED_PORTAL"][1], overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1], Versus_RuinedPortalDiff2);
+
+    calculateDiff(versus_bastions2["BRIDGE"][0] / versus_bastions2["BRIDGE"][1], bastions["BRIDGE"][0] / bastions["BRIDGE"][1], Versus_BridgeDiff2);
+    calculateDiff(versus_bastions2["HOUSING"][0] / versus_bastions2["HOUSING"][1], bastions["HOUSING"][0] / bastions["HOUSING"][1], Versus_HousingDiff2);
+    calculateDiff(versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1], bastions["STABLES"][0] / bastions["STABLES"][1], Versus_StablesDiff2);
+    calculateDiff(versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1], bastions["TREASURE"][0] / bastions["TREASURE"][1], Versus_TreasureDiff2);
+}
+
 async function versus_call_Ranked_GetUserMatches() {
     try {
         const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2);
         const statusCode = response.status;
-        console.log("Versus");
 
         promises = [];
 
@@ -1029,143 +1174,7 @@ async function versus_call_Ranked_GetUserMatches() {
 
         await Promise.all(promises);
 
-        Versus_OverworldSplit1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
-        Versus_NetherSplit1.textContent = msToMinSecs(timings["nether"]["splits"][0] / timings["nether"]["splits"][1]) + " (" + timings["nether"]["splits"][1] + ")";
-        Versus_BastionSplit1.textContent = msToMinSecs(timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1]) + " (" + timings["bastion"]["splits"][1] + ")";
-        Versus_FortressSplit1.textContent = msToMinSecs(timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1]) + " (" + timings["fortress"]["splits"][1] + ")";
-        Versus_BlindSplit1.textContent = msToMinSecs(timings["blind"]["splits"][0] / timings["blind"]["splits"][1]) + " (" + timings["blind"]["splits"][1] + ")";
-        Versus_StrongholdSplit1.textContent = msToMinSecs(timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1]) + " (" + timings["stronghold"]["splits"][1] + ")";
-        Versus_EndSplit1.textContent = msToMinSecs(timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (" + timings["end"]["splits"][1] + ")";
-        Versus_CompletionSplits1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1]) + " (Splits)";
-        
-        Versus_OverworldDeaths1.textContent = percentageCalc(timings["overworld"]["deaths"], timings["overworld"]["splits"][1]);
-        Versus_NetherDeaths1.textContent = percentageCalc(timings["nether"]["deaths"], timings["nether"]["timestamps"][1]);
-        Versus_BastionDeaths1.textContent = percentageCalc(timings["bastion"]["deaths"], timings["bastion"]["timestamps"][1]);
-        Versus_FortressDeaths1.textContent = percentageCalc(timings["fortress"]["deaths"], timings["fortress"]["timestamps"][1]);
-        Versus_BlindDeaths1.textContent = percentageCalc(timings["blind"]["deaths"], timings["blind"]["timestamps"][1]);
-        Versus_StrongholdDeaths1.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
-        Versus_EndDeaths1.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
-
-        Versus_NetherTimestamp1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
-        Versus_BastionTimestamp1.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
-        Versus_FortressTimestamp1.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
-        Versus_BlindTimestamp1.textContent = msToMinSecs(timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1]) + " (" + timings["blind"]["timestamps"][1] + ")";
-        Versus_StrongholdTimestamp1.textContent = msToMinSecs(timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1]) + " (" + timings["stronghold"]["timestamps"][1] + ")";
-        Versus_EndTimestamp1.textContent = msToMinSecs(timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1]) + " (" + timings["end"]["timestamps"][1] + ")";
-        Versus_AverageCompletion1.textContent = msToMinSecs(timings["completions"][0] / timings["completions"][1]) + " (" + timings["completions"][1] + ")";
-        
-        Versus_BuriedTreasure1.textContent = msToMinSecs(overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1]) + " (" + overworlds["BURIED_TREASURE"][1] + ")";
-        Versus_Village1.textContent = msToMinSecs(overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1]) + " (" + overworlds["VILLAGE"][1] + ")";
-        Versus_Shipwreck1.textContent = msToMinSecs(overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1]) + " (" + overworlds["SHIPWRECK"][1] + ")";
-        Versus_DesertTemple1.textContent = msToMinSecs(overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1]) + " (" + overworlds["DESERT_TEMPLE"][1] + ")";
-        Versus_RuinedPortal1.textContent = msToMinSecs(overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1]) + " (" + overworlds["RUINED_PORTAL"][1] + ")";
-        
-        Versus_Bridge1.textContent = msToMinSecs(bastions["BRIDGE"][0] / bastions["BRIDGE"][1]) + " (" + bastions["BRIDGE"][1] + ")";
-        Versus_Housing1.textContent = msToMinSecs(bastions["HOUSING"][0] / bastions["HOUSING"][1]) + " (" + bastions["HOUSING"][1] + ")";
-        Versus_Stables1.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
-        Versus_Treasure1.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
-
-        Versus_BridgeDeaths1.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
-        Versus_HousingDeaths1.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
-        Versus_StablesDeaths1.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
-        Versus_TreasureDeaths1.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
-        
-        Versus_OverworldSplit2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
-        Versus_NetherSplit2.textContent = msToMinSecs(versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1]) + " (" + versus_timings2["nether"]["splits"][1] + ")";
-        Versus_BastionSplit2.textContent = msToMinSecs(versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1]) + " (" + versus_timings2["bastion"]["splits"][1] + ")";
-        Versus_FortressSplit2.textContent = msToMinSecs(versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1]) + " (" + versus_timings2["fortress"]["splits"][1] + ")";
-        Versus_BlindSplit2.textContent = msToMinSecs(versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1]) + " (" + versus_timings2["blind"]["splits"][1] + ")";
-        Versus_StrongholdSplit2.textContent = msToMinSecs(versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1]) + " (" + versus_timings2["stronghold"]["splits"][1] + ")";
-        Versus_EndSplit2.textContent = msToMinSecs(versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1]) + " (" + versus_timings2["end"]["splits"][1] + ")";
-        Versus_CompletionSplits2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1] + versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1] + versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1] + versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1] + versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1] + versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1] + versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1]) + " (Splits)";
-        
-        Versus_OverworldDeaths2.textContent = percentageCalc(versus_timings2["overworld"]["deaths"], versus_timings2["overworld"]["splits"][1]);
-        Versus_NetherDeaths2.textContent = percentageCalc(versus_timings2["nether"]["deaths"], versus_timings2["nether"]["timestamps"][1]);
-        Versus_BastionDeaths2.textContent = percentageCalc(versus_timings2["bastion"]["deaths"], versus_timings2["bastion"]["timestamps"][1]);
-        Versus_FortressDeaths2.textContent = percentageCalc(versus_timings2["fortress"]["deaths"], versus_timings2["fortress"]["timestamps"][1]);
-        Versus_BlindDeaths2.textContent = percentageCalc(versus_timings2["blind"]["deaths"], versus_timings2["blind"]["timestamps"][1]);
-        Versus_StrongholdDeaths2.textContent = percentageCalc(versus_timings2["stronghold"]["deaths"], versus_timings2["stronghold"]["timestamps"][1]);
-        Versus_EndDeaths2.textContent = percentageCalc(versus_timings2["end"]["deaths"], versus_timings2["end"]["timestamps"][1]);
-
-        Versus_NetherTimestamp2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
-        Versus_BastionTimestamp2.textContent = msToMinSecs(versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1]) + " (" + versus_timings2["bastion"]["timestamps"][1] + ")";
-        Versus_FortressTimestamp2.textContent = msToMinSecs(versus_timings2["fortress"]["timestamps"][0] / versus_timings2["fortress"]["timestamps"][1]) + " (" + versus_timings2["fortress"]["timestamps"][1] + ")";
-        Versus_BlindTimestamp2.textContent = msToMinSecs(versus_timings2["blind"]["timestamps"][0] / versus_timings2["blind"]["timestamps"][1]) + " (" + versus_timings2["blind"]["timestamps"][1] + ")";
-        Versus_StrongholdTimestamp2.textContent = msToMinSecs(versus_timings2["stronghold"]["timestamps"][0] / versus_timings2["stronghold"]["timestamps"][1]) + " (" + versus_timings2["stronghold"]["timestamps"][1] + ")";
-        Versus_EndTimestamp2.textContent = msToMinSecs(versus_timings2["end"]["timestamps"][0] / versus_timings2["end"]["timestamps"][1]) + " (" + versus_timings2["end"]["timestamps"][1] + ")";
-        Versus_AverageCompletion2.textContent = msToMinSecs(versus_timings2["completions"][0] / versus_timings2["completions"][1]) + " (" + versus_timings2["completions"][1] + ")";
-        
-        Versus_BuriedTreasure2.textContent = msToMinSecs(versus_overworlds2["BURIED_TREASURE"][0] / versus_overworlds2["BURIED_TREASURE"][1]) + " (" + versus_overworlds2["BURIED_TREASURE"][1] + ")";
-        Versus_Village2.textContent = msToMinSecs(versus_overworlds2["VILLAGE"][0] / versus_overworlds2["VILLAGE"][1]) + " (" + versus_overworlds2["VILLAGE"][1] + ")";
-        Versus_Shipwreck2.textContent = msToMinSecs(versus_overworlds2["SHIPWRECK"][0] / versus_overworlds2["SHIPWRECK"][1]) + " (" + versus_overworlds2["SHIPWRECK"][1] + ")";
-        Versus_DesertTemple2.textContent = msToMinSecs(versus_overworlds2["DESERT_TEMPLE"][0] / versus_overworlds2["DESERT_TEMPLE"][1]) + " (" + versus_overworlds2["DESERT_TEMPLE"][1] + ")";
-        Versus_RuinedPortal2.textContent = msToMinSecs(versus_overworlds2["RUINED_PORTAL"][0] / versus_overworlds2["RUINED_PORTAL"][1]) + " (" + versus_overworlds2["RUINED_PORTAL"][1] + ")";
-        
-        Versus_Bridge2.textContent = msToMinSecs(versus_bastions2["BRIDGE"][0] / versus_bastions2["BRIDGE"][1]) + " (" + versus_bastions2["BRIDGE"][1] + ")";
-        Versus_Housing2.textContent = msToMinSecs(versus_bastions2["HOUSING"][0] / versus_bastions2["HOUSING"][1]) + " (" + versus_bastions2["HOUSING"][1] + ")";
-        Versus_Stables2.textContent = msToMinSecs(versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1]) + " (" + versus_bastions2["STABLES"][1] + ")";
-        Versus_Treasure2.textContent = msToMinSecs(versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1]) + " (" + versus_bastions2["TREASURE"][1] + ")";
-
-        Versus_BridgeDeaths2.textContent = percentageCalc(versus_bastions2["BRIDGE"][2], versus_bastions2["BRIDGE"][1]);
-        Versus_HousingDeaths2.textContent = percentageCalc(versus_bastions2["HOUSING"][2], versus_bastions2["HOUSING"][1]);
-        Versus_StablesDeaths2.textContent = percentageCalc(versus_bastions2["STABLES"][2], versus_bastions2["STABLES"][1]);
-        Versus_TreasureDeaths2.textContent = percentageCalc(versus_bastions2["TREASURE"][2], versus_bastions2["TREASURE"][1]);
-
-        calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], Versus_OverworldSplitDiff1);
-        calculateDiff(timings["nether"]["splits"][0] / timings["nether"]["splits"][1], versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1], Versus_NetherSplitDiff1);
-        calculateDiff(timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1], versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1], Versus_BastionSplitDiff1);
-        calculateDiff(timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1], versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1], Versus_FortressSplitDiff1);
-        calculateDiff(timings["blind"]["splits"][0] / timings["blind"]["splits"][1], versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1], Versus_BlindSplitDiff1);
-        calculateDiff(timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1], versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1], Versus_StrongholdSplitDiff1);
-        calculateDiff(timings["end"]["splits"][0] / timings["end"]["splits"][1], versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], Versus_EndSplitDiff1);
-        calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1] + versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1] + versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1] + versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1] + versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1] + versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1] + versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], Versus_CompletionSplitDiff1);
-
-        calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], Versus_NetherEnterDiff1);
-        calculateDiff(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1], versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1], Versus_BastionEnterDiff1);
-        calculateDiff(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1], versus_timings2["fortress"]["timestamps"][0] / versus_timings2["fortress"]["timestamps"][1], Versus_FortressEnterDiff1);
-        calculateDiff(timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1], versus_timings2["blind"]["timestamps"][0] / versus_timings2["blind"]["timestamps"][1], Versus_BlindEnterDiff1);
-        calculateDiff(timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1], versus_timings2["stronghold"]["timestamps"][0] / versus_timings2["stronghold"]["timestamps"][1], Versus_StrongholdEnterDiff1);
-        calculateDiff(timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1], versus_timings2["end"]["timestamps"][0] / versus_timings2["end"]["timestamps"][1], Versus_EndEnterDiff1);
-        calculateDiff(timings["completions"][0] / timings["completions"][1], versus_timings2["completions"][0] / versus_timings2["completions"][1], Versus_AvgCompletionDiff1);
-
-        calculateDiff(overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1], versus_overworlds2["BURIED_TREASURE"][0] / versus_overworlds2["BURIED_TREASURE"][1], Versus_BuriedTreasureDiff1);
-        calculateDiff(overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1], versus_overworlds2["VILLAGE"][0] / versus_overworlds2["VILLAGE"][1], Versus_VillageDiff1);
-        calculateDiff(overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1], versus_overworlds2["SHIPWRECK"][0] / versus_overworlds2["SHIPWRECK"][1], Versus_ShipwreckDiff1);
-        calculateDiff(overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1], versus_overworlds2["DESERT_TEMPLE"][0] / versus_overworlds2["DESERT_TEMPLE"][1], Versus_DesertTempleDiff1);
-        calculateDiff(overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1], versus_overworlds2["RUINED_PORTAL"][0] / versus_overworlds2["RUINED_PORTAL"][1], Versus_RuinedPortalDiff1);
-
-        calculateDiff(bastions["BRIDGE"][0] / bastions["BRIDGE"][1], versus_bastions2["BRIDGE"][0] / versus_bastions2["BRIDGE"][1], Versus_BridgeDiff1);
-        calculateDiff(bastions["HOUSING"][0] / bastions["HOUSING"][1], versus_bastions2["HOUSING"][0] / versus_bastions2["HOUSING"][1], Versus_HousingDiff1);
-        calculateDiff(bastions["STABLES"][0] / bastions["STABLES"][1], versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1], Versus_StablesDiff1);
-        calculateDiff(bastions["TREASURE"][0] / bastions["TREASURE"][1], versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1], Versus_TreasureDiff1);
-
-        calculateDiff(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], Versus_OverworldSplitDiff2);
-        calculateDiff(versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1], timings["nether"]["splits"][0] / timings["nether"]["splits"][1], Versus_NetherSplitDiff2);
-        calculateDiff(versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1], timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1], Versus_BastionSplitDiff2);
-        calculateDiff(versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1], timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1], Versus_FortressSplitDiff2);
-        calculateDiff(versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1], timings["blind"]["splits"][0] / timings["blind"]["splits"][1], Versus_BlindSplitDiff2);
-        calculateDiff(versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1], timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1], Versus_StrongholdSplitDiff2);
-        calculateDiff(versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], timings["end"]["splits"][0] / timings["end"]["splits"][1], Versus_EndSplitDiff2);
-        calculateDiff(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1] + versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1] + versus_timings2["bastion"]["splits"][0] / versus_timings2["bastion"]["splits"][1] + versus_timings2["fortress"]["splits"][0] / versus_timings2["fortress"]["splits"][1] + versus_timings2["blind"]["splits"][0] / versus_timings2["blind"]["splits"][1] + versus_timings2["stronghold"]["splits"][0] / versus_timings2["stronghold"]["splits"][1] + versus_timings2["end"]["splits"][0] / versus_timings2["end"]["splits"][1], timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1] + timings["nether"]["splits"][0] / timings["nether"]["splits"][1] + timings["bastion"]["splits"][0] / timings["bastion"]["splits"][1] + timings["fortress"]["splits"][0] / timings["fortress"]["splits"][1] + timings["blind"]["splits"][0] / timings["blind"]["splits"][1] + timings["stronghold"]["splits"][0] / timings["stronghold"]["splits"][1] + timings["end"]["splits"][0] / timings["end"]["splits"][1], Versus_CompletionSplitDiff2);
-
-        calculateDiff(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], Versus_NetherEnterDiff2);
-        calculateDiff(versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1], timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1], Versus_BastionEnterDiff2);
-        calculateDiff(versus_timings2["fortress"]["timestamps"][0] / versus_timings2["fortress"]["timestamps"][1], timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1], Versus_FortressEnterDiff2);
-        calculateDiff(versus_timings2["blind"]["timestamps"][0] / versus_timings2["blind"]["timestamps"][1], timings["blind"]["timestamps"][0] / timings["blind"]["timestamps"][1], Versus_BlindEnterDiff2);
-        calculateDiff(versus_timings2["stronghold"]["timestamps"][0] / versus_timings2["stronghold"]["timestamps"][1], timings["stronghold"]["timestamps"][0] / timings["stronghold"]["timestamps"][1], Versus_StrongholdEnterDiff2);
-        calculateDiff(versus_timings2["end"]["timestamps"][0] / versus_timings2["end"]["timestamps"][1], timings["end"]["timestamps"][0] / timings["end"]["timestamps"][1], Versus_EndEnterDiff2);
-        calculateDiff(versus_timings2["completions"][0] / versus_timings2["completions"][1], timings["completions"][0] / timings["completions"][1], Versus_AvgCompletionDiff2);
-
-        calculateDiff(versus_overworlds2["BURIED_TREASURE"][0] / versus_overworlds2["BURIED_TREASURE"][1], overworlds["BURIED_TREASURE"][0] / overworlds["BURIED_TREASURE"][1], Versus_BuriedTreasureDiff2);
-        calculateDiff(versus_overworlds2["VILLAGE"][0] / versus_overworlds2["VILLAGE"][1], overworlds["VILLAGE"][0] / overworlds["VILLAGE"][1], Versus_VillageDiff2);
-        calculateDiff(versus_overworlds2["SHIPWRECK"][0] / versus_overworlds2["SHIPWRECK"][1], overworlds["SHIPWRECK"][0] / overworlds["SHIPWRECK"][1], Versus_ShipwreckDiff2);
-        calculateDiff(versus_overworlds2["DESERT_TEMPLE"][0] / versus_overworlds2["DESERT_TEMPLE"][1], overworlds["DESERT_TEMPLE"][0] / overworlds["DESERT_TEMPLE"][1], Versus_DesertTempleDiff2);
-        calculateDiff(versus_overworlds2["RUINED_PORTAL"][0] / versus_overworlds2["RUINED_PORTAL"][1], overworlds["RUINED_PORTAL"][0] / overworlds["RUINED_PORTAL"][1], Versus_RuinedPortalDiff2);
-
-        calculateDiff(versus_bastions2["BRIDGE"][0] / versus_bastions2["BRIDGE"][1], bastions["BRIDGE"][0] / bastions["BRIDGE"][1], Versus_BridgeDiff2);
-        calculateDiff(versus_bastions2["HOUSING"][0] / versus_bastions2["HOUSING"][1], bastions["HOUSING"][0] / bastions["HOUSING"][1], Versus_HousingDiff2);
-        calculateDiff(versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1], bastions["STABLES"][0] / bastions["STABLES"][1], Versus_StablesDiff2);
-        calculateDiff(versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1], bastions["TREASURE"][0] / bastions["TREASURE"][1], Versus_TreasureDiff2);
+        versus_display_info();
     } catch (error) {
         console.error("ERROR IN 'versus_call_Ranked_GetUserMatches': ", error);
     }
@@ -1405,6 +1414,67 @@ MatchCountSlider.addEventListener("touchend", function() {
     call_Ranked_GetUserMatches_External();
 })
 
+// Versus Nameplate
+Versus_PlayerName1.addEventListener("blur", function() {
+    const text = Versus_PlayerName1.innerText.trim();
+    if (text == previousName) return;
+    if (text) {
+        history.pushState({}, '', '/versus?player1=' + text + "&player2=" + encodeURIComponent(versusIGN));
+    } else {
+        history.pushState({}, '', '/');
+    }
+    ign = text;
+    previousName = text;
+    Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
+    versus1ChangeStats();
+})
+
+Versus_PlayerName1.addEventListener("keydown", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        Versus_PlayerName1.blur();
+    }  
+})
+
+Versus_PlayerName1.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(Versus_PlayerName1);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+})
+
+Versus_PlayerName2.addEventListener("blur", function() {
+    const text = Versus_PlayerName2.innerText.trim();
+    if (text == previousVersusIGN) return;
+    if (text) {
+        history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
+    } else {
+        history.pushState({}, '', '/');
+    }
+    versusIGN = text;
+    previousVersusIGN = text;
+    Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
+    versus_call_Ranked_GetUserMatches();
+})
+
+Versus_PlayerName2.addEventListener("keydown", function(event) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+        Versus_PlayerName2.blur();
+    }  
+})
+
+Versus_PlayerName2.addEventListener("focus", function() {
+    const range = document.createRange();
+    range.selectNodeContents(Versus_PlayerName2);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+})
+
 // Versus Match Count Sliders
 Versus_MatchCount1.addEventListener("blur", function() {
     let newText = this.textContent;
@@ -1559,10 +1629,10 @@ VersusSearchText.addEventListener("blur", function() {
         configUI.style.display = "none";
         VersusSearch.style.display = "none";
 
-        matchCount = 20;
-        versus_matchCount2 = 20;
-        versus_previousMatchCount1 = 20;
-        versus_previousMatchCount2 = 20;
+        matchCount = defaultMatchCount;
+        versus_matchCount2 = defaultMatchCount;
+        versus_previousMatchCount1 = defaultMatchCount;
+        versus_previousMatchCount2 = defaultMatchCount;
 
         Versus_MatchCount1.textContent = matchCount;
         Versus_MatchCount2.textContent = matchCount;
