@@ -448,8 +448,31 @@ function configureInVersusMode() {
 }
 
 async function versus1ChangeStats() {
+    Versus_NameplatePlayer1.style.display = "none";
+    Versus_NameplatePlayer2.style.display = "none";
+
+    Versus_Config1.style.display = "none";
+    Versus_Config2.style.display = "none";
+
+    Versus_Data1.style.display = "none";
+    Versus_Data2.style.display = "none";
+
+    LoadingText.style.display = "block";
+    LoadingParrot.style.display = "inline";
+
     await call_Ranked_GetMatches_Internal();
     versus_display_info();
+    Versus_NameplatePlayer1.style.display = "block";
+    Versus_NameplatePlayer2.style.display = "block";
+
+    Versus_Config1.style.display = "inline-flex";
+    Versus_Config2.style.display = "inline-flex";
+
+    Versus_Data1.style.display = "block";
+    Versus_Data2.style.display = "block";
+
+    LoadingText.style.display = "none";
+    LoadingParrot.style.display = "none";
 }
 
 // Calling APIs
@@ -1113,6 +1136,18 @@ function versus_display_info() {
 
 async function versus_call_Ranked_GetUserMatches() {
     try {
+        Versus_NameplatePlayer1.style.display = "none";
+        Versus_NameplatePlayer2.style.display = "none";
+
+        Versus_Config1.style.display = "none";
+        Versus_Config2.style.display = "none";
+
+        Versus_Data1.style.display = "none";
+        Versus_Data2.style.display = "none";
+
+        LoadingText.style.display = "block";
+        LoadingParrot.style.display = "inline";
+
         const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2);
         const statusCode = response.status;
 
@@ -1191,6 +1226,18 @@ async function versus_call_Ranked_GetUserMatches() {
         }
 
         await Promise.all(promises);
+
+        Versus_NameplatePlayer1.style.display = "block";
+        Versus_NameplatePlayer2.style.display = "block";
+
+        Versus_Config1.style.display = "inline-flex";
+        Versus_Config2.style.display = "inline-flex";
+
+        Versus_Data1.style.display = "block";
+        Versus_Data2.style.display = "block";
+
+        LoadingText.style.display = "none";
+        LoadingParrot.style.display = "none";
 
         versus_display_info();
     } catch (error) {
@@ -1427,14 +1474,24 @@ MatchCountSlider.addEventListener("input", function() {
 })
 
 MatchCountSlider.addEventListener("mouseup", function() {
-    if (matchCountSlider.value == previousMatchCount) return;
-    previousMatchCount = matchCountSlider.value;
+    if (MatchCountSlider.value == previousMatchCount) return;
+    if (MatchCountSlider.value >= matchCountLimit) {
+        MatchCountSlider.value = matchCountLimit;
+        matchCount = matchCountLimit;
+        MatchCount.textContent = String(matchCountLimit);
+    }
+    previousMatchCount = MatchCountSlider.value;
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
 })
 
 MatchCountSlider.addEventListener("touchend", function() {
-    if (matchCountSlider.value == previousMatchCount) return;
+    if (MatchCountSlider.value == previousMatchCount) return;
+    if (MatchCountSlider.value >= matchCountLimit) {
+        MatchCountSlider.value = matchCountLimit;
+        matchCount = matchCountLimit;
+        MatchCount.textContent = String(matchCountLimit);
+    }
     previousMatchCount = matchCountSlider.value;
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
@@ -1651,11 +1708,18 @@ VersusSearchText.addEventListener("focus", function() {
     sel.addRange(range);
 })
 
-VersusSearchText.addEventListener("blur", function() {
+VersusSearchText.addEventListener("blur", async function() {
     const text = VersusSearchText.innerText.trim();
 
     if (text == "(Search for player 2)") return;
     if (text) {
+        randomiseParrot(0);
+        loadingText.textContent = "Loading . .";
+        loadingText.style.marginTop = "40%";
+
+        LoadingText.style.display = "block";
+        LoadingParrot.style.display = "inline";
+
         history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
         Nameplate.style.display = "none";
         configUI.style.display = "none";
@@ -1685,6 +1749,12 @@ VersusSearchText.addEventListener("blur", function() {
 
         Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
         Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+
+        call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
+        call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
+        versusIGN = text;
+        await versus_call_Ranked_GetUserMatches();
+
         Versus_NameplatePlayer1.style.display = "block";
         Versus_NameplatePlayer2.style.display = "block";
 
@@ -1694,10 +1764,8 @@ VersusSearchText.addEventListener("blur", function() {
         Versus_Data1.style.display = "block";
         Versus_Data2.style.display = "block";
 
-        call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
-        call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
-        versusIGN = text;
-        versus_call_Ranked_GetUserMatches();
+        LoadingText.style.display = "none";
+        LoadingParrot.style.display = "none";
     } else {
         history.pushState({}, '', '/' + ign);
     }
