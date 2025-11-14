@@ -1653,7 +1653,8 @@ VersusSearchText.addEventListener("focus", function() {
 
 VersusSearchText.addEventListener("blur", function() {
     const text = VersusSearchText.innerText.trim();
-    if (versusIGN == "(Search for player 2)") return;
+
+    if (text == "(Search for player 2)") return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
         Nameplate.style.display = "none";
