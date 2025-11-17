@@ -1,8 +1,8 @@
 // Variables
 let gamemode = 2; // 2 = ranked, 3 = private
 
-const defaultMatchCount = 5;
-const matchCountLimit = 5;
+const defaultMatchCount = 20;
+const matchCountLimit = 50;
 
 let previousName = "(Search for player)";
 let previousMatchCount = defaultMatchCount;
@@ -10,6 +10,8 @@ let matchCount = defaultMatchCount;
 
 let ign = "(Search for player)";
 let uuid = "";
+
+let originalIGN = "";
 
 let versusUUID = "";
 let versusToggle = false;
@@ -153,7 +155,7 @@ const PlayerModelContainer = document.getElementById("playerModelContainer");
 const PlayerInfoContainer = document.getElementById("playerInfoContainer");
 const NameplateLoading = document.getElementById("nameplateLoading");
 
-const HomeButton = document.getElementById("home");
+const BackButton = document.getElementById("back");
 
 const configUI = document.getElementById("configUI");
 
@@ -452,7 +454,7 @@ function configureInVersusMode() {
 async function versus1ChangeStats() {
     randomiseParrot(0);
 
-    HomeButton.style.display = "none";
+    BackButton.style.display = "none";
 
     Versus_NameplatePlayer1.style.display = "none";
     Versus_NameplatePlayer2.style.display = "none";
@@ -469,7 +471,7 @@ async function versus1ChangeStats() {
     await call_Ranked_GetMatches_Internal();
     versus_display_info();
 
-    HomeButton.style.display = "block";
+    BackButton.style.display = "block";
 
     Versus_NameplatePlayer1.style.display = "block";
     Versus_NameplatePlayer2.style.display = "block";
@@ -479,6 +481,70 @@ async function versus1ChangeStats() {
 
     Versus_Data1.style.display = "block";
     Versus_Data2.style.display = "block";
+
+    LoadingText.style.display = "none";
+    LoadingParrot.style.display = "none";
+}
+
+async function accessVersusByURL(player1, player2) {
+    randomiseParrot(0);
+    loadingText.textContent = "Loading . .";
+    loadingText.style.marginTop = "40%";
+
+    LoadingText.style.display = "block";
+    LoadingParrot.style.display = "inline";
+
+    Nameplate.style.display = "none";
+    configUI.style.display = "none";
+    VersusSearch.style.display = "none";
+
+    versus_matchCount2 = defaultMatchCount;
+    versus_previousMatchCount1 = matchCount;
+    versus_previousMatchCount2 = defaultMatchCount;
+
+    Versus_MatchCount1.textContent = matchCount;
+    Versus_MatchCount2.textContent = versus_matchCount2;
+    Versus_MatchCountSlider1.value = matchCount;
+    Versus_MatchCountSlider2.value = versus_matchCount2;
+
+    versus_gamemode1 = gamemode;
+    versus_gamemode2 = gamemode;
+
+    if (gamemode == 2) {
+        Versus_RankedButton1.style.backgroundColor = "#507699";
+        Versus_RankedButton2.style.backgroundColor = "#507699";
+    } else {
+        Versus_PrivateButton1.style.backgroundColor = "#507699";
+        Versus_PrivateButton2.style.backgroundColor = "#507699";
+    }
+
+    Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + player1 + "/face";
+    Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + player2 + "/face";
+
+    ign = player1;
+    originalIGN = player1;
+    versusIGN = player2;
+
+    call_Ranked_GetUser();
+    await call_Ranked_GetMatches_Internal();
+
+    call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, player1);
+    call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, player2);
+    
+    await versus_call_Ranked_GetUserMatches();
+
+    BackButton.style.display = "block";
+
+    Versus_NameplatePlayer1.style.display = "block";
+    Versus_NameplatePlayer2.style.display = "block";
+
+    Versus_Config1.style.display = "inline-flex";
+    Versus_Config2.style.display = "inline-flex";
+
+    Versus_Data1.style.display = "block";
+    Versus_Data2.style.display = "block";
+
+    dataSection.style.display = "none";
 
     LoadingText.style.display = "none";
     LoadingParrot.style.display = "none";
@@ -971,10 +1037,13 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
         if (statusCode != 200) {
             versusPbLabel.textContent = "PB: N/A";
             versusWinRateLabel.textContent = "W/L%: N/A";
+            BackButton.style.display = "block";
             switch (statusCode) {
                 case 400:
+                    loadingText.textContent = "Invalid IGN!";
                     break;
                 case 429:
+                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
                     break;
             }
             return;
@@ -1147,7 +1216,7 @@ async function versus_call_Ranked_GetUserMatches() {
     try {
         randomiseParrot(0);
 
-        HomeButton.style.display = "none";
+        BackButton.style.display = "none";
 
         Versus_NameplatePlayer1.style.display = "none";
         Versus_NameplatePlayer2.style.display = "none";
@@ -1240,7 +1309,7 @@ async function versus_call_Ranked_GetUserMatches() {
 
         await Promise.all(promises);
 
-        HomeButton.style.display = "block";
+        BackButton.style.display = "block";
 
         Versus_NameplatePlayer1.style.display = "block";
         Versus_NameplatePlayer2.style.display = "block";
@@ -1262,6 +1331,7 @@ async function versus_call_Ranked_GetUserMatches() {
 
 // On Page load (if in a subdirectory)
 const currentPath = window.location.pathname.slice(1);
+console.log(window.location.pathname.slice(1));
 
 if (currentPath && currentPath != "versus") {
     ign = currentPath;
@@ -1270,7 +1340,19 @@ if (currentPath && currentPath != "versus") {
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.textContent + "/face";
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches_External();
+} else if (currentPath == "versus") {
+    const searchQuery = window.location.search;
+    const keywords = searchQuery.split(/[ ?&=]+/);
+    console.log(keywords);
+
+    if (!searchQuery || keywords[1] != "player1" || keywords[3] != "player2") {
+        history.pushState({}, '', '/');
+        window.location.reload();
+    }
+
+    accessVersusByURL(keywords[2], keywords[4]);    
 } else {
+    history.pushState({}, '', '/');
     dataSection.style.display = "none";
     configUI.style.display = "none";
     LoadingText.style.display = "block";
@@ -1287,8 +1369,8 @@ PlayerName.addEventListener("blur", function() {
     } else {
         history.pushState({}, '', '/');
     }
-    ign = text;
-    previousName = text;
+    ign = encodeURIComponent(text);
+    previousName = encodeURIComponent(text);
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     dataSection.style.display = "block";
     versusToggle = false;
@@ -1513,18 +1595,18 @@ MatchCountSlider.addEventListener("touchend", function() {
 })
 
 // Home Button
-HomeButton.addEventListener("mouseover", function() {
-    HomeButton.style.backgroundColor = "#354e66";
+BackButton.addEventListener("mouseover", function() {
+    BackButton.style.backgroundColor = "#354e66";
 })
 
-HomeButton.addEventListener("mouseout", function() {
-    HomeButton.style.backgroundColor = "#18232e";
+BackButton.addEventListener("mouseout", function() {
+    BackButton.style.backgroundColor = "#18232e";
 })
 
-HomeButton.addEventListener("click", function() {
-    HomeButton.style.backgroundColor = "#507699";
-    history.pushState({}, '', '/');
-
+BackButton.addEventListener("click", function() {
+    BackButton.style.backgroundColor = "#507699";
+    history.pushState({}, '', '/' + originalIGN);
+    window.location.reload();
 })
 
 // Versus Nameplate
@@ -1539,6 +1621,7 @@ Versus_PlayerName1.addEventListener("blur", function() {
     ign = text;
     previousName = text;
     Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
     versus1ChangeStats();
 })
@@ -1569,6 +1652,7 @@ Versus_PlayerName2.addEventListener("blur", function() {
     versusIGN = text;
     previousVersusIGN = text;
     Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
     versus_call_Ranked_GetUserMatches();
 })
@@ -1760,6 +1844,7 @@ VersusSearchText.addEventListener("focus", function() {
 
 VersusSearchText.addEventListener("blur", async function() {
     const text = VersusSearchText.innerText.trim();
+    originalIGN = ign;
 
     if (text == "(Search for player 2)") return;
     if (text) {
@@ -1795,8 +1880,6 @@ VersusSearchText.addEventListener("blur", async function() {
             Versus_PrivateButton2.style.backgroundColor = "#507699";
         }
 
-        console.log(matchCount);
-
         Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
         Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
 
@@ -1805,7 +1888,7 @@ VersusSearchText.addEventListener("blur", async function() {
         versusIGN = text;
         await versus_call_Ranked_GetUserMatches();
 
-        HomeButton.style.display = "block";
+        BackButton.style.display = "block";
 
         Versus_NameplatePlayer1.style.display = "block";
         Versus_NameplatePlayer2.style.display = "block";
