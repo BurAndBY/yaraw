@@ -696,15 +696,7 @@ async function versus_call_Ranked_GetMatch2(matchID) {
 
         if (statusCode != 200) {
             PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
-            return;
+            
         }
 
         const data = await response.json();
@@ -1293,14 +1285,6 @@ async function versus_call_Ranked_GetUserMatches() {
 
         if (statusCode != 200) {
             PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
             return;
         }
 
