@@ -4,19 +4,19 @@ let gamemode = 2; // 2 = ranked, 3 = private
 const defaultMatchCount = 20;
 const matchCountLimit = 50;
 
-let previousName = "(Search for player)";
+let previousName = "";
 let previousMatchCount = defaultMatchCount;
 let matchCount = defaultMatchCount;
 
-let ign = "(Search for player)";
+let ign = "";
 let uuid = "";
 
 let originalIGN = "";
 
 let versusUUID = "";
 let versusToggle = false;
-let versusIGN = "(Search for player 2)"
-let previousVersusIGN = "(Search for player 2)";
+let versusIGN = ""
+let previousVersusIGN = "";
 
 let versus_gamemode2 = 2;
 
@@ -161,8 +161,8 @@ const configUI = document.getElementById("configUI");
 
 const GamemodeDiv = document.getElementById("gamemodeDiv");
 
-const RankedButton = document.getElementById("Ranked");
-const PrivateButton = document.getElementById("Private");
+const GamemodeButton = document.getElementById("gamemodeButton");
+const GamemodeContent = document.getElementById("gamemodeContent");
 
 const MatchCountChanger = document.getElementById("matchCountChanger");
 
@@ -1058,7 +1058,7 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
 
         versusWinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
-        versusPlayerName.textContent = data["data"]["nickname"];
+        versusPlayerName.value = data["data"]["nickname"];
 
         if (playerNum == 1) {
             versusUUID = data["data"]["uuid"];
@@ -1340,8 +1340,8 @@ console.log(window.location.pathname.slice(1));
 if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
-    PlayerName.textContent = decodeURIComponent(currentPath);
-    PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.textContent + "/face";
+    PlayerName.value = decodeURIComponent(currentPath);
+    PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.value + "/face";
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches_External();
 } else if (currentPath == "versus") {
@@ -1366,7 +1366,8 @@ if (currentPath && currentPath != "versus") {
 
 // Nameplate
 PlayerName.addEventListener("blur", function() {
-    const text = PlayerName.innerText.trim();
+    const text = PlayerName.value.trim();
+    console.log(text);
     if (text == previousName) return;
     if (text) {
         history.pushState({}, '', '/' + encodeURIComponent(text));
@@ -1388,62 +1389,31 @@ PlayerName.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         PlayerName.blur();
-    }  
-})
+    }
 
-PlayerName.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(PlayerName);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    if (event.key == "Escape") {
+        event.preventDefault();
+        playerName.value = "";
+        playerName.blur();
+    }
 })
 
 // Gamemode buttons
-RankedButton.style.backgroundColor = "#507699";
-
-RankedButton.addEventListener("click", function() {
-    if (gamemode == 3) {
-        RankedButton.style.backgroundColor = "#507699";
-        PrivateButton.style.backgroundColor = "#202F3D";
-        gamemode = 2;
-        configureInVersusMode()
-        call_Ranked_GetUserMatches_External();
-    }
+GamemodeButton.addEventListener("click", function() {
+    GamemodeButton.style.backgroundColor = "#507699";
+    gamemode = 2;
+    GamemodeContent.style.display = "block";
+    //configureInVersusMode()
+    //call_Ranked_GetUserMatches_External();
 })
 
-RankedButton.addEventListener("mouseover", function() {
-    if (gamemode == 3) {
-        RankedButton.style.backgroundColor = "#354e66";
-    }
+GamemodeButton.addEventListener("mouseover", function() {
+    GamemodeButton.style.backgroundColor = "#354e66";
 })
 
-RankedButton.addEventListener("mouseout", function() {
-    if (gamemode == 3) {
-        RankedButton.style.backgroundColor = "#202F3D";
-    }
-})
-
-PrivateButton.addEventListener("mouseover", function() {
-    if (gamemode == 2) {
-        PrivateButton.style.backgroundColor = "#354e66";
-    }
-})
-
-PrivateButton.addEventListener("mouseout", function() {
-    if (gamemode == 2) {
-        PrivateButton.style.backgroundColor = "#202F3D";
-    }
-})
-
-PrivateButton.addEventListener("click", function() {
-    if (gamemode == 2) {
-        PrivateButton.style.backgroundColor = "#507699";
-        RankedButton.style.backgroundColor = "#202F3D";
-        gamemode = 3;
-        configureInVersusMode()
-        call_Ranked_GetUserMatches_External();
-    }
+GamemodeButton.addEventListener("mouseout", function() {
+    GamemodeButton.style.backgroundColor = "#202F3D";
+    //GamemodeContent.style.display = "none";
 })
 
 // Versus Gamemode Buttons
@@ -1615,7 +1585,7 @@ BackButton.addEventListener("click", function() {
 
 // Versus Nameplate
 Versus_PlayerName1.addEventListener("blur", function() {
-    const text = Versus_PlayerName1.innerText.trim();
+    const text = Versus_PlayerName1.value.trim();
     if (text == previousName) return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + text + "&player2=" + encodeURIComponent(versusIGN));
@@ -1634,19 +1604,17 @@ Versus_PlayerName1.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         Versus_PlayerName1.blur();
-    }  
-})
+    }
 
-Versus_PlayerName1.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(Versus_PlayerName1);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_PlayerName1.value = "";
+        Versus_PlayerName1.blur();
+    }
 })
 
 Versus_PlayerName2.addEventListener("blur", function() {
-    const text = Versus_PlayerName2.innerText.trim();
+    const text = Versus_PlayerName2.value.trim();
     if (text == previousVersusIGN) return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
@@ -1665,15 +1633,13 @@ Versus_PlayerName2.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         Versus_PlayerName2.blur();
-    }  
-})
+    }
 
-Versus_PlayerName2.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(Versus_PlayerName2);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_PlayerName2.value = "";
+        Versus_PlayerName2.blur();
+    }
 })
 
 // Versus Match Count Sliders
@@ -1820,7 +1786,6 @@ VersusButton.addEventListener("click", function() {
     versusToggle = !versusToggle;
     if (versusToggle) {
         VersusButton.style.backgroundColor = "#507699";
-        history.pushState({}, '', '/' + encodeURIComponent("versus"));
         VersusSearchText.textContent = "(Search for player 2)";
         dataSection.style.display = "none";
         VersusSearch.style.display = "block";
@@ -1828,26 +1793,12 @@ VersusButton.addEventListener("click", function() {
         VersusSearch.style.display = "none";
         VersusButton.style.backgroundColor = "#202F3D";
         dataSection.style.display = "block";
-        const text = PlayerName.innerText.trim();
-        if (text) {
-            history.pushState({}, '', '/' + encodeURIComponent(text));
-        } else {
-            history.pushState({}, '', '/');
-        }
     }
 })
 
 //Versus Search
-VersusSearchText.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(VersusSearchText);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-})
-
 VersusSearchText.addEventListener("blur", async function() {
-    const text = VersusSearchText.innerText.trim();
+    const text = VersusSearchText.value.trim();
     originalIGN = ign;
 
     if (text == "(Search for player 2)") return;
@@ -1914,5 +1865,11 @@ VersusSearchText.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         VersusSearchText.blur();
-    }  
+    }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        VersusSearchText.value = "";
+        VersusSearchText.blur();
+    }
 })

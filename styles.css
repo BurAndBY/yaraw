@@ -15,6 +15,22 @@ h1 {
     justify-content: center;
     align-items: center;
 }
+input {
+    background-color: transparent;
+    color: white;
+    font-family: "Lexend";
+    font-size: 30px;
+    border: none;
+}
+input::placeholder {
+    color: white;
+}
+input:focus {
+    outline: none;
+}
+input:focus::placeholder {
+    color: transparent;
+}
 h2 {
     color: white;
     font-family: "Lexend";
@@ -39,7 +55,11 @@ h3 {
     display: flex;
     justify-content: center;
 }
-
+#playerName, #versus_playerName1, #versus_playerName2 {
+    width: 100%;
+    margin-top: 15px;
+    font-weight: 700;
+}
 #nameplatePlayer1 {
     width: 480px;
     height: 150px;
@@ -153,6 +173,7 @@ hr {
     justify-content: center;
     align-items: center;
     flex: 1;
+    position: relative;
 }
 #versus {
     background-color: #18232e;
@@ -180,9 +201,28 @@ button {
     width: 100%;
     padding: 7px;
 }
+#gamemodeContent {
+    border-bottom: 25px;
+    position: absolute;
+    min-width: 100%;
+    display: none;
+    margin-top: 150px;
+    background-color: red;
+}
 .gamemodeButton {
-    border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
+    border-radius: 25px;
+}
+.gamemodeItem {
+    background-color:transparent;
+}
+#gamemodeButton::after {
+    content: '';
+    border: 6px solid transparent;
+    border-top: 8px solid white;
+    margin-left: 2px;
+    display: inline-flex;
+    float: right;
+    margin-top: 6px;
 }
 .slider {
     -webkit-appearance: none;
@@ -238,6 +278,9 @@ button {
 #versusSearchText {
     margin-top: 0%; 
     height: 100%;
+    width: 100%;
+    font-weight: 600;
+    text-align: center;
 }
 #back {
     background-color: #18232e;
