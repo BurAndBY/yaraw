@@ -1,5 +1,8 @@
 // Variables
-let gamemode = 2; // 2 = ranked, 3 = private
+let gamemode = 2; // 1 = casual, 2 = ranked, 3 = private
+let gamemodeColorLock = false;
+let gamemodeContentHover = false;
+const gamemodes = ["Casual", "Ranked", "Private"];
 
 const defaultMatchCount = 20;
 const matchCountLimit = 50;
@@ -163,6 +166,7 @@ const GamemodeDiv = document.getElementById("gamemodeDiv");
 
 const GamemodeButton = document.getElementById("gamemodeButton");
 const GamemodeContent = document.getElementById("gamemodeContent");
+const GamemodeItems = document.getElementsByClassName("gamemodeItem");
 
 const MatchCountChanger = document.getElementById("matchCountChanger");
 
@@ -1398,22 +1402,92 @@ PlayerName.addEventListener("keydown", function(event) {
     }
 })
 
-// Gamemode buttons
+// Gamemode button
 GamemodeButton.addEventListener("click", function() {
     GamemodeButton.style.backgroundColor = "#507699";
-    gamemode = 2;
-    GamemodeContent.style.display = "block";
-    //configureInVersusMode()
-    //call_Ranked_GetUserMatches_External();
+    if (GamemodeContent.style.display == "block") {
+        GamemodeContent.style.display = "none";
+        gamemodeColorLock = false;
+        GamemodeButton.style.backgroundColor = "#354e66";
+    } else {
+        GamemodeContent.style.display = "block";
+        gamemodeColorLock = true;
+    }
 })
 
 GamemodeButton.addEventListener("mouseover", function() {
-    GamemodeButton.style.backgroundColor = "#354e66";
+    if (!gamemodeColorLock) {
+        GamemodeButton.style.backgroundColor = "#354e66";
+    }
 })
 
 GamemodeButton.addEventListener("mouseout", function() {
-    GamemodeButton.style.backgroundColor = "#202F3D";
+    if (!gamemodeColorLock) {
+        GamemodeButton.style.backgroundColor = "#202F3D";
+    }
     //GamemodeContent.style.display = "none";
+})
+
+GamemodeContent.addEventListener("mouseover", function() {
+    gamemodeContentHover = true;
+    console.log("G: " + gamemodeContentHover);
+})
+
+GamemodeContent.addEventListener("mouseout", function() {
+    gamemodeContentHover = false;
+    console.log("G: " + gamemodeContentHover);
+})
+
+// Gamemode Items
+for (let i = 0; i < GamemodeItems.length; i++) {
+    if (GamemodeItems[i].textContent == GamemodeButton.textContent) {
+        GamemodeItems[i].style.backgroundColor = "#507699";
+    }
+
+    GamemodeItems[i].addEventListener("mouseover", function() {
+        if (i + 1 != gamemode) {
+            GamemodeItems[i].style.backgroundColor = "#354e66";
+        }
+    })
+
+    GamemodeItems[i].addEventListener("mouseout", function() {
+        if (i + 1 != gamemode) {
+            GamemodeItems[i].style.backgroundColor = "#18232e";
+        }
+    })
+
+    GamemodeItems[i].addEventListener("click", function() {
+        GamemodeItems[i].style.backgroundColor = "#507699";
+        GamemodeItems[gamemode - 1].style.backgroundColor = "#18232e";
+        gamemode = i + 1; // Surely this works prayge
+        GamemodeContent.style.display = "none";
+        GamemodeButton.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>";
+        GamemodeButton.style.backgroundColor = "#202F3D";
+        gamemodeColorLock = false;
+        gamemodeContentHover = false;
+        configureInVersusMode()
+        call_Ranked_GetUserMatches_External();
+        console.log("G: " + gamemodeContentHover);
+        console.log(window.getComputedStyle(gamemodeContent).display);
+    })
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key == "Escape" && window.getComputedStyle(GamemodeContent).display == "block") {
+        event.preventDefault();
+        GamemodeContent.style.display = "none";
+        gamemodeColorLock = false;
+        GamemodeButton.style.backgroundColor = "#202F3D";
+    }
+})
+
+document.addEventListener("mouseup", function(event) {
+    if (GamemodeContent.style.display == "block" && !gamemodeContentHover) {
+        console.log(window.getComputedStyle(gamemodeContent).display);
+        GamemodeContent.style.display = "none";
+        gamemodeColorLock = false;
+        GamemodeButton.style.backgroundColor = "#202F3D";
+    }
 })
 
 // Versus Gamemode Buttons

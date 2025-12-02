@@ -206,23 +206,25 @@ button {
     position: absolute;
     min-width: 100%;
     display: none;
-    margin-top: 150px;
-    background-color: red;
+    margin-top: 100px;
+    background-color: #18232e;
+    outline: 8px solid #202F3D;
+    border-radius: 25px;
 }
 .gamemodeButton {
     border-radius: 25px;
 }
 .gamemodeItem {
-    background-color:transparent;
+    margin-right: 6px;
+    background-color:#18232e;
 }
-#gamemodeButton::after {
-    content: '';
-    border: 6px solid transparent;
-    border-top: 8px solid white;
-    margin-left: 2px;
-    display: inline-flex;
-    float: right;
-    margin-top: 6px;
+.downArrow {
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 .slider {
     -webkit-appearance: none;
