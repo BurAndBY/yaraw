@@ -53,48 +53,55 @@ let overworlds = {
     "RUINED_PORTAL": [0, 0],
 }
 
-let bastions = {
-    "BRIDGE": [0, 0, 0],
-    "HOUSING": [0, 0, 0],
-    "STABLES": [0, 0, 0],
-    "TREASURE": [0, 0, 0]
+let bastions = { // 0 = time, 1 = no. completed, 2 = no. entered, 3 = deaths, 4 = resets
+    "BRIDGE": [0, 0, 0, 0, 0],
+    "HOUSING": [0, 0, 0, 0, 0],
+    "STABLES": [0, 0, 0, 0, 0],
+    "TREASURE": [0, 0, 0, 0, 0]
 }
 
 let timings = {
     "overworld": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "nether": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "bastion": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "fortress": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "blind": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "stronghold": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "end": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "completions": [0, 0]
 };
@@ -107,48 +114,55 @@ let versus_overworlds2 = {
     "RUINED_PORTAL": [0, 0],
 }
 
-let versus_bastions2 = {
-    "BRIDGE": [0, 0, 0],
-    "HOUSING": [0, 0, 0],
-    "STABLES": [0, 0, 0],
-    "TREASURE": [0, 0, 0]
+let versus_bastions2 = { // The same as the normal bastions bs
+    "BRIDGE": [0, 0, 0, 0, 0],
+    "HOUSING": [0, 0, 0, 0, 0],
+    "STABLES": [0, 0, 0, 0, 0],
+    "TREASURE": [0, 0, 0, 0, 0]
 }
 
 let versus_timings2 = {
     "overworld": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "nether": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "bastion": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "fortress": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "blind": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "stronghold": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "end": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "completions": [0, 0]
 };
@@ -238,6 +252,14 @@ const BlindDeaths = document.getElementById("blindDeaths");
 const StrongholdDeaths = document.getElementById("strongholdDeaths");
 const EndDeaths = document.getElementById("endDeaths");
 
+const OverworldResets = document.getElementById("overworldResets");
+const NetherResets = document.getElementById("netherResets");
+const BastionResets = document.getElementById("bastionResets");
+const FortressResets = document.getElementById("fortressResets");
+const BlindResets = document.getElementById("blindResets");
+const StrongholdResets = document.getElementById("strongholdResets");
+const EndResets = document.getElementById("endResets");
+
 const NetherTimestamp = document.getElementById("netherTimestamp");
 const BastionTimestamp = document.getElementById("bastionTimestamp");
 const FortressTimestamp = document.getElementById("fortressTimestamp");
@@ -261,6 +283,11 @@ const BridgeDeaths = document.getElementById("bridgeDeaths");
 const HousingDeaths = document.getElementById("housingDeaths");
 const StablesDeaths = document.getElementById("stablesDeaths");
 const TreasureDeaths = document.getElementById("treasureDeaths");
+
+const BridgeResets = document.getElementById("bridgeResets");
+const HousingResets = document.getElementById("housingResets");
+const StablesResets = document.getElementById("stablesResets");
+const TreasureResets = document.getElementById("treasureResets");
 
 const Versus_Data1 = document.getElementById("versus_data1");
 const Versus_Data2 = document.getElementById("versus_data2");
@@ -299,6 +326,14 @@ const Versus_FortressDeaths1 = document.getElementById("versus_fortressDeaths1")
 const Versus_BlindDeaths1 = document.getElementById("versus_blindDeaths1");
 const Versus_StrongholdDeaths1 = document.getElementById("versus_strongholdDeaths1");
 const Versus_EndDeaths1 = document.getElementById("versus_endDeaths1");
+
+const Versus_OverworldResets1 = document.getElementById("versus_overworldResets1");
+const Versus_NetherResets1 = document.getElementById("versus_netherResets1");
+const Versus_BastionResets1 = document.getElementById("versus_bastionResets1");
+const Versus_FortressResets1 = document.getElementById("versus_fortressResets1");
+const Versus_BlindResets1 = document.getElementById("versus_blindResets1");
+const Versus_StrongholdResets1 = document.getElementById("versus_strongholdResets1");
+const Versus_EndResets1 = document.getElementById("versus_endResets1");
 
 const Versus_NetherTimestamp1 = document.getElementById("versus_netherTimestamp1");
 const Versus_BastionTimestamp1 = document.getElementById("versus_bastionTimestamp1");
@@ -352,6 +387,11 @@ const Versus_HousingDeaths1 = document.getElementById("versus_housingDeaths1");
 const Versus_StablesDeaths1 = document.getElementById("versus_stablesDeaths1");
 const Versus_TreasureDeaths1 = document.getElementById("versus_treasureDeaths1");
 
+const Versus_BridgeResets1 = document.getElementById("versus_bridgeResets1");
+const Versus_HousingResets1 = document.getElementById("versus_housingResets1");
+const Versus_StablesResets1 = document.getElementById("versus_stablesResets1");
+const Versus_TreasureResets1 = document.getElementById("versus_treasureResets1");
+
 const Versus_BridgeDiff1 = document.getElementById("versus_bridgeDiff1");
 const Versus_HousingDiff1 = document.getElementById("versus_housingDiff1");
 const Versus_StablesDiff1 = document.getElementById("versus_stablesDiff1");
@@ -379,6 +419,14 @@ const Versus_BlindDeaths2 = document.getElementById("versus_blindDeaths2");
 const Versus_StrongholdDeaths2 = document.getElementById("versus_strongholdDeaths2");
 const Versus_EndDeaths2 = document.getElementById("versus_endDeaths2");
 
+const Versus_OverworldResets2 = document.getElementById("versus_overworldResets2");
+const Versus_NetherResets2 = document.getElementById("versus_netherResets2");
+const Versus_BastionResets2 = document.getElementById("versus_bastionResets2");
+const Versus_FortressResets2 = document.getElementById("versus_fortressResets2");
+const Versus_BlindResets2 = document.getElementById("versus_blindResets2");
+const Versus_StrongholdResets2 = document.getElementById("versus_strongholdResets2");
+const Versus_EndResets2 = document.getElementById("versus_endResets2");
+
 const Versus_NetherTimestamp2 = document.getElementById("versus_netherTimestamp2");
 const Versus_BastionTimestamp2 = document.getElementById("versus_bastionTimestamp2");
 const Versus_FortressTimestamp2 = document.getElementById("versus_fortressTimestamp2");
@@ -402,6 +450,11 @@ const Versus_BridgeDeaths2 = document.getElementById("versus_bridgeDeaths2");
 const Versus_HousingDeaths2 = document.getElementById("versus_housingDeaths2");
 const Versus_StablesDeaths2 = document.getElementById("versus_stablesDeaths2");
 const Versus_TreasureDeaths2 = document.getElementById("versus_treasureDeaths2");
+
+const Versus_BridgeResets2 = document.getElementById("versus_bridgeResets2");
+const Versus_HousingResets2 = document.getElementById("versus_housingResets2");
+const Versus_StablesResets2 = document.getElementById("versus_stablesResets2");
+const Versus_TreasureResets2 = document.getElementById("versus_treasureResets2");
 
 // Misc functions
 function msToMinSecs(ms) {
@@ -525,7 +578,6 @@ async function accessVersusByURL(player1, player2) {
     Versus_MatchCountSlider1.value = matchCount;
     Versus_MatchCountSlider2.value = versus_matchCount2;
 
-    versus_gamemode1 = gamemode;
     versus_gamemode2 = gamemode;
 
     Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
@@ -536,7 +588,9 @@ async function accessVersusByURL(player1, player2) {
 
     ign = player1;
     originalIGN = player1;
+    previousName = player1;
     versusIGN = player2;
+    previousVersusIGN = player2;
 
     call_Ranked_GetUser();
     await call_Ranked_GetMatches_Internal();
@@ -620,12 +674,16 @@ async function call_Ranked_GetMatch(matchID) {
             switch (timeline["type"]) {
                 case "projectelo.timeline.reset":
                     latestReset = timeline["time"];
+                    timings[latestSplit]["resets"] += 1;
+                    if (latestSplit == "bastion") {
+                        bastions[bastionType][4] += 1;
+                    }
                     break;
 
                 case "projectelo.timeline.death":
                     timings[latestSplit]["deaths"] += 1;
                     if (latestSplit == "bastion") {
-                        bastions[bastionType][2] += 1;
+                        bastions[bastionType][3] += 1;
                     }
                     break;
                 
@@ -649,6 +707,9 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     timings["nether"]["splits"][1] += 1;
                     latestSplit = "bastion";
+                    if (bastionType != null) {
+                        bastions[bastionType][2] += 1;
+                    }
                     break;
                 
                 case "nether.find_fortress":
@@ -758,12 +819,16 @@ async function versus_call_Ranked_GetMatch2(matchID) {
             switch (timeline["type"]) {
                 case "projectelo.timeline.reset":
                     latestReset = timeline["time"];
+                    versus_timings2[latestSplit]["resets"] += 1;
+                    if (latestSplit == "bastion") {
+                        versus_bastions2[bastionType][4] += 1;
+                    }
                     break;
 
                 case "projectelo.timeline.death":
                     versus_timings2[latestSplit]["deaths"] += 1;
                     if (latestSplit == "bastion") {
-                        versus_bastions2[bastionType][2] += 1;
+                        versus_bastions2[bastionType][3] += 1;
                     }
                     break;
                 
@@ -787,6 +852,9 @@ async function versus_call_Ranked_GetMatch2(matchID) {
                     versus_timings2["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     versus_timings2["nether"]["splits"][1] += 1;
                     latestSplit = "bastion";
+                    if (bastionType != null) {
+                        versus_bastions2[bastionType][2] += 1;
+                    }
                     break;
                 
                 case "nether.find_fortress":
@@ -845,8 +913,6 @@ async function call_Ranked_GetMatches_Internal() {
     const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount);
     const statusCode = response.status;
 
-    console.log("INT: " + ign);
-
     promises = [];
 
     overworlds = {
@@ -858,47 +924,54 @@ async function call_Ranked_GetMatches_Internal() {
     }
 
     bastions = {
-        "BRIDGE": [0, 0, 0],
-        "HOUSING": [0, 0, 0],
-        "STABLES": [0, 0, 0],
-        "TREASURE": [0, 0, 0]
+        "BRIDGE": [0, 0, 0, 0, 0],
+        "HOUSING": [0, 0, 0, 0, 0],
+        "STABLES": [0, 0, 0, 0, 0],
+        "TREASURE": [0, 0, 0, 0, 0]
     }
 
     timings = {
         "overworld": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "nether": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "bastion": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "fortress": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "blind": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "stronghold": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "end": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "completions": [0, 0]
     };
@@ -942,6 +1015,14 @@ async function call_Ranked_GetMatches_Internal() {
     StrongholdDeaths.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
     EndDeaths.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
 
+    OverworldResets.textContent = percentageCalc(timings["overworld"]["resets"], timings["overworld"]["splits"][1]);
+    NetherResets.textContent = percentageCalc(timings["nether"]["resets"], timings["nether"]["timestamps"][1]);
+    BastionResets.textContent = percentageCalc(timings["bastion"]["resets"], timings["bastion"]["timestamps"][1]);
+    FortressResets.textContent = percentageCalc(timings["fortress"]["resets"], timings["fortress"]["timestamps"][1]);
+    BlindResets.textContent = percentageCalc(timings["blind"]["resets"], timings["blind"]["timestamps"][1]);
+    StrongholdResets.textContent = percentageCalc(timings["stronghold"]["resets"], timings["stronghold"]["timestamps"][1]);
+    EndResets.textContent = percentageCalc(timings["end"]["resets"], timings["end"]["timestamps"][1]);
+
     NetherTimestamp.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
     BastionTimestamp.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
     FortressTimestamp.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
@@ -961,12 +1042,15 @@ async function call_Ranked_GetMatches_Internal() {
     Stables.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
     Treasure.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
 
-    BridgeDeaths.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
-    HousingDeaths.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
-    StablesDeaths.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
-    TreasureDeaths.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
+    BridgeDeaths.textContent = percentageCalc(bastions["BRIDGE"][3], bastions["BRIDGE"][2]);
+    HousingDeaths.textContent = percentageCalc(bastions["HOUSING"][3], bastions["HOUSING"][2]);
+    StablesDeaths.textContent = percentageCalc(bastions["STABLES"][3], bastions["STABLES"][2]);
+    TreasureDeaths.textContent = percentageCalc(bastions["TREASURE"][3], bastions["TREASURE"][2]);
 
-    console.log(timings);
+    BridgeResets.textContent = percentageCalc(bastions["BRIDGE"][4], bastions["BRIDGE"][2]);
+    HousingResets.textContent = percentageCalc(bastions["HOUSING"][4], bastions["HOUSING"][2]);
+    StablesResets.textContent = percentageCalc(bastions["STABLES"][4], bastions["STABLES"][2]);
+    TreasureResets.textContent = percentageCalc(bastions["TREASURE"][4], bastions["TREASURE"][2]);
 }
 
 async function call_Ranked_GetUserMatches_External() {
@@ -1071,11 +1155,13 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
 
         versusWinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
-        versusPlayerName.value = data["data"]["nickname"];
+        versusPlayerName.placeholder = data["data"]["nickname"];
+        versusPlayerName.value = "";
 
         if (playerNum == 1) {
             versusUUID = data["data"]["uuid"];
             versusIGN = data["data"]["nickname"];
+            previousVersusIGN = versusIGN;
             PageTitle.textContent = ign + " vs " + data["data"]["nickname"] + " | Ranked Analysis";
         } else {
             uuid = data["data"]["uuid"];
@@ -1105,6 +1191,14 @@ function versus_display_info() {
     Versus_StrongholdDeaths1.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
     Versus_EndDeaths1.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
 
+    Versus_OverworldResets1.textContent = percentageCalc(timings["overworld"]["resets"], timings["overworld"]["splits"][1]);
+    Versus_NetherResets1.textContent = percentageCalc(timings["nether"]["resets"], timings["nether"]["timestamps"][1]);
+    Versus_BastionResets1.textContent = percentageCalc(timings["bastion"]["resets"], timings["bastion"]["timestamps"][1]);
+    Versus_FortressResets1.textContent = percentageCalc(timings["fortress"]["resets"], timings["fortress"]["timestamps"][1]);
+    Versus_BlindResets1.textContent = percentageCalc(timings["blind"]["resets"], timings["blind"]["timestamps"][1]);
+    Versus_StrongholdResets1.textContent = percentageCalc(timings["stronghold"]["resets"], timings["stronghold"]["timestamps"][1]);
+    Versus_EndResets1.textContent = percentageCalc(timings["end"]["resets"], timings["end"]["timestamps"][1]);
+
     Versus_NetherTimestamp1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
     Versus_BastionTimestamp1.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
     Versus_FortressTimestamp1.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
@@ -1124,10 +1218,15 @@ function versus_display_info() {
     Versus_Stables1.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
     Versus_Treasure1.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
 
-    Versus_BridgeDeaths1.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
-    Versus_HousingDeaths1.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
-    Versus_StablesDeaths1.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
-    Versus_TreasureDeaths1.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
+    Versus_BridgeDeaths1.textContent = percentageCalc(bastions["BRIDGE"][3], bastions["BRIDGE"][2]);
+    Versus_HousingDeaths1.textContent = percentageCalc(bastions["HOUSING"][3], bastions["HOUSING"][2]);
+    Versus_StablesDeaths1.textContent = percentageCalc(bastions["STABLES"][3], bastions["STABLES"][2]);
+    Versus_TreasureDeaths1.textContent = percentageCalc(bastions["TREASURE"][3], bastions["TREASURE"][2]);
+
+    Versus_BridgeResets1.textContent = percentageCalc(bastions["BRIDGE"][4], bastions["BRIDGE"][2]);
+    Versus_HousingResets1.textContent = percentageCalc(bastions["HOUSING"][4], bastions["HOUSING"][2]);
+    Versus_StablesResets1.textContent = percentageCalc(bastions["STABLES"][4], bastions["STABLES"][2]);
+    Versus_TreasureResets1.textContent = percentageCalc(bastions["TREASURE"][4], bastions["TREASURE"][2]);
         
     Versus_OverworldSplit2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
     Versus_NetherSplit2.textContent = msToMinSecs(versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1]) + " (" + versus_timings2["nether"]["splits"][1] + ")";
@@ -1145,6 +1244,14 @@ function versus_display_info() {
     Versus_BlindDeaths2.textContent = percentageCalc(versus_timings2["blind"]["deaths"], versus_timings2["blind"]["timestamps"][1]);
     Versus_StrongholdDeaths2.textContent = percentageCalc(versus_timings2["stronghold"]["deaths"], versus_timings2["stronghold"]["timestamps"][1]);
     Versus_EndDeaths2.textContent = percentageCalc(versus_timings2["end"]["deaths"], versus_timings2["end"]["timestamps"][1]);
+
+    Versus_OverworldResets2.textContent = percentageCalc(versus_timings2["overworld"]["resets"], versus_timings2["overworld"]["splits"][1]);
+    Versus_NetherResets2.textContent = percentageCalc(versus_timings2["nether"]["resets"], versus_timings2["nether"]["timestamps"][1]);
+    Versus_BastionResets2.textContent = percentageCalc(versus_timings2["bastion"]["resets"], versus_timings2["bastion"]["timestamps"][1]);
+    Versus_FortressResets2.textContent = percentageCalc(versus_timings2["fortress"]["resets"], versus_timings2["fortress"]["timestamps"][1]);
+    Versus_BlindResets2.textContent = percentageCalc(versus_timings2["blind"]["resets"], versus_timings2["blind"]["timestamps"][1]);
+    Versus_StrongholdResets2.textContent = percentageCalc(versus_timings2["stronghold"]["resets"], versus_timings2["stronghold"]["timestamps"][1]);
+    Versus_EndResets2.textContent = percentageCalc(versus_timings2["end"]["resets"], versus_timings2["end"]["timestamps"][1]);
 
     Versus_NetherTimestamp2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
     Versus_BastionTimestamp2.textContent = msToMinSecs(versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1]) + " (" + versus_timings2["bastion"]["timestamps"][1] + ")";
@@ -1165,10 +1272,15 @@ function versus_display_info() {
     Versus_Stables2.textContent = msToMinSecs(versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1]) + " (" + versus_bastions2["STABLES"][1] + ")";
     Versus_Treasure2.textContent = msToMinSecs(versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1]) + " (" + versus_bastions2["TREASURE"][1] + ")";
 
-    Versus_BridgeDeaths2.textContent = percentageCalc(versus_bastions2["BRIDGE"][2], versus_bastions2["BRIDGE"][1]);
-    Versus_HousingDeaths2.textContent = percentageCalc(versus_bastions2["HOUSING"][2], versus_bastions2["HOUSING"][1]);
-    Versus_StablesDeaths2.textContent = percentageCalc(versus_bastions2["STABLES"][2], versus_bastions2["STABLES"][1]);
-    Versus_TreasureDeaths2.textContent = percentageCalc(versus_bastions2["TREASURE"][2], versus_bastions2["TREASURE"][1]);
+    Versus_BridgeDeaths2.textContent = percentageCalc(versus_bastions2["BRIDGE"][3], versus_bastions2["BRIDGE"][2]);
+    Versus_HousingDeaths2.textContent = percentageCalc(versus_bastions2["HOUSING"][3], versus_bastions2["HOUSING"][2]);
+    Versus_StablesDeaths2.textContent = percentageCalc(versus_bastions2["STABLES"][3], versus_bastions2["STABLES"][2]);
+    Versus_TreasureDeaths2.textContent = percentageCalc(versus_bastions2["TREASURE"][3], versus_bastions2["TREASURE"][2]);
+
+    Versus_BridgeResets2.textContent = percentageCalc(versus_bastions2["BRIDGE"][4], versus_bastions2["BRIDGE"][2]);
+    Versus_HousingResets2.textContent = percentageCalc(versus_bastions2["HOUSING"][4], versus_bastions2["HOUSING"][2]);
+    Versus_StablesResets2.textContent = percentageCalc(versus_bastions2["STABLES"][4], versus_bastions2["STABLES"][2]);
+    Versus_TreasureResets2.textContent = percentageCalc(versus_bastions2["TREASURE"][4], versus_bastions2["TREASURE"][2]);
 
     calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], Versus_OverworldSplitDiff1);
     calculateDiff(timings["nether"]["splits"][0] / timings["nether"]["splits"][1], versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1], Versus_NetherSplitDiff1);
@@ -1259,47 +1371,54 @@ async function versus_call_Ranked_GetUserMatches() {
         }
 
         versus_bastions2 = {
-            "BRIDGE": [0, 0, 0],
-            "HOUSING": [0, 0, 0],
-            "STABLES": [0, 0, 0],
-            "TREASURE": [0, 0, 0]
+            "BRIDGE": [0, 0, 0, 0, 0],
+            "HOUSING": [0, 0, 0, 0, 0],
+            "STABLES": [0, 0, 0, 0, 0],
+            "TREASURE": [0, 0, 0, 0, 0]
         }
 
         versus_timings2 = {
             "overworld": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "nether": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "bastion": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "fortress": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "blind": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "stronghold": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "end": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "completions": [0, 0]
         };
@@ -1360,7 +1479,6 @@ if (currentPath && currentPath != "versus") {
 } else if (currentPath == "versus") {
     const searchQuery = window.location.search;
     const keywords = searchQuery.split(/[ ?&=]+/);
-    console.log(keywords);
 
     if (!searchQuery || keywords[1] != "player1" || keywords[3] != "player2") {
         history.pushState({}, '', '/');
@@ -1380,8 +1498,7 @@ if (currentPath && currentPath != "versus") {
 // Nameplate
 PlayerName.addEventListener("blur", function() {
     const text = PlayerName.value.trim();
-    console.log(text);
-    if (text == previousName) return;
+    if (text == previousName || text == "") return;
     if (text) {
         history.pushState({}, '', '/' + encodeURIComponent(text));
     } else {
@@ -1389,6 +1506,8 @@ PlayerName.addEventListener("blur", function() {
     }
     ign = encodeURIComponent(text);
     previousName = encodeURIComponent(text);
+    PlayerName.placeholder = PlayerName.value;
+    PlayerName.value = "";
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     dataSection.style.display = "block";
     versusToggle = false;
@@ -1406,7 +1525,7 @@ PlayerName.addEventListener("keydown", function(event) {
 
     if (event.key == "Escape") {
         event.preventDefault();
-        playerName.value = "";
+        playerName.value = ign;
         playerName.blur();
     }
 })
@@ -1573,13 +1692,13 @@ for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
     }
 
     Versus_GamemodeItems1[i].addEventListener("mouseover", function() {
-        if (i + 1 != versus_gamemode1) {
+        if (i + 1 != gamemode) {
             Versus_GamemodeItems1[i].style.backgroundColor = "#354e66";
         }
     })
 
     Versus_GamemodeItems1[i].addEventListener("mouseout", function() {
-        if (i + 1 != versus_gamemode1) {
+        if (i + 1 != gamemode) {
             Versus_GamemodeItems1[i].style.backgroundColor = "#18232e";
         }
     })
@@ -1590,10 +1709,10 @@ for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
         Versus_GamemodeContent1.style.display = "none";
         Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
         Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
-        if (i + 1 == versus_gamemode1) return;
+        if (i + 1 == gamemode) return;
         Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
-        Versus_GamemodeItems1[versus_gamemode1 - 1].style.backgroundColor = "#18232e";
-        versus_gamemode1 = i + 1; // Surely this works prayge
+        Versus_GamemodeItems1[gamemode - 1].style.backgroundColor = "#18232e";
+        gamemode = i + 1; // Surely this works prayge
         Versus_GamemodeButton1.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
         versus1ChangeStats();
     })
@@ -1660,7 +1779,7 @@ for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
         Versus_GamemodeContent2.style.display = "none";
         Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
         Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
-        if (i + 1 == versus_gamemode1) return;
+        if (i + 1 == versus_gamemode2) return;
         Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
         Versus_GamemodeItems2[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
         versus_gamemode2 = i + 1; // Surely this works prayge
@@ -1751,7 +1870,7 @@ BackButton.addEventListener("click", function() {
 // Versus Nameplate
 Versus_PlayerName1.addEventListener("blur", function() {
     const text = Versus_PlayerName1.value.trim();
-    if (text == previousName) return;
+    if (text == previousName || text == "") return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + text + "&player2=" + encodeURIComponent(versusIGN));
     } else {
@@ -1759,6 +1878,8 @@ Versus_PlayerName1.addEventListener("blur", function() {
     }
     ign = text;
     previousName = text;
+    Versus_PlayerName1.placeholder = Versus_PlayerName1.value;
+    Versus_PlayerName1.value = "";
     Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
@@ -1773,14 +1894,14 @@ Versus_PlayerName1.addEventListener("keydown", function(event) {
 
     if (event.key == "Escape") {
         event.preventDefault();
-        Versus_PlayerName1.value = "";
+        Versus_PlayerName1.value = ign;
         Versus_PlayerName1.blur();
     }
 })
 
 Versus_PlayerName2.addEventListener("blur", function() {
     const text = Versus_PlayerName2.value.trim();
-    if (text == previousVersusIGN) return;
+    if (text == previousVersusIGN || text == "") return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
     } else {
@@ -1788,6 +1909,8 @@ Versus_PlayerName2.addEventListener("blur", function() {
     }
     versusIGN = text;
     previousVersusIGN = text;
+    Versus_PlayerName2.placeholder = Versus_PlayerName2.value;
+    Versus_PlayerName2.value = "";
     Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
@@ -1802,7 +1925,7 @@ Versus_PlayerName2.addEventListener("keydown", function(event) {
 
     if (event.key == "Escape") {
         event.preventDefault();
-        Versus_PlayerName2.value = "";
+        Versus_PlayerName2.value = previousVersusIGN;
         Versus_PlayerName2.blur();
     }
 })
@@ -1962,7 +2085,7 @@ VersusSearchText.addEventListener("blur", async function() {
     const text = VersusSearchText.value.trim();
     originalIGN = ign;
 
-    if (text == "(Search for player 2)") return;
+    if (text == "") return;
     if (text) {
         randomiseParrot(0);
         loadingText.textContent = "Loading . .";
@@ -1985,7 +2108,6 @@ VersusSearchText.addEventListener("blur", async function() {
         Versus_MatchCountSlider1.value = matchCount;
         Versus_MatchCountSlider2.value = versus_matchCount2;
 
-        versus_gamemode1 = gamemode;
         versus_gamemode2 = gamemode;
 
         Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
@@ -2013,6 +2135,7 @@ VersusSearchText.addEventListener("blur", async function() {
         call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
         versusIGN = text;
+        previousVersusIGN = text;
         await versus_call_Ranked_GetUserMatches();
 
         BackButton.style.display = "block";
