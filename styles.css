@@ -98,10 +98,15 @@ h3 {
     height: 500px;
     display: block;
 }
-.matchCount {
+#MatchCount, #versus_matchCount1, #versus_matchCount2 {
     background-color: #18232e;
     border-radius: 5px;
     padding: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    width: 25px;
+    float: left;
+    text-align: center;
 }
 ul {
   list-style-type: none;

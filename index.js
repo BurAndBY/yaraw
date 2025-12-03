@@ -1672,7 +1672,8 @@ for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
 // Match Count Slider
 MatchCount.addEventListener("blur", function() {
     MatchCount.style.backgroundColor = "#18232e";
-    let newText = this.textContent;
+    let newText = MatchCount.value;
+    if (newText == "") return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1681,23 +1682,14 @@ MatchCount.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
-    this.textContent = newText;
     if (parseInt(newText) == previousMatchCount) return;
-    console.log(parseInt(newText));
     MatchCountSlider.value = parseInt(newText);
     previousMatchCount = parseInt(newText);
     matchCount = parseInt(newText);
+    MatchCount.placeholder = newText;
+    MatchCount.value = "";
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
-})
-
-MatchCount.addEventListener("focus", function() {
-    MatchCount.style.backgroundColor = "#507699";
-    const range = document.createRange();
-    range.selectNodeContents(MatchCount);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
 })
 
 MatchCount.addEventListener("keydown", function(event) {
@@ -1705,10 +1697,15 @@ MatchCount.addEventListener("keydown", function(event) {
         event.preventDefault();
         MatchCount.blur();
     }
+    if (event.key == "Escape") {
+        event.preventDefault();
+        MatchCount.value = "";
+        MatchCount.blur();
+    }
 })
 
 MatchCountSlider.addEventListener("input", function() {
-    MatchCount.textContent = MatchCountSlider.value;
+    MatchCount.placeholder = MatchCountSlider.value;
     matchCount = matchCountSlider.value;
 })
 
@@ -1716,7 +1713,7 @@ MatchCountSlider.addEventListener("mouseup", function() {
     if (MatchCountSlider.value >= matchCountLimit) {
         MatchCountSlider.value = matchCountLimit;
         matchCount = matchCountLimit;
-        MatchCount.textContent = String(matchCountLimit);
+        MatchCount.placeholder = String(matchCountLimit);
     }
     if (MatchCountSlider.value == previousMatchCount) return;
     previousMatchCount = MatchCountSlider.value;
@@ -1728,7 +1725,7 @@ MatchCountSlider.addEventListener("touchend", function() {
     if (MatchCountSlider.value >= matchCountLimit) {
         MatchCountSlider.value = matchCountLimit;
         matchCount = matchCountLimit;
-        MatchCount.textContent = String(matchCountLimit);
+        MatchCount.placeholder = String(matchCountLimit);
     }
     if (MatchCountSlider.value == previousMatchCount) return;
     previousMatchCount = matchCountSlider.value;
@@ -1813,7 +1810,8 @@ Versus_PlayerName2.addEventListener("keydown", function(event) {
 // Versus Match Count Sliders
 Versus_MatchCount1.addEventListener("blur", function() {
     Versus_MatchCount1.style.backgroundColor = "#18232e";
-    let newText = this.textContent;
+    let newText = Versus_MatchCount1.value;
+    if (newText == "") return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1822,22 +1820,13 @@ Versus_MatchCount1.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
-    this.textContent = newText;
+    Versus_MatchCount1.placeholder = newText;
+    Versus_MatchCount1.value = "";
     if (parseInt(newText) == versus_previousMatchCount1) return;
-    console.log(parseInt(newText));
     Versus_MatchCountSlider1.value = parseInt(newText);
     matchCount = parseInt(newText); 
     versus_previousMatchCount1 = parseInt(newText);
     versus1ChangeStats();
-})
-
-Versus_MatchCount1.addEventListener("focus", function() {
-    Versus_MatchCount1.style.backgroundColor = "#507699";
-    const range = document.createRange();
-    range.selectNodeContents(Versus_MatchCount1);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
 })
 
 Versus_MatchCount1.addEventListener("keydown", function(event) {
@@ -1845,10 +1834,16 @@ Versus_MatchCount1.addEventListener("keydown", function(event) {
         event.preventDefault();
         Versus_MatchCount1.blur();
     }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_MatchCount1.value = "";
+        Versus_MatchCount1.blur();
+    }
 })
 
 Versus_MatchCountSlider1.addEventListener("input", function() {
-    Versus_MatchCount1.textContent = Versus_MatchCountSlider1.value;
+    Versus_MatchCount1.placeholder = Versus_MatchCountSlider1.value;
     matchCount = Versus_MatchCountSlider1.value;
 })
 
@@ -1856,7 +1851,7 @@ Versus_MatchCountSlider1.addEventListener("mouseup", function() {
     if (Versus_MatchCountSlider1.value >= matchCountLimit) {
         Versus_MatchCountSlider1.value = matchCountLimit;
         matchCount = matchCountLimit;
-        Versus_MatchCount1.textContent = String(matchCountLimit);
+        Versus_MatchCount1.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
@@ -1867,7 +1862,7 @@ Versus_MatchCountSlider1.addEventListener("touchend", function() {
     if (Versus_MatchCountSlider1.value >= matchCountLimit) {
         Versus_MatchCountSlider1.value = matchCountLimit;
         matchCount = matchCountLimit;
-        Versus_MatchCount1.textContent = String(matchCountLimit);
+        Versus_MatchCount1.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
@@ -1876,7 +1871,8 @@ Versus_MatchCountSlider1.addEventListener("touchend", function() {
 
 Versus_MatchCount2.addEventListener("blur", function() {
     Versus_MatchCount2.style.backgroundColor = "#18232e";
-    let newText = this.textContent;    
+    let newText = Versus_MatchCount2.value;
+    if (newText == "") return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1885,22 +1881,13 @@ Versus_MatchCount2.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
-    this.textContent = newText;
+    Versus_MatchCount2.placeholder = newText;
+    Versus_MatchCount2.value = "";
     if (parseInt(newText) == versus_previousMatchCount2) return;
-    console.log(parseInt(newText));
     Versus_MatchCountSlider2.value = parseInt(newText);
     versus_matchCount2 = parseInt(newText);
     versus_previousMatchCount2 = parseInt(newText);
     versus_call_Ranked_GetUserMatches();
-})
-
-Versus_MatchCount2.addEventListener("focus", function() {
-    Versus_MatchCount2.style.backgroundColor = "#507699";
-    const range = document.createRange();
-    range.selectNodeContents(Versus_MatchCount2);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
 })
 
 Versus_MatchCount2.addEventListener("keydown", function(event) {
@@ -1908,10 +1895,16 @@ Versus_MatchCount2.addEventListener("keydown", function(event) {
         event.preventDefault();
         Versus_MatchCount2.blur();
     }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_MatchCount2.value = "";
+        Versus_MatchCount2.blur();
+    }
 })
 
 Versus_MatchCountSlider2.addEventListener("input", function() {
-    Versus_MatchCount2.textContent = Versus_MatchCountSlider2.value;
+    Versus_MatchCount2.placeholder = Versus_MatchCountSlider2.value;
     versus_matchCount2 = Versus_MatchCountSlider2.value;
 })
 
@@ -1919,7 +1912,7 @@ Versus_MatchCountSlider2.addEventListener("mouseup", function() {
     if (Versus_MatchCountSlider2.value >= matchCountLimit) {
         Versus_MatchCountSlider2.value = matchCountLimit;
         versus_matchCount2 = matchCountLimit;
-        Versus_MatchCount2.textContent = String(matchCountLimit);
+        Versus_MatchCount2.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
@@ -1930,7 +1923,7 @@ Versus_MatchCountSlider2.addEventListener("touchend", function() {
     if (Versus_MatchCountSlider2.value >= matchCountLimit) {
         Versus_MatchCountSlider2.value = matchCountLimit;
         versus_matchCount2 = matchCountLimit;
-        Versus_MatchCount2.textContent = String(matchCountLimit);
+        Versus_MatchCount2.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
