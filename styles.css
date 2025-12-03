@@ -57,7 +57,7 @@ h3 {
 }
 #playerName, #versus_playerName1, #versus_playerName2 {
     width: 100%;
-    margin-top: 15px;
+    margin-top: 20px;
     font-weight: 700;
 }
 #nameplatePlayer1 {
@@ -218,13 +218,19 @@ button {
     margin-right: 6px;
     background-color:#18232e;
 }
-.downArrow {
+.arrow {
     border: solid white;
     border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
+}
+.down {
     transform: rotate(45deg);
     -webkit-transform: rotate(45deg);
+}
+.up {
+    transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
 }
 .slider {
     -webkit-appearance: none;
@@ -281,6 +287,7 @@ button {
     margin-top: 0%; 
     height: 100%;
     width: 100%;
+    font-size: 22px;
     font-weight: 600;
     text-align: center;
 }

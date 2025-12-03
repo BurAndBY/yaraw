@@ -2,9 +2,13 @@
 let gamemode = 2; // 1 = casual, 2 = ranked, 3 = private
 let gamemodeColorLock = false;
 let gamemodeContentHover = false;
+let gamemodeButtonHover = false;
 
 let versus_gamemodeColorLock1 = false;
 let versus_gamemodeColorLock2 = false;
+
+let versus_gamemodeButtonHover1 = false;
+let versus_gamemodeButtonHover2 = false;
 
 let versus_gamemodeContentHover1 = false;
 let versus_gamemodeContentHover2 = false;
@@ -524,8 +528,8 @@ async function accessVersusByURL(player1, player2) {
     versus_gamemode1 = gamemode;
     versus_gamemode2 = gamemode;
 
-    Versus_GamemodeButton1.textContent = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>"
-    Versus_GamemodeButton2.textContent = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>"
+    Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+    Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
 
     Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + player1 + "/face";
     Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + player2 + "/face";
@@ -1414,23 +1418,26 @@ GamemodeButton.addEventListener("click", function() {
         GamemodeContent.style.display = "none";
         gamemodeColorLock = false;
         GamemodeButton.style.backgroundColor = "#354e66";
+        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     } else {
         GamemodeContent.style.display = "block";
         gamemodeColorLock = true;
+        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
     }
 })
 
 GamemodeButton.addEventListener("mouseover", function() {
+    gamemodeButtonHover = true;
     if (!gamemodeColorLock) {
         GamemodeButton.style.backgroundColor = "#354e66";
     }
 })
 
 GamemodeButton.addEventListener("mouseout", function() {
+    gamemodeButtonHover = false;
     if (!gamemodeColorLock) {
         GamemodeButton.style.backgroundColor = "#202F3D";
     }
-    //GamemodeContent.style.display = "none";
 })
 
 GamemodeContent.addEventListener("mouseover", function() {
@@ -1460,18 +1467,18 @@ for (let i = 0; i < GamemodeItems.length; i++) {
     })
 
     GamemodeItems[i].addEventListener("click", function() {
-        GamemodeItems[i].style.backgroundColor = "#507699";
-        GamemodeItems[gamemode - 1].style.backgroundColor = "#18232e";
-        gamemode = i + 1; // Surely this works prayge
-        GamemodeContent.style.display = "none";
-        GamemodeButton.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>";
-        GamemodeButton.style.backgroundColor = "#202F3D";
         gamemodeColorLock = false;
         gamemodeContentHover = false;
+        GamemodeContent.style.display = "none";
+        GamemodeButton.style.backgroundColor = "#202F3D";
+        GamemodeButton.innerHTML = GamemodeButton.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        if (i + 1 == gamemode) return;
+        GamemodeItems[i].style.backgroundColor = "#507699";
+        GamemodeItems[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
+        gamemode = i + 1; // Surely this works prayge
+        GamemodeButton.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
         configureInVersusMode()
         call_Ranked_GetUserMatches_External();
-        console.log("G: " + gamemodeContentHover);
-        console.log(window.getComputedStyle(gamemodeContent).display);
     })
 }
 
@@ -1482,60 +1489,70 @@ document.addEventListener("keydown", function(event) {
             GamemodeContent.style.display = "none";
             gamemodeColorLock = false;
             GamemodeButton.style.backgroundColor = "#202F3D";
+            GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
         }
         if (Versus_GamemodeContent1.style.display == "block") {
             event.preventDefault();
-            Versus_GamemodeButton1.style.display = "none";
+            Versus_GamemodeContent1.style.display = "none";
             versus_gamemodeColorLock1 = false;
             Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+            Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
         }
         if (Versus_GamemodeContent2.style.display == "block") {
             event.preventDefault();
-            Versus_GamemodeButton2.style.display = "none";
+            Versus_GamemodeContent2.style.display = "none";
             versus_gamemodeColorLock2 = false;
             Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+            Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
         }
     }
 })
 
 document.addEventListener("mouseup", function(event) {
-    if (GamemodeContent.style.display == "block" && !gamemodeContentHover) {
+    if (GamemodeContent.style.display == "block" && !gamemodeContentHover && !gamemodeButtonHover) {
         GamemodeContent.style.display = "none";
         gamemodeColorLock = false;
         GamemodeButton.style.backgroundColor = "#202F3D";
+        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     }
-    if (Versus_GamemodeContent1.style.display == "block" && !versus_gamemodeContentHover1) {
+    if (Versus_GamemodeContent1.style.display == "block" && !versus_gamemodeContentHover1 && !versus_gamemodeButtonHover1) {
         Versus_GamemodeContent1.style.display = "none";
         versus_gamemodeColorLock1 = false;
         Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     }
-    if (Versus_GamemodeContent2.style.display == "block" && !versus_gamemodeContentHover2) {
+    if (Versus_GamemodeContent2.style.display == "block" && !versus_gamemodeContentHover2 && !versus_gamemodeButtonHover2) {
         Versus_GamemodeContent2.style.display = "none";
         versus_gamemodeColorLock2 = false;
         Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+        Versus_GamemodeContent2.innerHTML = Versus_GamemodeContent2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     }
 })
 
 // Versus 1 Gamemode Button
 Versus_GamemodeButton1.addEventListener("click", function() {
     Versus_GamemodeButton1.style.backgroundColor = "#507699";
-    if (GamemodeContent.style.display == "block") {
-        GamemodeContent.style.display = "none";
+    if (Versus_GamemodeContent1.style.display == "block") {
+        Versus_GamemodeContent1.style.display = "none";
         gamemodeColorLock = false;
         Versus_GamemodeButton1.style.backgroundColor = "#354e66";
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     } else {
-        GamemodeContent.style.display = "block";
+        Versus_GamemodeContent1.style.display = "block";
         gamemodeColorLock = true;
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
     }
 })
 
 Versus_GamemodeButton1.addEventListener("mouseover", function() {
+    versus_gamemodeButtonHover1 = true;
     if (!versus_gamemodeColorLock1) {
         Versus_GamemodeButton1.style.backgroundColor = "#354e66";
     }
 })
 
 Versus_GamemodeButton1.addEventListener("mouseout", function() {
+    versus_gamemodeButtonHover1 = false;
     if (!versus_gamemodeColorLock1) {
         Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
     }
@@ -1568,14 +1585,16 @@ for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
     })
 
     Versus_GamemodeItems1[i].addEventListener("click", function() {
+        versus_gamemodeColorLock1 = false;
+        versus_gamemodeContentHover1 = false;
+        Versus_GamemodeContent1.style.display = "none";
+        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        if (i + 1 == versus_gamemode1) return;
         Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
         Versus_GamemodeItems1[versus_gamemode1 - 1].style.backgroundColor = "#18232e";
         versus_gamemode1 = i + 1; // Surely this works prayge
-        Versus_GamemodeContent1.style.display = "none";
-        Versus_GamemodeButton1.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>";
-        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
-        versus_gamemodeColorLock1 = false;
-        versus_gamemodeContentHover1 = false;
+        Versus_GamemodeButton1.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
         versus1ChangeStats();
     })
 }
@@ -1583,23 +1602,27 @@ for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
 // Versus 2 Gamemode Button
 Versus_GamemodeButton2.addEventListener("click", function() {
     Versus_GamemodeButton2.style.backgroundColor = "#507699";
-    if (GamemodeContent.style.display == "block") {
-        GamemodeContent.style.display = "none";
+    if (Versus_GamemodeContent2.style.display == "block") {
+        Versus_GamemodeContent2.style.display = "none";
         gamemodeColorLock = false;
         Versus_GamemodeButton2.style.backgroundColor = "#354e66";
+        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     } else {
-        GamemodeContent.style.display = "block";
+        Versus_GamemodeContent2.style.display = "block";
         gamemodeColorLock = true;
+        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
     }
 })
 
 Versus_GamemodeButton2.addEventListener("mouseover", function() {
+    versus_gamemodeButtonHover2 = true;
     if (!versus_gamemodeColorLock2) {
         Versus_GamemodeButton2.style.backgroundColor = "#354e66";
     }
 })
 
 Versus_GamemodeButton2.addEventListener("mouseout", function() {
+    versus_gamemodeButtonHover2 = false;
     if (!versus_gamemodeColorLock2) {
         Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
     }
@@ -1632,14 +1655,16 @@ for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
     })
 
     Versus_GamemodeItems2[i].addEventListener("click", function() {
+        versus_gamemodeColorLock2 = false;
+        versus_gamemodeContentHover2 = false;
+        Versus_GamemodeContent2.style.display = "none";
+        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        if (i + 1 == versus_gamemode1) return;
         Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
         Versus_GamemodeItems2[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
         versus_gamemode2 = i + 1; // Surely this works prayge
-        Versus_GamemodeContent2.style.display = "none";
-        Versus_GamemodeButton2.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>";
-        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
-        versus_gamemodeColorLock2 = false;
-        versus_gamemodeContentHover2 = false;
+        Versus_GamemodeButton2.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
         versus_call_Ranked_GetUserMatches();
     })
 }
@@ -1970,8 +1995,24 @@ VersusSearchText.addEventListener("blur", async function() {
         versus_gamemode1 = gamemode;
         versus_gamemode2 = gamemode;
 
-        Versus_GamemodeButton1.textContent = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>"
-        Versus_GamemodeButton2.textContent = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='downArrow'></i>"
+        Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+        Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+
+        for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
+            if (Versus_GamemodeItems1[i].textContent == Versus_GamemodeButton1.textContent) {
+                Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
+            } else {
+                Versus_GamemodeItems1[i].style.backgroundColor = "#18232e";
+            }
+        }
+
+        for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
+            if (Versus_GamemodeItems2[i].textContent == Versus_GamemodeButton2.textContent) {
+                Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
+            } else {
+                Versus_GamemodeItems2[i].style.backgroundColor = "#18232e";
+            }
+        }
 
         Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
         Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
