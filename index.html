@@ -14,7 +14,7 @@
                 <img src="images/defaultSkin.webp" onerror="this.onerror=null; this.src='images/defaultSkin.webp'"; alt="Player Model" width="150" height="140" id="playerModel">
             </div>
             <div style="float: left; width: 65%;height: 45%;" id="playerNameContainer">
-                <h1 style="float: left;" id="playerName" contenteditable="true">(Search for player)</h1>
+                <input id="playerName" placeholder="(Search For Player)" autocomplete="off">
             </div>
 
             <div style="float: left; width: 60%;" id="playerInfoContainer">
@@ -30,12 +30,18 @@
         <!--Config UI-->
         <div id="configUI">
             <div class="gamemodeDiv" id="gamemodeDiv">
-                <button class="gamemodeButton" style="margin-right: 10px;" id="Ranked">Ranked</button>
-                <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="Private">Private</button>
+                <button class="gamemodeButton" id="gamemodeButton" style="z-index: 2;">Ranked<i style="float: right;margin-top: 3px;" class="arrow down"></i></button>
+                <div id="gamemodeContent">
+                    <div style="display: block;height: 50px;width: 100%;"></div>
+                    <button class="gamemodeItem">Casual</button>
+                    <button class="gamemodeItem">Ranked</button>
+                    <button class="gamemodeItem" style="border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;">Private</button>
+                </div>
             </div>
             <div style="width: 250px; flex: 1;display: flex; justify-content: center; align-items: center; gap: 20px" id="matchCountChanger">
                 <input type="range" min="1" max="50" value="20" class="slider" id="matchCountSlider">
-                <h3 style="width: 100px;">Matches: <span class="matchCount" id="MatchCount" contenteditable="true">20</span></h3>
+                <h3 style="width: 50px;">Matches:</h3>
+                <input id="MatchCount" placeholder="20" autocomplete="off">
             </div>
             <div id="versus">
                 <button id="versusButton">Versus</button>
@@ -60,33 +66,33 @@
                             <table>
                                 <tr>
                                     <td><img src="images/Grass_Block.webp" alt="Overworld" class="dataIcon"></td>
-                                    <td><h3>Overworld<br><span id="overworldSplit">N/A (0)</span><br>Death%: <span id="overworldDeaths">N/A</span></h3></td>
+                                    <td><h3>Overworld<br><span id="overworldSplit">N/A (0)</span><br>Death%: <span id="overworldDeaths">N/A</span><br>Reset%: <span id="overworldResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Netherrack.webp" alt="Nether Terrain" class="dataIcon"></td>
-                                    <td><h3>Nether Terrain<br><span id="netherSplit">N/A (0)</span><br>Death%: <span id="netherDeaths">N/A</span></h3></td>
+                                    <td><h3>Nether Terrain<br><span id="netherSplit">N/A (0)</span><br>Death%: <span id="netherDeaths">N/A</span><br>Reset%: <span id="netherResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Gold_Block.webp" alt="Bastion" class="dataIcon"></td>
-                                    <td><h3>Bastion<br><span id="bastionSplit">N/A (0)</span><br>Death%: <span id="bastionDeaths">N/A</span></h3></td>
+                                    <td><h3>Bastion<br><span id="bastionSplit">N/A (0)</span><br>Death%: <span id="bastionDeaths">N/A</span><br>Reset%: <span id="bastionResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Nether_Bricks.webp" alt="Fortress" class="dataIcon"></td>
-                                    <td><h3>Fortress<br><span id="fortressSplit">N/A (0)</span><br>Death%: <span id="fortressDeaths">N/A</span></h3></td>
+                                    <td><h3>Fortress<br><span id="fortressSplit">N/A (0)</span><br>Death%: <span id="fortressDeaths">N/A</span><br>Reset%: <span id="fortressResets">N/A</span></h3></td>
                                 </tr>
                             </table>
                             <table style="float: right;padding-right: 30px;">
                                 <tr>
                                     <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
-                                    <td><h3>Blind<br><span id="blindSplit">N/A (0)</span><br>Death%: <span id="blindDeaths">N/A</span></h3></td>
+                                    <td><h3>Blind<br><span id="blindSplit">N/A (0)</span><br>Death%: <span id="blindDeaths">N/A</span><br>Reset%: <span id="blindResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/End_Frame.webp" alt="Stronghold" class="dataIcon"></td>
-                                    <td><h3>Stronghold<br><span id="strongholdSplit">N/A (0)</span><br>Death%: <span id="strongholdDeaths">N/A</span></h3></td>
+                                    <td><h3>Stronghold<br><span id="strongholdSplit">N/A (0)</span><br>Death%: <span id="strongholdDeaths">N/A</span><br>Reset%: <span id="strongholdResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Endstone.webp" alt="End" class="dataIcon"></td>
-                                    <td><h3>End<br><span id="endSplit">N/A (0)</span><br>Death%: <span id="endDeaths">N/A</span></h3></td>
+                                    <td><h3>End<br><span id="endSplit">N/A (0)</span><br>Death%: <span id="endDeaths">N/A</span><br>Reset%: <span id="endResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Dragon_Egg.webp" alt="Completion" class="dataIcon"></td>
@@ -179,21 +185,21 @@
                             <table>
                                 <tr>
                                     <td><img src="images/Bridge.webp" alt="Bridge" class="bastionDataIcon"></td>
-                                    <td><h3>Bridge<br><span id="bridge">N/A (0)</span><br>Death%: <span id="bridgeDeaths">N/A</span></h3></td>
+                                    <td><h3>Bridge<br><span id="bridge">N/A (0)</span><br>Death%: <span id="bridgeDeaths">N/A</span><br>Reset%: <span id="bridgeResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Housing.webp" alt="Housing" class="bastionDataIcon"></td>
-                                    <td><h3>Housing<br><span id="housing">N/A (0)</span><br>Death%: <span id="housingDeaths">N/A</span></h3></td>
+                                    <td><h3>Housing<br><span id="housing">N/A (0)</span><br>Death%: <span id="housingDeaths">N/A</span><br>Reset%: <span id="housingResets">N/A</span></h3></td>
                                 </tr>
                             </table>
                             <table style="float: right;padding-right: 30px;">
                                 <tr>
                                     <td><img src="images/Stables.webp" alt="Stables" class="bastionDataIcon"></td>
-                                    <td><h3>Stables<br><span id="stables">N/A (0)</span><br>Death%: <span id="stablesDeaths">N/A</span></h3></td>
+                                    <td><h3>Stables<br><span id="stables">N/A (0)</span><br>Death%: <span id="stablesDeaths">N/A</span><br>Reset%: <span id="stablesResets">N/A</span></h3></td>
                                 </tr>
                                 <tr>
                                     <td><img src="images/Treasure.webp" alt="Treasure" class="bastionDataIcon"></td>
-                                    <td><h3>Treasure<br><span id="treasure">N/A (0)</span><br>Death%: <span id="treasureDeaths">N/A</span></h3></td>
+                                    <td><h3>Treasure<br><span id="treasure">N/A (0)</span><br>Death%: <span id="treasureDeaths">N/A</span><br>Reset%: <span id="treasureResets">N/A</span></h3></td>
                                 </tr>
                             </table>
                         </div>
@@ -205,7 +211,7 @@
         <!--Versus Search-->
         <div>
             <div class="bubble" id="versusSearch">
-                <h2 contenteditable="true" id="versusSearchText">(Search for player 2)</h2>
+                <input id="versusSearchText" placeholder="(Search for player 2)" autocomplete="off">
             </div>
         </div>
 
@@ -215,10 +221,10 @@
             <div style="margin-right: 5%;">
                 <div class="bubble" id="nameplatePlayer1">
                     <div style="float: left; width: 34%;border: 2px;" id="playerModelContainer">
-                        <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="versus_playerModel1">
+                        <img src="images/defaultSkin.webp" onerror="this.onerror=null; this.src='images/defaultSkin.webp'"; alt="Player Model" width="150" height="140" id="versus_playerModel1">
                     </div>
                     <div style="float: left; width: 65%;height: 45%;" id="playerNameContainer">
-                        <h1 style="float: left;" id="versus_playerName1" contenteditable="true">(Search for player)</h1>
+                        <input id="versus_playerName1" placeholder="(Search For Player)" autocomplete="off">
                     </div>
 
                     <div style="float: left; width: 60%;" id="versus_playerInfoContainer1">
@@ -232,12 +238,18 @@
                 </div>
                 <div id="versus_config1">
                     <div class="gamemodeDiv">
-                        <button class="gamemodeButton" style="margin-right: 10px;" id="versus_ranked1">Ranked</button>
-                        <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="versus_private1">Private</button>
+                        <button class="gamemodeButton" id="versus_gamemodeButton1" style="z-index: 2;">Ranked<i style="float: right;margin-top: 3px;" class="arrow down"></i></button>
+                        <div id="versus_gamemodeContent1">
+                            <div style="display: block;height: 50px;width: 100%;"></div>
+                            <button class="gamemodeItem">Casual</button>
+                            <button class="gamemodeItem">Ranked</button>
+                            <button class="gamemodeItem" style="border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;">Private</button>
+                        </div>
                     </div>
                     <div style="width: 250px; flex: 1;display: flex; justify-content: center; align-items: center; gap: 20px">
                         <input type="range" min="1" max="50" value="20" class="slider" id="versus_matchCountSlider1">
-                        <h3 style="width: 100px;">Matches: <span class="matchCount" id="versus_matchCount1" contenteditable="true">20</span></h3>
+                        <h3 style="width: 50px;">Matches:</h3>
+                        <input id="versus_matchCount1" placeholder="20" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -246,7 +258,7 @@
             <div style="margin-left: 5%;">
                 <div class="bubble" id="nameplatePlayer2">
                     <div style="float: left; width: 65%;height: 45%;margin-left: 10px;" id="playerNameContainer">
-                        <h1 style="float: left;" id="versus_playerName2" contenteditable="true">(Search for player)</h1>
+                        <input id="versus_playerName2" placeholder="(Search For Player)" autocomplete="off">
                     </div>
 
                     <div style="float: left; width: 60%;margin-left: 10px;" id="versus_playerInfoContainer2">
@@ -255,7 +267,7 @@
                     </div>
 
                     <div style="float: right; width: 34%;border: 2px;margin-top: -14%;" id="playerModelContainer">
-                        <img src="https://starlightskins.lunareclipse.studio/render/default/Max226/face" onerror="this.onerror=null; this.src='https://starlightskins.lunareclipse.studio/render/default/Max226/face'"; alt="Player Model" width="150" height="140" id="versus_playerModel2" style="-webkit-transform: scaleX(-1);transform: scaleX(-1);">
+                        <img src="images/defaultSkin.webp" onerror="this.onerror=null; this.src='images/defaultSkin.webp'"; alt="Player Model" width="150" height="140" id="versus_playerModel2" style="-webkit-transform: scaleX(-1);transform: scaleX(-1);">
                     </div>
                     
                     <div style="align-items: center; text-align: center; justify-content: center; width: 50%; margin: auto;display: none;" id="nameplateLoading">
@@ -264,12 +276,18 @@
                 </div>
                 <div id="versus_config2">
                     <div class="gamemodeDiv">
-                        <button class="gamemodeButton" style="margin-right: 10px;" id="versus_ranked2">Ranked</button>
-                        <button class="gamemodeButton" style="border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-top-left-radius: 0px; border-bottom-left-radius: 0px;" id="versus_private2">Private</button>
+                        <button class="gamemodeButton" id="versus_gamemodeButton2" style="z-index: 2;">Ranked<i style="float: right;margin-top: 3px;" class="arrow down"></i></button>
+                        <div id="versus_gamemodeContent2">
+                            <div style="display: block;height: 50px;width: 100%;"></div>
+                            <button class="gamemodeItem">Casual</button>
+                            <button class="gamemodeItem">Ranked</button>
+                            <button class="gamemodeItem" style="border-bottom-left-radius: 25px;border-bottom-right-radius: 25px;">Private</button>
+                        </div>
                     </div>
                     <div style="width: 250px; flex: 1;display: flex; justify-content: center; align-items: center; gap: 20px">
                         <input type="range" min="1" max="50" value="20" class="slider" id="versus_matchCountSlider2">
-                        <h3 style="width: 100px;">Matches: <span class="matchCount" id="versus_matchCount2" contenteditable="true">20</span></h3>
+                        <h3 style="width: 50px;">Matches:</h3>
+                        <input id="versus_matchCount2" placeholder="20" autocomplete="off">
                     </div>
                 </div>
             </div>
@@ -288,33 +306,33 @@
                                 <table>
                                     <tr>
                                         <td><img src="images/Grass_Block.webp" alt="Overworld" class="dataIcon"></td>
-                                        <td><h3>Overworld<br><span id="versus_overworldSplit1">N/A (0)</span><span id="versus_overworldSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_overworldDeaths1">N/A</span></h3></td>
+                                        <td><h3>Overworld<br><span id="versus_overworldSplit1">N/A (0)</span><span id="versus_overworldSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_overworldDeaths1">N/A</span><br>Reset%: <span id="versus_overworldResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Netherrack.webp" alt="Nether Terrain" class="dataIcon"></td>
-                                        <td><h3>Nether Terrain<br><span id="versus_netherSplit1">N/A (0)</span><span id="versus_netherSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_netherDeaths1">N/A</span></h3></td>
+                                        <td><h3>Nether Terrain<br><span id="versus_netherSplit1">N/A (0)</span><span id="versus_netherSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_netherDeaths1">N/A</span><br>Reset%: <span id="versus_netherResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Gold_Block.webp" alt="Bastion" class="dataIcon"></td>
-                                        <td><h3>Bastion<br><span id="versus_bastionSplit1">N/A (0)</span><span id="versus_bastionSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bastionDeaths1">N/A</span></h3></td>
+                                        <td><h3>Bastion<br><span id="versus_bastionSplit1">N/A (0)</span><span id="versus_bastionSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bastionDeaths1">N/A</span><br>Reset%: <span id="versus_bastionResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Nether_Bricks.webp" alt="Fortress" class="dataIcon"></td>
-                                        <td><h3>Fortress<br><span id="versus_fortressSplit1">N/A (0)</span><span id="versus_fortressSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_fortressDeaths1">N/A</span></h3></td>
+                                        <td><h3>Fortress<br><span id="versus_fortressSplit1">N/A (0)</span><span id="versus_fortressSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_fortressDeaths1">N/A</span><br>Reset%: <span id="versus_fortressResets1">N/A</span></h3></td>
                                     </tr>
                                 </table>
                                 <table style="float: right;padding-right: 30px;">
                                     <tr>
                                         <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
-                                        <td><h3>Blind<br><span id="versus_blindSplit1">N/A (0)</span><span id="versus_blindSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_blindDeaths1">N/A</span></h3></td>
+                                        <td><h3>Blind<br><span id="versus_blindSplit1">N/A (0)</span><span id="versus_blindSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_blindDeaths1">N/A</span><br>Reset%: <span id="versus_blindResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/End_Frame.webp" alt="Stronghold" class="dataIcon"></td>
-                                        <td><h3>Stronghold<br><span id="versus_strongholdSplit1">N/A (0)</span><span id="versus_strongholdSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_strongholdDeaths1">N/A</span></h3></td>
+                                        <td><h3>Stronghold<br><span id="versus_strongholdSplit1">N/A (0)</span><span id="versus_strongholdSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_strongholdDeaths1">N/A</span><br>Reset%: <span id="versus_strongholdResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Endstone.webp" alt="End" class="dataIcon"></td>
-                                        <td><h3>End<br><span id="versus_endSplit1">N/A (0)</span><span id="versus_endSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_endDeaths1">N/A</span></h3></td>
+                                        <td><h3>End<br><span id="versus_endSplit1">N/A (0)</span><span id="versus_endSplitDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_endDeaths1">N/A</span><br>Reset%: <span id="versus_endResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Dragon_Egg.webp" alt="Completion" class="dataIcon"></td>
@@ -407,21 +425,21 @@
                                 <table>
                                     <tr>
                                         <td><img src="images/Bridge.webp" alt="Bridge" class="bastionDataIcon"></td>
-                                        <td><h3>Bridge<br><span id="versus_bridge1">N/A (0)</span><span id="versus_bridgeDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bridgeDeaths1">N/A</span></h3></td>
+                                        <td><h3>Bridge<br><span id="versus_bridge1">N/A (0)</span><span id="versus_bridgeDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bridgeDeaths1">N/A</span><br>Reset%: <span id="versus_bridgeResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Housing.webp" alt="Housing" class="bastionDataIcon"></td>
-                                        <td><h3>Housing<br><span id="versus_housing1">N/A (0)</span><span id="versus_housingDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_housingDeaths1">N/A</span></h3></td>
+                                        <td><h3>Housing<br><span id="versus_housing1">N/A (0)</span><span id="versus_housingDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_housingDeaths1">N/A</span><br>Reset%: <span id="versus_housingResets1">N/A</span></h3></td>
                                     </tr>
                                 </table>
                                 <table style="float: right;padding-right: 30px;">
                                     <tr>
                                         <td><img src="images/Stables.webp" alt="Stables" class="bastionDataIcon"></td>
-                                        <td><h3>Stables<br><span id="versus_stables1">N/A (0)</span><span id="versus_stablesDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_stablesDeaths1">N/A</span></h3></td>
+                                        <td><h3>Stables<br><span id="versus_stables1">N/A (0)</span><span id="versus_stablesDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_stablesDeaths1">N/A</span><br>Reset%: <span id="versus_stablesResets1">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Treasure.webp" alt="Treasure" class="bastionDataIcon"></td>
-                                        <td><h3>Treasure<br><span id="versus_treasure1">N/A (0)</span><span id="versus_treasureDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_treasureDeaths1">N/A</span></h3></td>
+                                        <td><h3>Treasure<br><span id="versus_treasure1">N/A (0)</span><span id="versus_treasureDiff1" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_treasureDeaths1">N/A</span><br>Reset%: <span id="versus_treasureResets1">N/A</span></h3></td>
                                     </tr>
                                 </table>
                             </div>
@@ -442,33 +460,33 @@
                                 <table>
                                     <tr>
                                         <td><img src="images/Grass_Block.webp" alt="Overworld" class="dataIcon"></td>
-                                        <td><h3>Overworld<br><span id="versus_overworldSplit2">N/A (0)</span><span id="versus_overworldSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_overworldDeaths2">N/A</span></h3></td>
+                                        <td><h3>Overworld<br><span id="versus_overworldSplit2">N/A (0)</span><span id="versus_overworldSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_overworldDeaths2">N/A</span><br>Reset%: <span id="versus_overworldResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Netherrack.webp" alt="Nether Terrain" class="dataIcon"></td>
-                                        <td><h3>Nether Terrain<br><span id="versus_netherSplit2">N/A (0)</span><span id="versus_netherSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_netherDeaths2">N/A</span></h3></td>
+                                        <td><h3>Nether Terrain<br><span id="versus_netherSplit2">N/A (0)</span><span id="versus_netherSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_netherDeaths2">N/A</span><br>Reset%: <span id="versus_netherResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Gold_Block.webp" alt="Bastion" class="dataIcon"></td>
-                                        <td><h3>Bastion<br><span id="versus_bastionSplit2">N/A (0)</span><span id="versus_bastionSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bastionDeaths2">N/A</span></h3></td>
+                                        <td><h3>Bastion<br><span id="versus_bastionSplit2">N/A (0)</span><span id="versus_bastionSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bastionDeaths2">N/A</span><br>Reset%: <span id="versus_bastionResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Nether_Bricks.webp" alt="Fortress" class="dataIcon"></td>
-                                        <td><h3>Fortress<br><span id="versus_fortressSplit2">N/A (0)</span><span id="versus_fortressSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_fortressDeaths2">N/A</span></h3></td>
+                                        <td><h3>Fortress<br><span id="versus_fortressSplit2">N/A (0)</span><span id="versus_fortressSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_fortressDeaths2">N/A</span><br>Reset%: <span id="versus_fortressResets2">N/A</span></h3></td>
                                     </tr>
                                 </table>
                                 <table style="float: right;padding-right: 30px;">
                                     <tr>
                                         <td><img src="images/Portal.webp" alt="Blind" class="dataIcon"></td>
-                                        <td><h3>Blind<br><span id="versus_blindSplit2">N/A (0)</span><span id="versus_blindSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_blindDeaths2">N/A</span></h3></td>
+                                        <td><h3>Blind<br><span id="versus_blindSplit2">N/A (0)</span><span id="versus_blindSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_blindDeaths2">N/A</span><br>Reset%: <span id="versus_blindResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/End_Frame.webp" alt="Stronghold" class="dataIcon"></td>
-                                        <td><h3>Stronghold<br><span id="versus_strongholdSplit2">N/A (0)</span><span id="versus_strongholdSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_strongholdDeaths2">N/A</span></h3></td>
+                                        <td><h3>Stronghold<br><span id="versus_strongholdSplit2">N/A (0)</span><span id="versus_strongholdSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_strongholdDeaths2">N/A</span><br>Reset%: <span id="versus_strongholdResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Endstone.webp" alt="End" class="dataIcon"></td>
-                                        <td><h3>End<br><span id="versus_endSplit2">N/A (0)</span><span id="versus_endSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_endDeaths2">N/A</span></h3></td>
+                                        <td><h3>End<br><span id="versus_endSplit2">N/A (0)</span><span id="versus_endSplitDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_endDeaths2">N/A</span><br>Reset%: <span id="versus_endResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Dragon_Egg.webp" alt="Completion" class="dataIcon"></td>
@@ -561,21 +579,21 @@
                                 <table>
                                     <tr>
                                         <td><img src="images/Bridge.webp" alt="Bridge" class="bastionDataIcon"></td>
-                                        <td><h3>Bridge<br><span id="versus_bridge2">N/A (0)</span><span id="versus_bridgeDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bridgeDeaths2">N/A</span></h3></td>
+                                        <td><h3>Bridge<br><span id="versus_bridge2">N/A (0)</span><span id="versus_bridgeDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_bridgeDeaths2">N/A</span><br>Reset%: <span id="versus_bridgeResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Housing.webp" alt="Housing" class="bastionDataIcon"></td>
-                                        <td><h3>Housing<br><span id="versus_housing2">N/A (0)</span><span id="versus_housingDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_housingDeaths2">N/A</span></h3></td>
+                                        <td><h3>Housing<br><span id="versus_housing2">N/A (0)</span><span id="versus_housingDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_housingDeaths2">N/A</span><br>Reset%: <span id="versus_housingResets2">N/A</span></h3></td>
                                     </tr>
                                 </table>
                                 <table style="float: right;padding-right: 30px;">
                                     <tr>
                                         <td><img src="images/Stables.webp" alt="Stables" class="bastionDataIcon"></td>
-                                        <td><h3>Stables<br><span id="versus_stables2">N/A (0)</span><span id="versus_stablesDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_stablesDeaths2">N/A</span></h3></td>
+                                        <td><h3>Stables<br><span id="versus_stables2">N/A (0)</span><span id="versus_stablesDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_stablesDeaths2">N/A</span><br>Reset%: <span id="versus_stablesResets2">N/A</span></h3></td>
                                     </tr>
                                     <tr>
                                         <td><img src="images/Treasure.webp" alt="Treasure" class="bastionDataIcon"></td>
-                                        <td><h3>Treasure<br><span id="versus_treasure2">N/A (0)</span><span id="versus_treasureDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_treasureDeaths2">N/A</span></h3></td>
+                                        <td><h3>Treasure<br><span id="versus_treasure2">N/A (0)</span><span id="versus_treasureDiff2" style="color: orange"> (N/A)</span><br>Death%: <span id="versus_treasureDeaths2">N/A</span><br>Reset%: <span id="versus_treasureResets2">N/A</span></h3></td>
                                     </tr>
                                 </table>
                             </div>

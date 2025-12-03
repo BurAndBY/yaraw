@@ -1,22 +1,36 @@
 // Variables
-let gamemode = 2; // 2 = ranked, 3 = private
+let gamemode = 2; // 1 = casual, 2 = ranked, 3 = private
+let gamemodeColorLock = false;
+let gamemodeContentHover = false;
+let gamemodeButtonHover = false;
+
+let versus_gamemodeColorLock1 = false;
+let versus_gamemodeColorLock2 = false;
+
+let versus_gamemodeButtonHover1 = false;
+let versus_gamemodeButtonHover2 = false;
+
+let versus_gamemodeContentHover1 = false;
+let versus_gamemodeContentHover2 = false;
+
+const gamemodes = ["Casual", "Ranked", "Private"];
 
 const defaultMatchCount = 20;
 const matchCountLimit = 50;
 
-let previousName = "(Search for player)";
+let previousName = "";
 let previousMatchCount = defaultMatchCount;
 let matchCount = defaultMatchCount;
 
-let ign = "(Search for player)";
+let ign = "";
 let uuid = "";
 
 let originalIGN = "";
 
 let versusUUID = "";
 let versusToggle = false;
-let versusIGN = "(Search for player 2)"
-let previousVersusIGN = "(Search for player 2)";
+let versusIGN = ""
+let previousVersusIGN = "";
 
 let versus_gamemode2 = 2;
 
@@ -39,48 +53,55 @@ let overworlds = {
     "RUINED_PORTAL": [0, 0],
 }
 
-let bastions = {
-    "BRIDGE": [0, 0, 0],
-    "HOUSING": [0, 0, 0],
-    "STABLES": [0, 0, 0],
-    "TREASURE": [0, 0, 0]
+let bastions = { // 0 = time, 1 = no. completed, 2 = no. entered, 3 = deaths, 4 = resets
+    "BRIDGE": [0, 0, 0, 0, 0],
+    "HOUSING": [0, 0, 0, 0, 0],
+    "STABLES": [0, 0, 0, 0, 0],
+    "TREASURE": [0, 0, 0, 0, 0]
 }
 
 let timings = {
     "overworld": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "nether": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "bastion": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "fortress": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "blind": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "stronghold": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "end": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "completions": [0, 0]
 };
@@ -93,48 +114,55 @@ let versus_overworlds2 = {
     "RUINED_PORTAL": [0, 0],
 }
 
-let versus_bastions2 = {
-    "BRIDGE": [0, 0, 0],
-    "HOUSING": [0, 0, 0],
-    "STABLES": [0, 0, 0],
-    "TREASURE": [0, 0, 0]
+let versus_bastions2 = { // The same as the normal bastions bs
+    "BRIDGE": [0, 0, 0, 0, 0],
+    "HOUSING": [0, 0, 0, 0, 0],
+    "STABLES": [0, 0, 0, 0, 0],
+    "TREASURE": [0, 0, 0, 0, 0]
 }
 
 let versus_timings2 = {
     "overworld": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "nether": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "bastion": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "fortress": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "blind": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "stronghold": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "end": {
         "splits": [0, 0],
         "timestamps": [0, 0],
-        "deaths": 0
+        "deaths": 0,
+        "resets": 0
     },
     "completions": [0, 0]
 };
@@ -161,8 +189,9 @@ const configUI = document.getElementById("configUI");
 
 const GamemodeDiv = document.getElementById("gamemodeDiv");
 
-const RankedButton = document.getElementById("Ranked");
-const PrivateButton = document.getElementById("Private");
+const GamemodeButton = document.getElementById("gamemodeButton");
+const GamemodeContent = document.getElementById("gamemodeContent");
+const GamemodeItems = GamemodeContent.querySelectorAll(".gamemodeItem");
 
 const MatchCountChanger = document.getElementById("matchCountChanger");
 
@@ -179,10 +208,13 @@ const Versus_PbLabel1 = document.getElementById("versus_pbLabel1");
 const Versus_PlayerName1 = document.getElementById("versus_playerName1");
 const Versus_PlayerModel1 = document.getElementById("versus_playerModel1");
 
-const Versus_RankedButton1 = document.getElementById("versus_ranked1");
-const Versus_RankedButton2 = document.getElementById("versus_ranked2");
-const Versus_PrivateButton1 = document.getElementById("versus_private1");
-const Versus_PrivateButton2 = document.getElementById("versus_private2");
+const Versus_GamemodeButton1 = document.getElementById("versus_gamemodeButton1");
+const Versus_GamemodeContent1 = document.getElementById("versus_gamemodeContent1");
+const Versus_GamemodeItems1 = Versus_GamemodeContent1.querySelectorAll(".gamemodeItem");
+
+const Versus_GamemodeButton2 = document.getElementById("versus_gamemodeButton2");
+const Versus_GamemodeContent2 = document.getElementById("versus_gamemodeContent2");
+const Versus_GamemodeItems2 = Versus_GamemodeContent2.querySelectorAll(".gamemodeItem");
 
 const Versus_MatchCount1 = document.getElementById("versus_matchCount1");
 const Versus_MatchCount2 = document.getElementById("versus_matchCount2");
@@ -220,6 +252,14 @@ const BlindDeaths = document.getElementById("blindDeaths");
 const StrongholdDeaths = document.getElementById("strongholdDeaths");
 const EndDeaths = document.getElementById("endDeaths");
 
+const OverworldResets = document.getElementById("overworldResets");
+const NetherResets = document.getElementById("netherResets");
+const BastionResets = document.getElementById("bastionResets");
+const FortressResets = document.getElementById("fortressResets");
+const BlindResets = document.getElementById("blindResets");
+const StrongholdResets = document.getElementById("strongholdResets");
+const EndResets = document.getElementById("endResets");
+
 const NetherTimestamp = document.getElementById("netherTimestamp");
 const BastionTimestamp = document.getElementById("bastionTimestamp");
 const FortressTimestamp = document.getElementById("fortressTimestamp");
@@ -243,6 +283,11 @@ const BridgeDeaths = document.getElementById("bridgeDeaths");
 const HousingDeaths = document.getElementById("housingDeaths");
 const StablesDeaths = document.getElementById("stablesDeaths");
 const TreasureDeaths = document.getElementById("treasureDeaths");
+
+const BridgeResets = document.getElementById("bridgeResets");
+const HousingResets = document.getElementById("housingResets");
+const StablesResets = document.getElementById("stablesResets");
+const TreasureResets = document.getElementById("treasureResets");
 
 const Versus_Data1 = document.getElementById("versus_data1");
 const Versus_Data2 = document.getElementById("versus_data2");
@@ -281,6 +326,14 @@ const Versus_FortressDeaths1 = document.getElementById("versus_fortressDeaths1")
 const Versus_BlindDeaths1 = document.getElementById("versus_blindDeaths1");
 const Versus_StrongholdDeaths1 = document.getElementById("versus_strongholdDeaths1");
 const Versus_EndDeaths1 = document.getElementById("versus_endDeaths1");
+
+const Versus_OverworldResets1 = document.getElementById("versus_overworldResets1");
+const Versus_NetherResets1 = document.getElementById("versus_netherResets1");
+const Versus_BastionResets1 = document.getElementById("versus_bastionResets1");
+const Versus_FortressResets1 = document.getElementById("versus_fortressResets1");
+const Versus_BlindResets1 = document.getElementById("versus_blindResets1");
+const Versus_StrongholdResets1 = document.getElementById("versus_strongholdResets1");
+const Versus_EndResets1 = document.getElementById("versus_endResets1");
 
 const Versus_NetherTimestamp1 = document.getElementById("versus_netherTimestamp1");
 const Versus_BastionTimestamp1 = document.getElementById("versus_bastionTimestamp1");
@@ -334,6 +387,11 @@ const Versus_HousingDeaths1 = document.getElementById("versus_housingDeaths1");
 const Versus_StablesDeaths1 = document.getElementById("versus_stablesDeaths1");
 const Versus_TreasureDeaths1 = document.getElementById("versus_treasureDeaths1");
 
+const Versus_BridgeResets1 = document.getElementById("versus_bridgeResets1");
+const Versus_HousingResets1 = document.getElementById("versus_housingResets1");
+const Versus_StablesResets1 = document.getElementById("versus_stablesResets1");
+const Versus_TreasureResets1 = document.getElementById("versus_treasureResets1");
+
 const Versus_BridgeDiff1 = document.getElementById("versus_bridgeDiff1");
 const Versus_HousingDiff1 = document.getElementById("versus_housingDiff1");
 const Versus_StablesDiff1 = document.getElementById("versus_stablesDiff1");
@@ -361,6 +419,14 @@ const Versus_BlindDeaths2 = document.getElementById("versus_blindDeaths2");
 const Versus_StrongholdDeaths2 = document.getElementById("versus_strongholdDeaths2");
 const Versus_EndDeaths2 = document.getElementById("versus_endDeaths2");
 
+const Versus_OverworldResets2 = document.getElementById("versus_overworldResets2");
+const Versus_NetherResets2 = document.getElementById("versus_netherResets2");
+const Versus_BastionResets2 = document.getElementById("versus_bastionResets2");
+const Versus_FortressResets2 = document.getElementById("versus_fortressResets2");
+const Versus_BlindResets2 = document.getElementById("versus_blindResets2");
+const Versus_StrongholdResets2 = document.getElementById("versus_strongholdResets2");
+const Versus_EndResets2 = document.getElementById("versus_endResets2");
+
 const Versus_NetherTimestamp2 = document.getElementById("versus_netherTimestamp2");
 const Versus_BastionTimestamp2 = document.getElementById("versus_bastionTimestamp2");
 const Versus_FortressTimestamp2 = document.getElementById("versus_fortressTimestamp2");
@@ -384,6 +450,11 @@ const Versus_BridgeDeaths2 = document.getElementById("versus_bridgeDeaths2");
 const Versus_HousingDeaths2 = document.getElementById("versus_housingDeaths2");
 const Versus_StablesDeaths2 = document.getElementById("versus_stablesDeaths2");
 const Versus_TreasureDeaths2 = document.getElementById("versus_treasureDeaths2");
+
+const Versus_BridgeResets2 = document.getElementById("versus_bridgeResets2");
+const Versus_HousingResets2 = document.getElementById("versus_housingResets2");
+const Versus_StablesResets2 = document.getElementById("versus_stablesResets2");
+const Versus_TreasureResets2 = document.getElementById("versus_treasureResets2");
 
 // Misc functions
 function msToMinSecs(ms) {
@@ -507,23 +578,19 @@ async function accessVersusByURL(player1, player2) {
     Versus_MatchCountSlider1.value = matchCount;
     Versus_MatchCountSlider2.value = versus_matchCount2;
 
-    versus_gamemode1 = gamemode;
     versus_gamemode2 = gamemode;
 
-    if (gamemode == 2) {
-        Versus_RankedButton1.style.backgroundColor = "#507699";
-        Versus_RankedButton2.style.backgroundColor = "#507699";
-    } else {
-        Versus_PrivateButton1.style.backgroundColor = "#507699";
-        Versus_PrivateButton2.style.backgroundColor = "#507699";
-    }
+    Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+    Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
 
     Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + player1 + "/face";
     Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + player2 + "/face";
 
     ign = player1;
     originalIGN = player1;
+    previousName = player1;
     versusIGN = player2;
+    previousVersusIGN = player2;
 
     call_Ranked_GetUser();
     await call_Ranked_GetMatches_Internal();
@@ -607,12 +674,16 @@ async function call_Ranked_GetMatch(matchID) {
             switch (timeline["type"]) {
                 case "projectelo.timeline.reset":
                     latestReset = timeline["time"];
+                    timings[latestSplit]["resets"] += 1;
+                    if (latestSplit == "bastion") {
+                        bastions[bastionType][4] += 1;
+                    }
                     break;
 
                 case "projectelo.timeline.death":
                     timings[latestSplit]["deaths"] += 1;
                     if (latestSplit == "bastion") {
-                        bastions[bastionType][2] += 1;
+                        bastions[bastionType][3] += 1;
                     }
                     break;
                 
@@ -636,6 +707,9 @@ async function call_Ranked_GetMatch(matchID) {
                     timings["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     timings["nether"]["splits"][1] += 1;
                     latestSplit = "bastion";
+                    if (bastionType != null) {
+                        bastions[bastionType][2] += 1;
+                    }
                     break;
                 
                 case "nether.find_fortress":
@@ -745,12 +819,16 @@ async function versus_call_Ranked_GetMatch2(matchID) {
             switch (timeline["type"]) {
                 case "projectelo.timeline.reset":
                     latestReset = timeline["time"];
+                    versus_timings2[latestSplit]["resets"] += 1;
+                    if (latestSplit == "bastion") {
+                        versus_bastions2[bastionType][4] += 1;
+                    }
                     break;
 
                 case "projectelo.timeline.death":
                     versus_timings2[latestSplit]["deaths"] += 1;
                     if (latestSplit == "bastion") {
-                        versus_bastions2[bastionType][2] += 1;
+                        versus_bastions2[bastionType][3] += 1;
                     }
                     break;
                 
@@ -774,6 +852,9 @@ async function versus_call_Ranked_GetMatch2(matchID) {
                     versus_timings2["nether"]["splits"][0] += timeline["time"] - timestamps["enter_nether"];
                     versus_timings2["nether"]["splits"][1] += 1;
                     latestSplit = "bastion";
+                    if (bastionType != null) {
+                        versus_bastions2[bastionType][2] += 1;
+                    }
                     break;
                 
                 case "nether.find_fortress":
@@ -832,8 +913,6 @@ async function call_Ranked_GetMatches_Internal() {
     const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount);
     const statusCode = response.status;
 
-    console.log("INT: " + ign);
-
     promises = [];
 
     overworlds = {
@@ -845,47 +924,54 @@ async function call_Ranked_GetMatches_Internal() {
     }
 
     bastions = {
-        "BRIDGE": [0, 0, 0],
-        "HOUSING": [0, 0, 0],
-        "STABLES": [0, 0, 0],
-        "TREASURE": [0, 0, 0]
+        "BRIDGE": [0, 0, 0, 0, 0],
+        "HOUSING": [0, 0, 0, 0, 0],
+        "STABLES": [0, 0, 0, 0, 0],
+        "TREASURE": [0, 0, 0, 0, 0]
     }
 
     timings = {
         "overworld": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "nether": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "bastion": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "fortress": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "blind": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "stronghold": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "end": {
             "splits": [0, 0],
             "timestamps": [0, 0],
-            "deaths": 0
+            "deaths": 0,
+            "resets": 0
         },
         "completions": [0, 0]
     };
@@ -929,6 +1015,14 @@ async function call_Ranked_GetMatches_Internal() {
     StrongholdDeaths.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
     EndDeaths.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
 
+    OverworldResets.textContent = percentageCalc(timings["overworld"]["resets"], timings["overworld"]["splits"][1]);
+    NetherResets.textContent = percentageCalc(timings["nether"]["resets"], timings["nether"]["timestamps"][1]);
+    BastionResets.textContent = percentageCalc(timings["bastion"]["resets"], timings["bastion"]["timestamps"][1]);
+    FortressResets.textContent = percentageCalc(timings["fortress"]["resets"], timings["fortress"]["timestamps"][1]);
+    BlindResets.textContent = percentageCalc(timings["blind"]["resets"], timings["blind"]["timestamps"][1]);
+    StrongholdResets.textContent = percentageCalc(timings["stronghold"]["resets"], timings["stronghold"]["timestamps"][1]);
+    EndResets.textContent = percentageCalc(timings["end"]["resets"], timings["end"]["timestamps"][1]);
+
     NetherTimestamp.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
     BastionTimestamp.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
     FortressTimestamp.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
@@ -948,12 +1042,15 @@ async function call_Ranked_GetMatches_Internal() {
     Stables.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
     Treasure.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
 
-    BridgeDeaths.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
-    HousingDeaths.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
-    StablesDeaths.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
-    TreasureDeaths.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
+    BridgeDeaths.textContent = percentageCalc(bastions["BRIDGE"][3], bastions["BRIDGE"][2]);
+    HousingDeaths.textContent = percentageCalc(bastions["HOUSING"][3], bastions["HOUSING"][2]);
+    StablesDeaths.textContent = percentageCalc(bastions["STABLES"][3], bastions["STABLES"][2]);
+    TreasureDeaths.textContent = percentageCalc(bastions["TREASURE"][3], bastions["TREASURE"][2]);
 
-    console.log(timings);
+    BridgeResets.textContent = percentageCalc(bastions["BRIDGE"][4], bastions["BRIDGE"][2]);
+    HousingResets.textContent = percentageCalc(bastions["HOUSING"][4], bastions["HOUSING"][2]);
+    StablesResets.textContent = percentageCalc(bastions["STABLES"][4], bastions["STABLES"][2]);
+    TreasureResets.textContent = percentageCalc(bastions["TREASURE"][4], bastions["TREASURE"][2]);
 }
 
 async function call_Ranked_GetUserMatches_External() {
@@ -1058,11 +1155,13 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
 
         versusWinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
-        versusPlayerName.textContent = data["data"]["nickname"];
+        versusPlayerName.placeholder = data["data"]["nickname"];
+        versusPlayerName.value = "";
 
         if (playerNum == 1) {
             versusUUID = data["data"]["uuid"];
             versusIGN = data["data"]["nickname"];
+            previousVersusIGN = versusIGN;
             PageTitle.textContent = ign + " vs " + data["data"]["nickname"] + " | Ranked Analysis";
         } else {
             uuid = data["data"]["uuid"];
@@ -1092,6 +1191,14 @@ function versus_display_info() {
     Versus_StrongholdDeaths1.textContent = percentageCalc(timings["stronghold"]["deaths"], timings["stronghold"]["timestamps"][1]);
     Versus_EndDeaths1.textContent = percentageCalc(timings["end"]["deaths"], timings["end"]["timestamps"][1]);
 
+    Versus_OverworldResets1.textContent = percentageCalc(timings["overworld"]["resets"], timings["overworld"]["splits"][1]);
+    Versus_NetherResets1.textContent = percentageCalc(timings["nether"]["resets"], timings["nether"]["timestamps"][1]);
+    Versus_BastionResets1.textContent = percentageCalc(timings["bastion"]["resets"], timings["bastion"]["timestamps"][1]);
+    Versus_FortressResets1.textContent = percentageCalc(timings["fortress"]["resets"], timings["fortress"]["timestamps"][1]);
+    Versus_BlindResets1.textContent = percentageCalc(timings["blind"]["resets"], timings["blind"]["timestamps"][1]);
+    Versus_StrongholdResets1.textContent = percentageCalc(timings["stronghold"]["resets"], timings["stronghold"]["timestamps"][1]);
+    Versus_EndResets1.textContent = percentageCalc(timings["end"]["resets"], timings["end"]["timestamps"][1]);
+
     Versus_NetherTimestamp1.textContent = msToMinSecs(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1]) + " (" + timings["overworld"]["splits"][1] + ")";
     Versus_BastionTimestamp1.textContent = msToMinSecs(timings["bastion"]["timestamps"][0] / timings["bastion"]["timestamps"][1]) + " (" + timings["bastion"]["timestamps"][1] + ")";
     Versus_FortressTimestamp1.textContent = msToMinSecs(timings["fortress"]["timestamps"][0] / timings["fortress"]["timestamps"][1]) + " (" + timings["fortress"]["timestamps"][1] + ")";
@@ -1111,10 +1218,15 @@ function versus_display_info() {
     Versus_Stables1.textContent = msToMinSecs(bastions["STABLES"][0] / bastions["STABLES"][1]) + " (" + bastions["STABLES"][1] + ")";
     Versus_Treasure1.textContent = msToMinSecs(bastions["TREASURE"][0] / bastions["TREASURE"][1]) + " (" + bastions["TREASURE"][1] + ")";
 
-    Versus_BridgeDeaths1.textContent = percentageCalc(bastions["BRIDGE"][2], bastions["BRIDGE"][1]);
-    Versus_HousingDeaths1.textContent = percentageCalc(bastions["HOUSING"][2], bastions["HOUSING"][1]);
-    Versus_StablesDeaths1.textContent = percentageCalc(bastions["STABLES"][2], bastions["STABLES"][1]);
-    Versus_TreasureDeaths1.textContent = percentageCalc(bastions["TREASURE"][2], bastions["TREASURE"][1]);
+    Versus_BridgeDeaths1.textContent = percentageCalc(bastions["BRIDGE"][3], bastions["BRIDGE"][2]);
+    Versus_HousingDeaths1.textContent = percentageCalc(bastions["HOUSING"][3], bastions["HOUSING"][2]);
+    Versus_StablesDeaths1.textContent = percentageCalc(bastions["STABLES"][3], bastions["STABLES"][2]);
+    Versus_TreasureDeaths1.textContent = percentageCalc(bastions["TREASURE"][3], bastions["TREASURE"][2]);
+
+    Versus_BridgeResets1.textContent = percentageCalc(bastions["BRIDGE"][4], bastions["BRIDGE"][2]);
+    Versus_HousingResets1.textContent = percentageCalc(bastions["HOUSING"][4], bastions["HOUSING"][2]);
+    Versus_StablesResets1.textContent = percentageCalc(bastions["STABLES"][4], bastions["STABLES"][2]);
+    Versus_TreasureResets1.textContent = percentageCalc(bastions["TREASURE"][4], bastions["TREASURE"][2]);
         
     Versus_OverworldSplit2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
     Versus_NetherSplit2.textContent = msToMinSecs(versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1]) + " (" + versus_timings2["nether"]["splits"][1] + ")";
@@ -1132,6 +1244,14 @@ function versus_display_info() {
     Versus_BlindDeaths2.textContent = percentageCalc(versus_timings2["blind"]["deaths"], versus_timings2["blind"]["timestamps"][1]);
     Versus_StrongholdDeaths2.textContent = percentageCalc(versus_timings2["stronghold"]["deaths"], versus_timings2["stronghold"]["timestamps"][1]);
     Versus_EndDeaths2.textContent = percentageCalc(versus_timings2["end"]["deaths"], versus_timings2["end"]["timestamps"][1]);
+
+    Versus_OverworldResets2.textContent = percentageCalc(versus_timings2["overworld"]["resets"], versus_timings2["overworld"]["splits"][1]);
+    Versus_NetherResets2.textContent = percentageCalc(versus_timings2["nether"]["resets"], versus_timings2["nether"]["timestamps"][1]);
+    Versus_BastionResets2.textContent = percentageCalc(versus_timings2["bastion"]["resets"], versus_timings2["bastion"]["timestamps"][1]);
+    Versus_FortressResets2.textContent = percentageCalc(versus_timings2["fortress"]["resets"], versus_timings2["fortress"]["timestamps"][1]);
+    Versus_BlindResets2.textContent = percentageCalc(versus_timings2["blind"]["resets"], versus_timings2["blind"]["timestamps"][1]);
+    Versus_StrongholdResets2.textContent = percentageCalc(versus_timings2["stronghold"]["resets"], versus_timings2["stronghold"]["timestamps"][1]);
+    Versus_EndResets2.textContent = percentageCalc(versus_timings2["end"]["resets"], versus_timings2["end"]["timestamps"][1]);
 
     Versus_NetherTimestamp2.textContent = msToMinSecs(versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1]) + " (" + versus_timings2["overworld"]["splits"][1] + ")";
     Versus_BastionTimestamp2.textContent = msToMinSecs(versus_timings2["bastion"]["timestamps"][0] / versus_timings2["bastion"]["timestamps"][1]) + " (" + versus_timings2["bastion"]["timestamps"][1] + ")";
@@ -1152,10 +1272,15 @@ function versus_display_info() {
     Versus_Stables2.textContent = msToMinSecs(versus_bastions2["STABLES"][0] / versus_bastions2["STABLES"][1]) + " (" + versus_bastions2["STABLES"][1] + ")";
     Versus_Treasure2.textContent = msToMinSecs(versus_bastions2["TREASURE"][0] / versus_bastions2["TREASURE"][1]) + " (" + versus_bastions2["TREASURE"][1] + ")";
 
-    Versus_BridgeDeaths2.textContent = percentageCalc(versus_bastions2["BRIDGE"][2], versus_bastions2["BRIDGE"][1]);
-    Versus_HousingDeaths2.textContent = percentageCalc(versus_bastions2["HOUSING"][2], versus_bastions2["HOUSING"][1]);
-    Versus_StablesDeaths2.textContent = percentageCalc(versus_bastions2["STABLES"][2], versus_bastions2["STABLES"][1]);
-    Versus_TreasureDeaths2.textContent = percentageCalc(versus_bastions2["TREASURE"][2], versus_bastions2["TREASURE"][1]);
+    Versus_BridgeDeaths2.textContent = percentageCalc(versus_bastions2["BRIDGE"][3], versus_bastions2["BRIDGE"][2]);
+    Versus_HousingDeaths2.textContent = percentageCalc(versus_bastions2["HOUSING"][3], versus_bastions2["HOUSING"][2]);
+    Versus_StablesDeaths2.textContent = percentageCalc(versus_bastions2["STABLES"][3], versus_bastions2["STABLES"][2]);
+    Versus_TreasureDeaths2.textContent = percentageCalc(versus_bastions2["TREASURE"][3], versus_bastions2["TREASURE"][2]);
+
+    Versus_BridgeResets2.textContent = percentageCalc(versus_bastions2["BRIDGE"][4], versus_bastions2["BRIDGE"][2]);
+    Versus_HousingResets2.textContent = percentageCalc(versus_bastions2["HOUSING"][4], versus_bastions2["HOUSING"][2]);
+    Versus_StablesResets2.textContent = percentageCalc(versus_bastions2["STABLES"][4], versus_bastions2["STABLES"][2]);
+    Versus_TreasureResets2.textContent = percentageCalc(versus_bastions2["TREASURE"][4], versus_bastions2["TREASURE"][2]);
 
     calculateDiff(timings["overworld"]["splits"][0] / timings["overworld"]["splits"][1], versus_timings2["overworld"]["splits"][0] / versus_timings2["overworld"]["splits"][1], Versus_OverworldSplitDiff1);
     calculateDiff(timings["nether"]["splits"][0] / timings["nether"]["splits"][1], versus_timings2["nether"]["splits"][0] / versus_timings2["nether"]["splits"][1], Versus_NetherSplitDiff1);
@@ -1246,47 +1371,54 @@ async function versus_call_Ranked_GetUserMatches() {
         }
 
         versus_bastions2 = {
-            "BRIDGE": [0, 0, 0],
-            "HOUSING": [0, 0, 0],
-            "STABLES": [0, 0, 0],
-            "TREASURE": [0, 0, 0]
+            "BRIDGE": [0, 0, 0, 0, 0],
+            "HOUSING": [0, 0, 0, 0, 0],
+            "STABLES": [0, 0, 0, 0, 0],
+            "TREASURE": [0, 0, 0, 0, 0]
         }
 
         versus_timings2 = {
             "overworld": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "nether": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "bastion": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "fortress": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "blind": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "stronghold": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "end": {
                 "splits": [0, 0],
                 "timestamps": [0, 0],
-                "deaths": 0
+                "deaths": 0,
+                "resets": 0
             },
             "completions": [0, 0]
         };
@@ -1340,14 +1472,13 @@ console.log(window.location.pathname.slice(1));
 if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
-    PlayerName.textContent = decodeURIComponent(currentPath);
-    PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.textContent + "/face";
+    PlayerName.value = decodeURIComponent(currentPath);
+    PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.value + "/face";
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches_External();
 } else if (currentPath == "versus") {
     const searchQuery = window.location.search;
     const keywords = searchQuery.split(/[ ?&=]+/);
-    console.log(keywords);
 
     if (!searchQuery || keywords[1] != "player1" || keywords[3] != "player2") {
         history.pushState({}, '', '/');
@@ -1366,8 +1497,8 @@ if (currentPath && currentPath != "versus") {
 
 // Nameplate
 PlayerName.addEventListener("blur", function() {
-    const text = PlayerName.innerText.trim();
-    if (text == previousName) return;
+    const text = PlayerName.value.trim();
+    if (text == previousName || text == "") return;
     if (text) {
         history.pushState({}, '', '/' + encodeURIComponent(text));
     } else {
@@ -1375,6 +1506,8 @@ PlayerName.addEventListener("blur", function() {
     }
     ign = encodeURIComponent(text);
     previousName = encodeURIComponent(text);
+    PlayerName.placeholder = PlayerName.value;
+    PlayerName.value = "";
     PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     dataSection.style.display = "block";
     versusToggle = false;
@@ -1388,153 +1521,278 @@ PlayerName.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         PlayerName.blur();
-    }  
+    }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        playerName.value = ign;
+        playerName.blur();
+    }
 })
 
-PlayerName.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(PlayerName);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+// Gamemode button
+GamemodeButton.addEventListener("click", function() {
+    GamemodeButton.style.backgroundColor = "#507699";
+    if (GamemodeContent.style.display == "block") {
+        GamemodeContent.style.display = "none";
+        gamemodeColorLock = false;
+        GamemodeButton.style.backgroundColor = "#354e66";
+        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+    } else {
+        GamemodeContent.style.display = "block";
+        gamemodeColorLock = true;
+        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
+    }
 })
 
-// Gamemode buttons
-RankedButton.style.backgroundColor = "#507699";
+GamemodeButton.addEventListener("mouseover", function() {
+    gamemodeButtonHover = true;
+    if (!gamemodeColorLock) {
+        GamemodeButton.style.backgroundColor = "#354e66";
+    }
+})
 
-RankedButton.addEventListener("click", function() {
-    if (gamemode == 3) {
-        RankedButton.style.backgroundColor = "#507699";
-        PrivateButton.style.backgroundColor = "#202F3D";
-        gamemode = 2;
+GamemodeButton.addEventListener("mouseout", function() {
+    gamemodeButtonHover = false;
+    if (!gamemodeColorLock) {
+        GamemodeButton.style.backgroundColor = "#202F3D";
+    }
+})
+
+GamemodeContent.addEventListener("mouseover", function() {
+    gamemodeContentHover = true;
+})
+
+GamemodeContent.addEventListener("mouseout", function() {
+    gamemodeContentHover = false;
+})
+
+// Gamemode Items
+for (let i = 0; i < GamemodeItems.length; i++) {
+    if (GamemodeItems[i].textContent == GamemodeButton.textContent) {
+        GamemodeItems[i].style.backgroundColor = "#507699";
+    }
+
+    GamemodeItems[i].addEventListener("mouseover", function() {
+        if (i + 1 != gamemode) {
+            GamemodeItems[i].style.backgroundColor = "#354e66";
+        }
+    })
+
+    GamemodeItems[i].addEventListener("mouseout", function() {
+        if (i + 1 != gamemode) {
+            GamemodeItems[i].style.backgroundColor = "#18232e";
+        }
+    })
+
+    GamemodeItems[i].addEventListener("click", function() {
+        gamemodeColorLock = false;
+        gamemodeContentHover = false;
+        GamemodeContent.style.display = "none";
+        GamemodeButton.style.backgroundColor = "#202F3D";
+        GamemodeButton.innerHTML = GamemodeButton.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        if (i + 1 == gamemode) return;
+        GamemodeItems[i].style.backgroundColor = "#507699";
+        GamemodeItems[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
+        gamemode = i + 1; // Surely this works prayge
+        GamemodeButton.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
         configureInVersusMode()
         call_Ranked_GetUserMatches_External();
+    })
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key == "Escape") {
+        if (GamemodeContent.style.display == "block") {
+            event.preventDefault();
+            GamemodeContent.style.display = "none";
+            gamemodeColorLock = false;
+            GamemodeButton.style.backgroundColor = "#202F3D";
+            GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        }
+        if (Versus_GamemodeContent1.style.display == "block") {
+            event.preventDefault();
+            Versus_GamemodeContent1.style.display = "none";
+            versus_gamemodeColorLock1 = false;
+            Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+            Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        }
+        if (Versus_GamemodeContent2.style.display == "block") {
+            event.preventDefault();
+            Versus_GamemodeContent2.style.display = "none";
+            versus_gamemodeColorLock2 = false;
+            Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+            Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        }
     }
 })
 
-RankedButton.addEventListener("mouseover", function() {
-    if (gamemode == 3) {
-        RankedButton.style.backgroundColor = "#354e66";
+document.addEventListener("mouseup", function(event) {
+    if (GamemodeContent.style.display == "block" && !gamemodeContentHover && !gamemodeButtonHover) {
+        GamemodeContent.style.display = "none";
+        gamemodeColorLock = false;
+        GamemodeButton.style.backgroundColor = "#202F3D";
+        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+    }
+    if (Versus_GamemodeContent1.style.display == "block" && !versus_gamemodeContentHover1 && !versus_gamemodeButtonHover1) {
+        Versus_GamemodeContent1.style.display = "none";
+        versus_gamemodeColorLock1 = false;
+        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+    }
+    if (Versus_GamemodeContent2.style.display == "block" && !versus_gamemodeContentHover2 && !versus_gamemodeButtonHover2) {
+        Versus_GamemodeContent2.style.display = "none";
+        versus_gamemodeColorLock2 = false;
+        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+        Versus_GamemodeContent2.innerHTML = Versus_GamemodeContent2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
     }
 })
 
-RankedButton.addEventListener("mouseout", function() {
-    if (gamemode == 3) {
-        RankedButton.style.backgroundColor = "#202F3D";
+// Versus 1 Gamemode Button
+Versus_GamemodeButton1.addEventListener("click", function() {
+    Versus_GamemodeButton1.style.backgroundColor = "#507699";
+    if (Versus_GamemodeContent1.style.display == "block") {
+        Versus_GamemodeContent1.style.display = "none";
+        gamemodeColorLock = false;
+        Versus_GamemodeButton1.style.backgroundColor = "#354e66";
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+    } else {
+        Versus_GamemodeContent1.style.display = "block";
+        gamemodeColorLock = true;
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
     }
 })
 
-PrivateButton.addEventListener("mouseover", function() {
-    if (gamemode == 2) {
-        PrivateButton.style.backgroundColor = "#354e66";
+Versus_GamemodeButton1.addEventListener("mouseover", function() {
+    versus_gamemodeButtonHover1 = true;
+    if (!versus_gamemodeColorLock1) {
+        Versus_GamemodeButton1.style.backgroundColor = "#354e66";
     }
 })
 
-PrivateButton.addEventListener("mouseout", function() {
-    if (gamemode == 2) {
-        PrivateButton.style.backgroundColor = "#202F3D";
+Versus_GamemodeButton1.addEventListener("mouseout", function() {
+    versus_gamemodeButtonHover1 = false;
+    if (!versus_gamemodeColorLock1) {
+        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
     }
 })
 
-PrivateButton.addEventListener("click", function() {
-    if (gamemode == 2) {
-        PrivateButton.style.backgroundColor = "#507699";
-        RankedButton.style.backgroundColor = "#202F3D";
-        gamemode = 3;
-        configureInVersusMode()
-        call_Ranked_GetUserMatches_External();
+Versus_GamemodeContent1.addEventListener("mouseover", function() {
+    versus_gamemodeContentHover1 = true;
+})
+
+Versus_GamemodeContent1.addEventListener("mouseout", function() {
+    versus_gamemodeContentHover1 = false;
+})
+
+// Versus 1 Gamemode Items
+for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
+    if (Versus_GamemodeItems1[i].textContent == Versus_GamemodeButton1.textContent) {
+        Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
+    }
+
+    Versus_GamemodeItems1[i].addEventListener("mouseover", function() {
+        if (i + 1 != gamemode) {
+            Versus_GamemodeItems1[i].style.backgroundColor = "#354e66";
+        }
+    })
+
+    Versus_GamemodeItems1[i].addEventListener("mouseout", function() {
+        if (i + 1 != gamemode) {
+            Versus_GamemodeItems1[i].style.backgroundColor = "#18232e";
+        }
+    })
+
+    Versus_GamemodeItems1[i].addEventListener("click", function() {
+        versus_gamemodeColorLock1 = false;
+        versus_gamemodeContentHover1 = false;
+        Versus_GamemodeContent1.style.display = "none";
+        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        if (i + 1 == gamemode) return;
+        Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
+        Versus_GamemodeItems1[gamemode - 1].style.backgroundColor = "#18232e";
+        gamemode = i + 1; // Surely this works prayge
+        Versus_GamemodeButton1.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        versus1ChangeStats();
+    })
+}
+
+// Versus 2 Gamemode Button
+Versus_GamemodeButton2.addEventListener("click", function() {
+    Versus_GamemodeButton2.style.backgroundColor = "#507699";
+    if (Versus_GamemodeContent2.style.display == "block") {
+        Versus_GamemodeContent2.style.display = "none";
+        gamemodeColorLock = false;
+        Versus_GamemodeButton2.style.backgroundColor = "#354e66";
+        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+    } else {
+        Versus_GamemodeContent2.style.display = "block";
+        gamemodeColorLock = true;
+        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
     }
 })
 
-// Versus Gamemode Buttons
-Versus_RankedButton1.addEventListener("click", function() {
-    if (gamemode == 3) {
-        Versus_RankedButton1.style.backgroundColor = "#507699";
-        Versus_PrivateButton1.style.backgroundColor = "#202F3D";
-        gamemode = 2;
-        versus1ChangeStats()
+Versus_GamemodeButton2.addEventListener("mouseover", function() {
+    versus_gamemodeButtonHover2 = true;
+    if (!versus_gamemodeColorLock2) {
+        Versus_GamemodeButton2.style.backgroundColor = "#354e66";
     }
 })
 
-Versus_RankedButton1.addEventListener("mouseover", function() {
-    if (gamemode == 3) {
-        Versus_RankedButton1.style.backgroundColor = "#354e66";
+Versus_GamemodeButton2.addEventListener("mouseout", function() {
+    versus_gamemodeButtonHover2 = false;
+    if (!versus_gamemodeColorLock2) {
+        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
     }
 })
 
-Versus_RankedButton1.addEventListener("mouseout", function() {
-    if (gamemode == 3) {
-        Versus_RankedButton1.style.backgroundColor = "#202F3D";
-    }
+Versus_GamemodeContent2.addEventListener("mouseover", function() {
+    versus_gamemodeContentHover2 = true;
 })
 
-Versus_PrivateButton1.addEventListener("mouseover", function() {
-    if (gamemode == 2) {
-        Versus_PrivateButton1.style.backgroundColor = "#354e66";
-    }
+Versus_GamemodeContent2.addEventListener("mouseout", function() {
+    versus_gamemodeContentHover2 = false;
 })
 
-Versus_PrivateButton1.addEventListener("mouseout", function() {
-    if (gamemode == 2) {
-        Versus_PrivateButton1.style.backgroundColor = "#202F3D";
+// Versus 2 Gamemode Items
+for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
+    if (Versus_GamemodeItems2[i].textContent == Versus_GamemodeButton2.textContent) {
+        Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
     }
-})
 
-Versus_PrivateButton1.addEventListener("click", function() {
-    if (gamemode == 2) {
-        Versus_PrivateButton1.style.backgroundColor = "#507699";
-        Versus_RankedButton1.style.backgroundColor = "#202F3D";
-        gamemode = 3;
-        versus1ChangeStats()
-    }
-})
+    Versus_GamemodeItems2[i].addEventListener("mouseover", function() {
+        if (i + 1 != versus_gamemode2) {
+            Versus_GamemodeItems2[i].style.backgroundColor = "#354e66";
+        }
+    })
 
-Versus_RankedButton2.addEventListener("click", function() {
-    if (versus_gamemode2 == 3) {
-        Versus_RankedButton2.style.backgroundColor = "#507699";
-        Versus_PrivateButton2.style.backgroundColor = "#202F3D";
-        versus_gamemode2 = 2;
+    Versus_GamemodeItems2[i].addEventListener("mouseout", function() {
+        if (i + 1 != versus_gamemode2) {
+            Versus_GamemodeItems2[i].style.backgroundColor = "#18232e";
+        }
+    })
+
+    Versus_GamemodeItems2[i].addEventListener("click", function() {
+        versus_gamemodeColorLock2 = false;
+        versus_gamemodeContentHover2 = false;
+        Versus_GamemodeContent2.style.display = "none";
+        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        if (i + 1 == versus_gamemode2) return;
+        Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
+        Versus_GamemodeItems2[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
+        versus_gamemode2 = i + 1; // Surely this works prayge
+        Versus_GamemodeButton2.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
         versus_call_Ranked_GetUserMatches();
-    }
-})
-
-Versus_RankedButton2.addEventListener("mouseover", function() {
-    if (versus_gamemode2 == 3) {
-        Versus_RankedButton2.style.backgroundColor = "#354e66";
-    }
-})
-
-Versus_RankedButton2.addEventListener("mouseout", function() {
-    if (versus_gamemode2 == 3) {
-        Versus_RankedButton2.style.backgroundColor = "#202F3D";
-    }
-})
-
-Versus_PrivateButton2.addEventListener("mouseover", function() {
-    if (versus_gamemode2 == 2) {
-        Versus_PrivateButton2.style.backgroundColor = "#354e66";
-    }
-})
-
-Versus_PrivateButton2.addEventListener("mouseout", function() {
-    if (versus_gamemode2 == 2) {
-        Versus_PrivateButton2.style.backgroundColor = "#202F3D";
-    }
-})
-
-Versus_PrivateButton2.addEventListener("click", function() {
-    if (versus_gamemode2 == 2) {
-        Versus_PrivateButton2.style.backgroundColor = "#507699";
-        Versus_RankedButton2.style.backgroundColor = "#202F3D";
-        versus_gamemode2 = 3;
-        versus_call_Ranked_GetUserMatches();
-    }
-})
+    })
+}
 
 // Match Count Slider
 MatchCount.addEventListener("blur", function() {
     MatchCount.style.backgroundColor = "#18232e";
-    let newText = this.textContent;
+    let newText = MatchCount.value;
+    if (newText == "") return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1543,23 +1801,14 @@ MatchCount.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
-    this.textContent = newText;
     if (parseInt(newText) == previousMatchCount) return;
-    console.log(parseInt(newText));
     MatchCountSlider.value = parseInt(newText);
     previousMatchCount = parseInt(newText);
     matchCount = parseInt(newText);
+    MatchCount.placeholder = newText;
+    MatchCount.value = "";
     configureInVersusMode()
     call_Ranked_GetUserMatches_External();
-})
-
-MatchCount.addEventListener("focus", function() {
-    MatchCount.style.backgroundColor = "#507699";
-    const range = document.createRange();
-    range.selectNodeContents(MatchCount);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
 })
 
 MatchCount.addEventListener("keydown", function(event) {
@@ -1567,10 +1816,15 @@ MatchCount.addEventListener("keydown", function(event) {
         event.preventDefault();
         MatchCount.blur();
     }
+    if (event.key == "Escape") {
+        event.preventDefault();
+        MatchCount.value = "";
+        MatchCount.blur();
+    }
 })
 
 MatchCountSlider.addEventListener("input", function() {
-    MatchCount.textContent = MatchCountSlider.value;
+    MatchCount.placeholder = MatchCountSlider.value;
     matchCount = matchCountSlider.value;
 })
 
@@ -1578,7 +1832,7 @@ MatchCountSlider.addEventListener("mouseup", function() {
     if (MatchCountSlider.value >= matchCountLimit) {
         MatchCountSlider.value = matchCountLimit;
         matchCount = matchCountLimit;
-        MatchCount.textContent = String(matchCountLimit);
+        MatchCount.placeholder = String(matchCountLimit);
     }
     if (MatchCountSlider.value == previousMatchCount) return;
     previousMatchCount = MatchCountSlider.value;
@@ -1590,7 +1844,7 @@ MatchCountSlider.addEventListener("touchend", function() {
     if (MatchCountSlider.value >= matchCountLimit) {
         MatchCountSlider.value = matchCountLimit;
         matchCount = matchCountLimit;
-        MatchCount.textContent = String(matchCountLimit);
+        MatchCount.placeholder = String(matchCountLimit);
     }
     if (MatchCountSlider.value == previousMatchCount) return;
     previousMatchCount = matchCountSlider.value;
@@ -1615,8 +1869,8 @@ BackButton.addEventListener("click", function() {
 
 // Versus Nameplate
 Versus_PlayerName1.addEventListener("blur", function() {
-    const text = Versus_PlayerName1.innerText.trim();
-    if (text == previousName) return;
+    const text = Versus_PlayerName1.value.trim();
+    if (text == previousName || text == "") return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + text + "&player2=" + encodeURIComponent(versusIGN));
     } else {
@@ -1624,6 +1878,8 @@ Versus_PlayerName1.addEventListener("blur", function() {
     }
     ign = text;
     previousName = text;
+    Versus_PlayerName1.placeholder = Versus_PlayerName1.value;
+    Versus_PlayerName1.value = "";
     Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
@@ -1634,20 +1890,18 @@ Versus_PlayerName1.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         Versus_PlayerName1.blur();
-    }  
-})
+    }
 
-Versus_PlayerName1.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(Versus_PlayerName1);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_PlayerName1.value = ign;
+        Versus_PlayerName1.blur();
+    }
 })
 
 Versus_PlayerName2.addEventListener("blur", function() {
-    const text = Versus_PlayerName2.innerText.trim();
-    if (text == previousVersusIGN) return;
+    const text = Versus_PlayerName2.value.trim();
+    if (text == previousVersusIGN || text == "") return;
     if (text) {
         history.pushState({}, '', '/versus?player1=' + ign + "&player2=" + encodeURIComponent(text));
     } else {
@@ -1655,6 +1909,8 @@ Versus_PlayerName2.addEventListener("blur", function() {
     }
     versusIGN = text;
     previousVersusIGN = text;
+    Versus_PlayerName2.placeholder = Versus_PlayerName2.value;
+    Versus_PlayerName2.value = "";
     Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
@@ -1665,21 +1921,20 @@ Versus_PlayerName2.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         Versus_PlayerName2.blur();
-    }  
-})
+    }
 
-Versus_PlayerName2.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(Versus_PlayerName2);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_PlayerName2.value = previousVersusIGN;
+        Versus_PlayerName2.blur();
+    }
 })
 
 // Versus Match Count Sliders
 Versus_MatchCount1.addEventListener("blur", function() {
     Versus_MatchCount1.style.backgroundColor = "#18232e";
-    let newText = this.textContent;
+    let newText = Versus_MatchCount1.value;
+    if (newText == "") return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1688,22 +1943,13 @@ Versus_MatchCount1.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
-    this.textContent = newText;
+    Versus_MatchCount1.placeholder = newText;
+    Versus_MatchCount1.value = "";
     if (parseInt(newText) == versus_previousMatchCount1) return;
-    console.log(parseInt(newText));
     Versus_MatchCountSlider1.value = parseInt(newText);
     matchCount = parseInt(newText); 
     versus_previousMatchCount1 = parseInt(newText);
     versus1ChangeStats();
-})
-
-Versus_MatchCount1.addEventListener("focus", function() {
-    Versus_MatchCount1.style.backgroundColor = "#507699";
-    const range = document.createRange();
-    range.selectNodeContents(Versus_MatchCount1);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
 })
 
 Versus_MatchCount1.addEventListener("keydown", function(event) {
@@ -1711,10 +1957,16 @@ Versus_MatchCount1.addEventListener("keydown", function(event) {
         event.preventDefault();
         Versus_MatchCount1.blur();
     }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_MatchCount1.value = "";
+        Versus_MatchCount1.blur();
+    }
 })
 
 Versus_MatchCountSlider1.addEventListener("input", function() {
-    Versus_MatchCount1.textContent = Versus_MatchCountSlider1.value;
+    Versus_MatchCount1.placeholder = Versus_MatchCountSlider1.value;
     matchCount = Versus_MatchCountSlider1.value;
 })
 
@@ -1722,7 +1974,7 @@ Versus_MatchCountSlider1.addEventListener("mouseup", function() {
     if (Versus_MatchCountSlider1.value >= matchCountLimit) {
         Versus_MatchCountSlider1.value = matchCountLimit;
         matchCount = matchCountLimit;
-        Versus_MatchCount1.textContent = String(matchCountLimit);
+        Versus_MatchCount1.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
@@ -1733,7 +1985,7 @@ Versus_MatchCountSlider1.addEventListener("touchend", function() {
     if (Versus_MatchCountSlider1.value >= matchCountLimit) {
         Versus_MatchCountSlider1.value = matchCountLimit;
         matchCount = matchCountLimit;
-        Versus_MatchCount1.textContent = String(matchCountLimit);
+        Versus_MatchCount1.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
     versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
@@ -1742,7 +1994,8 @@ Versus_MatchCountSlider1.addEventListener("touchend", function() {
 
 Versus_MatchCount2.addEventListener("blur", function() {
     Versus_MatchCount2.style.backgroundColor = "#18232e";
-    let newText = this.textContent;    
+    let newText = Versus_MatchCount2.value;
+    if (newText == "") return;
     if (/^\d+$/.test(newText) == false) {
         // Has letters or number exceeds limit
         newText = "1";
@@ -1751,22 +2004,13 @@ Versus_MatchCount2.addEventListener("blur", function() {
     } else if (parseInt(newText) <= 0) {
         newText = "1";
     }
-    this.textContent = newText;
+    Versus_MatchCount2.placeholder = newText;
+    Versus_MatchCount2.value = "";
     if (parseInt(newText) == versus_previousMatchCount2) return;
-    console.log(parseInt(newText));
     Versus_MatchCountSlider2.value = parseInt(newText);
     versus_matchCount2 = parseInt(newText);
     versus_previousMatchCount2 = parseInt(newText);
     versus_call_Ranked_GetUserMatches();
-})
-
-Versus_MatchCount2.addEventListener("focus", function() {
-    Versus_MatchCount2.style.backgroundColor = "#507699";
-    const range = document.createRange();
-    range.selectNodeContents(Versus_MatchCount2);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
 })
 
 Versus_MatchCount2.addEventListener("keydown", function(event) {
@@ -1774,10 +2018,16 @@ Versus_MatchCount2.addEventListener("keydown", function(event) {
         event.preventDefault();
         Versus_MatchCount2.blur();
     }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        Versus_MatchCount2.value = "";
+        Versus_MatchCount2.blur();
+    }
 })
 
 Versus_MatchCountSlider2.addEventListener("input", function() {
-    Versus_MatchCount2.textContent = Versus_MatchCountSlider2.value;
+    Versus_MatchCount2.placeholder = Versus_MatchCountSlider2.value;
     versus_matchCount2 = Versus_MatchCountSlider2.value;
 })
 
@@ -1785,7 +2035,7 @@ Versus_MatchCountSlider2.addEventListener("mouseup", function() {
     if (Versus_MatchCountSlider2.value >= matchCountLimit) {
         Versus_MatchCountSlider2.value = matchCountLimit;
         versus_matchCount2 = matchCountLimit;
-        Versus_MatchCount2.textContent = String(matchCountLimit);
+        Versus_MatchCount2.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
@@ -1796,7 +2046,7 @@ Versus_MatchCountSlider2.addEventListener("touchend", function() {
     if (Versus_MatchCountSlider2.value >= matchCountLimit) {
         Versus_MatchCountSlider2.value = matchCountLimit;
         versus_matchCount2 = matchCountLimit;
-        Versus_MatchCount2.textContent = String(matchCountLimit);
+        Versus_MatchCount2.placeholder = String(matchCountLimit);
     }
     if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
     versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
@@ -1820,7 +2070,6 @@ VersusButton.addEventListener("click", function() {
     versusToggle = !versusToggle;
     if (versusToggle) {
         VersusButton.style.backgroundColor = "#507699";
-        history.pushState({}, '', '/' + encodeURIComponent("versus"));
         VersusSearchText.textContent = "(Search for player 2)";
         dataSection.style.display = "none";
         VersusSearch.style.display = "block";
@@ -1828,29 +2077,15 @@ VersusButton.addEventListener("click", function() {
         VersusSearch.style.display = "none";
         VersusButton.style.backgroundColor = "#202F3D";
         dataSection.style.display = "block";
-        const text = PlayerName.innerText.trim();
-        if (text) {
-            history.pushState({}, '', '/' + encodeURIComponent(text));
-        } else {
-            history.pushState({}, '', '/');
-        }
     }
 })
 
 //Versus Search
-VersusSearchText.addEventListener("focus", function() {
-    const range = document.createRange();
-    range.selectNodeContents(VersusSearchText);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-})
-
 VersusSearchText.addEventListener("blur", async function() {
-    const text = VersusSearchText.innerText.trim();
+    const text = VersusSearchText.value.trim();
     originalIGN = ign;
 
-    if (text == "(Search for player 2)") return;
+    if (text == "") return;
     if (text) {
         randomiseParrot(0);
         loadingText.textContent = "Loading . .";
@@ -1873,15 +2108,25 @@ VersusSearchText.addEventListener("blur", async function() {
         Versus_MatchCountSlider1.value = matchCount;
         Versus_MatchCountSlider2.value = versus_matchCount2;
 
-        versus_gamemode1 = gamemode;
         versus_gamemode2 = gamemode;
 
-        if (gamemode == 2) {
-            Versus_RankedButton1.style.backgroundColor = "#507699";
-            Versus_RankedButton2.style.backgroundColor = "#507699";
-        } else {
-            Versus_PrivateButton1.style.backgroundColor = "#507699";
-            Versus_PrivateButton2.style.backgroundColor = "#507699";
+        Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+        Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+
+        for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
+            if (Versus_GamemodeItems1[i].textContent == Versus_GamemodeButton1.textContent) {
+                Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
+            } else {
+                Versus_GamemodeItems1[i].style.backgroundColor = "#18232e";
+            }
+        }
+
+        for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
+            if (Versus_GamemodeItems2[i].textContent == Versus_GamemodeButton2.textContent) {
+                Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
+            } else {
+                Versus_GamemodeItems2[i].style.backgroundColor = "#18232e";
+            }
         }
 
         Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
@@ -1890,6 +2135,7 @@ VersusSearchText.addEventListener("blur", async function() {
         call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
         versusIGN = text;
+        previousVersusIGN = text;
         await versus_call_Ranked_GetUserMatches();
 
         BackButton.style.display = "block";
@@ -1914,5 +2160,11 @@ VersusSearchText.addEventListener("keydown", function(event) {
     if (event.key == "Enter") {
         event.preventDefault();
         VersusSearchText.blur();
-    }  
+    }
+
+    if (event.key == "Escape") {
+        event.preventDefault();
+        VersusSearchText.value = "";
+        VersusSearchText.blur();
+    }
 })
