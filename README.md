@@ -25,5 +25,5 @@ Version Changelog:
 1.2
 - Added Casual Mode
 - Revamped Gamemode Button to accommodate
-- Realised that '<input>' was a thing so optimised the input fields
+- Realised that input was a thing so optimised the input fields
 - Added 'Reset%' stat
