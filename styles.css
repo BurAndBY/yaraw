@@ -201,7 +201,7 @@ button {
     width: 100%;
     padding: 7px;
 }
-#gamemodeContent {
+#gamemodeContent, #versus_gamemodeContent1, #versus_gamemodeContent2 {
     border-bottom: 25px;
     position: absolute;
     min-width: 100%;
