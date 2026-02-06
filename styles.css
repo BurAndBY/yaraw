@@ -4,7 +4,9 @@
   font-display: swap;
 }
 body {
-    background-color:#202F3D;
+    background-color: #0b0e11;
+    color: #e7e7e7;
+    font-family: "Segoe UI", Tahoma, sans-serif;
     position: relative;
     margin: 0;
     padding: 0 16px 40px;
@@ -13,33 +15,33 @@ body {
     box-sizing: border-box;
 }
 h1 {
-    color: white;
-    font-family: "Lexend";
+    color: #e7e7e7;
+    font-family: "Lexend", "Segoe UI", Tahoma, sans-serif;
     font-size: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 input {
-    background-color: transparent;
-    color: white;
-    font-family: "Lexend";
+    background-color: #0b0e11;
+    color: #e7e7e7;
     font-size: 30px;
-    border: none;
+    border: 1px solid #2a2f36;
+    border-radius: 8px;
+    padding: 6px 10px;
 }
 select, label {
-    color: white;
-    font-family: "Lexend";
+    color: #9aa4b2;
     font-size: 14px;
 }
 select {
-    background-color: #18232e;
-    border: 1px solid #354e66;
+    background-color: #0b0e11;
+    border: 1px solid #2a2f36;
     border-radius: 8px;
     padding: 6px 10px;
 }
 input::placeholder {
-    color: white;
+    color: #9aa4b2;
 }
 input:focus {
     outline: none;
@@ -48,16 +50,16 @@ input:focus::placeholder {
     color: transparent;
 }
 h2 {
-    color: white;
-    font-family: "Lexend";
+    color: #e7e7e7;
+    font-family: "Lexend", "Segoe UI", Tahoma, sans-serif;
     font-size: 21px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 h3 {
-    color: white;
-    font-family: "Lexend";
+    color: #c7d2e0;
+    font-family: "Lexend", "Segoe UI", Tahoma, sans-serif;
     font-size: 14px;
     line-height: 1.4;
 }
@@ -109,24 +111,27 @@ h3 {
     margin-left: 5%;
 }
 .bubble {
-    background-color: #18232e;
+    background-color: #101316;
     margin: auto;
-    border-radius: 25px;
-    padding: 6px;
+    border-radius: 12px;
+    padding: 12px;
     width: min(94vw, 450px);
     min-height: 420px;
     height: auto;
     display: block;
+    border: 1px solid #2a2f36;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
 #MatchCount, #versus_matchCount1, #versus_matchCount2 {
-    background-color: #18232e;
-    border-radius: 5px;
+    background-color: #0b0e11;
+    border-radius: 6px;
     padding: 4px;
     font-size: 14px;
     font-weight: 700;
     width: 25px;
     float: left;
     text-align: center;
+    border: 1px solid #2a2f36;
 }
 ul {
   list-style-type: none;
@@ -174,8 +179,8 @@ table {
 }
 hr {
     height: 0px;
-    border: 0px solid #202F3D;
-    color: #202F3D;
+    border: 0px solid #2a2f36;
+    color: #2a2f36;
     border-top-width: 4px;
     border-bottom-width: 4px;
     border-radius: 25px;
@@ -190,12 +195,13 @@ hr {
     flex-wrap: wrap;
 }
 .seasonPicker {
-    background-color: #18232e;
-    border-radius: 20px;
-    padding: 6px 12px;
+    background-color: #101316;
+    border-radius: 10px;
+    padding: 8px 12px;
     display: flex;
     align-items: center;
     gap: 10px;
+    border: 1px solid #2a2f36;
 }
 .seasonPicker label {
     text-transform: uppercase;
@@ -206,43 +212,58 @@ hr {
     min-width: 70px;
 }
 .gamemodeDiv {
-    background-color: #18232e;
-    height: 30px;
-    border-radius: 25px;
-    padding: 10px;
+    background-color: #101316;
+    border-radius: 10px;
+    padding: 6px;
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex: 1;
     position: relative;
+    border: 1px solid #2a2f36;
 }
 #versus {
-    background-color: #18232e;
+    background-color: #101316;
     width: 200px;
-    height: 30px;
-    border-radius: 25px;
-    padding: 10px;
+    border-radius: 10px;
+    padding: 6px;
     margin: auto;
     display: flex;
     justify-content: center;
     align-items: center;
     flex: 1;
+    border: 1px solid #2a2f36;
 }
 #versusButton {
     border-radius: 25px;
     width: 100%;
 }
 button {
-    background-color: #202F3D;
-    color: white;
-    font-family: "Lexend";
+    background-color: #1a1f25;
+    color: #e7e7e7;
     font-size: 16px;
-    border: none;
+    border: 1px solid #2a2f36;
     cursor: pointer;
     width: 100%;
     padding: 7px;
     touch-action: manipulation;
+    border-radius: 8px;
+}
+.gamemodeButton,
+#versusButton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    height: 28px;
+    padding: 4px 10px;
+    font-size: 14px;
+    line-height: 1.2;
+}
+.gamemodeButton .arrow {
+    float: none;
+    margin-top: 0;
 }
 #gamemodeContent, #versus_gamemodeContent1, #versus_gamemodeContent2 {
     border-bottom: 25px;
@@ -250,19 +271,21 @@ button {
     min-width: 100%;
     display: none;
     margin-top: 100px;
-    background-color: #18232e;
-    outline: 8px solid #202F3D;
-    border-radius: 25px;
+    background-color: #101316;
+    outline: 8px solid #0b0e11;
+    border-radius: 10px;
+    border: 1px solid #2a2f36;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
 .gamemodeButton {
-    border-radius: 25px;
+    border-radius: 8px;
 }
 .gamemodeItem {
     margin-right: 6px;
-    background-color:#18232e;
+    background-color: #1a1f25;
 }
 .arrow {
-    border: solid white;
+    border: solid #e7e7e7;
     border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
@@ -287,12 +310,12 @@ button {
     outline: none;
 }
 .slider::-webkit-slider-runnable-track {
-    background: #18232e;
+    background: #1a1f25;
     height: 8px;
     border-radius: 5px;
 }
 .slider::-moz-range-track {
-    background: #18232e;
+    background: #1a1f25;
     height: 8px;
     border-radius: 5px;
 }
@@ -301,18 +324,20 @@ button {
   appearance: none;
   height: 20px;
   width: 20px;
-  background: white;
+  background: #e7e7e7;
   border-radius: 50%;
   margin-top: -6px;
+  border: 1px solid #2a2f36;
 }
 .slider::-moz-range-thumb {
   -webkit-appearance: none;
   appearance: none;
   height: 20px;
   width: 20px;
-  background: white;
+  background: #e7e7e7;
   border-radius: 50%;
   margin-top: -6px;
+  border: 1px solid #2a2f36;
 }
 #loadingScreen {
     align-items: center;
@@ -335,13 +360,14 @@ button {
     text-align: center;
 }
 #back {
-    background-color: #18232e;
-    border-radius: 25px;
+    background-color: #1a1f25;
+    border-radius: 10px;
     width: 120px;
     height: 40px;
     margin-top: 20px;
     margin-left: 16px;
     display: none;
+    border: 1px solid #2a2f36;
 }
 @media (max-width: 900px) {
     body {
