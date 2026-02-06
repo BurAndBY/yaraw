@@ -6,6 +6,11 @@
 body {
     background-color:#202F3D;
     position: relative;
+    margin: 0;
+    padding: 0 16px 40px;
+}
+* {
+    box-sizing: border-box;
 }
 h1 {
     color: white;
@@ -21,6 +26,17 @@ input {
     font-family: "Lexend";
     font-size: 30px;
     border: none;
+}
+select, label {
+    color: white;
+    font-family: "Lexend";
+    font-size: 14px;
+}
+select {
+    background-color: #18232e;
+    border: 1px solid #354e66;
+    border-radius: 8px;
+    padding: 6px 10px;
 }
 input::placeholder {
     color: white;
@@ -46,10 +62,11 @@ h3 {
     line-height: 1.4;
 }
 #nameplate {
-    width: 480px;
-    height: 150px;
+    width: min(95vw, 480px);
+    height: auto;
     margin-bottom: 40px;
     margin-top: 30px;
+    display: flow-root;
 }
 .versusContainers {
     display: flex;
@@ -61,21 +78,23 @@ h3 {
     font-weight: 700;
 }
 #nameplatePlayer1 {
-    width: 480px;
-    height: 150px;
+    width: min(95vw, 480px);
+    height: auto;
     margin:0%;
     margin-bottom: 40px;
     display: none;
     margin-top: -65px;
+    overflow: hidden;
 }
 #nameplatePlayer2 {
-    width: 480px;
-    height: 150px;
+    width: min(95vw, 480px);
+    height: auto;
     margin:0%;
     margin-bottom: 40px;
     display: none;
     margin-top: -65px;
     margin-left: 5%;
+    overflow: hidden;
 }
 #versus_config1 {
     display: none;
@@ -94,8 +113,9 @@ h3 {
     margin: auto;
     border-radius: 25px;
     padding: 6px;
-    width: 450px;
-    height: 550px;
+    width: min(94vw, 450px);
+    min-height: 420px;
+    height: auto;
     display: block;
 }
 #MatchCount, #versus_matchCount1, #versus_matchCount2 {
@@ -166,7 +186,24 @@ hr {
     align-items: center;
     margin: auto;
     gap: 15px;
-    width: 46%;
+    width: min(96vw, 900px);
+    flex-wrap: wrap;
+}
+.seasonPicker {
+    background-color: #18232e;
+    border-radius: 20px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.seasonPicker label {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+}
+.seasonPicker select {
+    min-width: 70px;
 }
 .gamemodeDiv {
     background-color: #18232e;
@@ -205,6 +242,7 @@ button {
     cursor: pointer;
     width: 100%;
     padding: 7px;
+    touch-action: manipulation;
 }
 #gamemodeContent, #versus_gamemodeContent1, #versus_gamemodeContent2 {
     border-bottom: 25px;
@@ -304,4 +342,61 @@ button {
     margin-top: 20px;
     margin-left: 16px;
     display: none;
+}
+@media (max-width: 900px) {
+    body {
+        padding: 0 12px 32px;
+    }
+    h1 {
+        font-size: 26px;
+    }
+    h2 {
+        font-size: 18px;
+    }
+    #matchCountChanger {
+        width: 100%;
+        gap: 12px;
+    }
+    #versus {
+        width: 100%;
+    }
+    #loadingScreen {
+        width: 100%;
+    }
+    #nameplatePlayer1, #nameplatePlayer2 {
+        margin-top: 0;
+        margin-left: 0;
+    }
+    .versusContainers {
+        flex-direction: column;
+        gap: 16px;
+    }
+    #versus_config1, #versus_config2 {
+        flex-wrap: wrap;
+    }
+    #versus_data1, #versus_data2 {
+        width: 100%;
+    }
+    li {
+        display: block;
+        width: 100%;
+    }
+    table {
+        float: none;
+        width: 100%;
+        padding-right: 0;
+        margin-bottom: 12px;
+    }
+    td {
+        padding-left: 4px;
+    }
+    .bubble {
+        width: 100% !important;
+        min-height: 0;
+        padding: 12px;
+    }
+    table {
+        float: none !important;
+        padding-right: 0 !important;
+    }
 }

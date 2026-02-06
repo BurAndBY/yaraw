@@ -17,10 +17,12 @@ const gamemodes = ["Casual", "Ranked", "Private"];
 
 const defaultMatchCount = 20;
 const matchCountLimit = 50;
+const defaultSeason = 10;
 
 let previousName = "";
 let previousMatchCount = defaultMatchCount;
 let matchCount = defaultMatchCount;
+let season = defaultSeason;
 
 let ign = "";
 let uuid = "";
@@ -197,6 +199,9 @@ const MatchCountChanger = document.getElementById("matchCountChanger");
 
 const MatchCount = document.getElementById("MatchCount");
 const MatchCountSlider = document.getElementById("matchCountSlider");
+const SeasonSelect = document.getElementById("seasonSelect");
+const Versus_SeasonSelect1 = document.getElementById("versus_seasonSelect1");
+const Versus_SeasonSelect2 = document.getElementById("versus_seasonSelect2");
 
 const VersusButton = document.getElementById("versusButton");
 const VersusSearch = document.getElementById("versusSearch");
@@ -520,6 +525,33 @@ function configureInVersusMode() {
             history.pushState({}, '', '/');
         }
     }
+}
+
+function setSeasonValue(newSeason) {
+    season = newSeason;
+    if (SeasonSelect) SeasonSelect.value = String(newSeason);
+    if (Versus_SeasonSelect1) Versus_SeasonSelect1.value = String(newSeason);
+    if (Versus_SeasonSelect2) Versus_SeasonSelect2.value = String(newSeason);
+}
+
+function isVersusRoute() {
+    return window.location.pathname.slice(1) === "versus";
+}
+
+function refreshSeasonData() {
+    if (isVersusRoute()) {
+        versus1ChangeStats();
+        versus_call_Ranked_GetUserMatches();
+        return;
+    }
+    call_Ranked_GetUserMatches_External();
+}
+
+function handleSeasonChange(event) {
+    const newSeason = parseInt(event.target.value, 10);
+    if (!newSeason || newSeason === season) return;
+    setSeasonValue(newSeason);
+    refreshSeasonData();
 }
 
 async function versus1ChangeStats() {
@@ -910,7 +942,7 @@ async function versus_call_Ranked_GetMatch2(matchID) {
 }
 
 async function call_Ranked_GetMatches_Internal() {
-    const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount);
+    const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount + "&season=" + season);
     const statusCode = response.status;
 
     promises = [];
@@ -1357,7 +1389,7 @@ async function versus_call_Ranked_GetUserMatches() {
         LoadingText.style.display = "block";
         LoadingParrot.style.display = "inline";
 
-        const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2);
+        const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2 + "&season=" + season);
         const statusCode = response.status;
 
         promises = [];
@@ -1469,6 +1501,8 @@ async function versus_call_Ranked_GetUserMatches() {
 const currentPath = window.location.pathname.slice(1);
 console.log(window.location.pathname.slice(1));
 
+setSeasonValue(defaultSeason);
+
 if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
@@ -1566,6 +1600,16 @@ GamemodeContent.addEventListener("mouseover", function() {
 GamemodeContent.addEventListener("mouseout", function() {
     gamemodeContentHover = false;
 })
+
+if (SeasonSelect) {
+    SeasonSelect.addEventListener("change", handleSeasonChange);
+}
+if (Versus_SeasonSelect1) {
+    Versus_SeasonSelect1.addEventListener("change", handleSeasonChange);
+}
+if (Versus_SeasonSelect2) {
+    Versus_SeasonSelect2.addEventListener("change", handleSeasonChange);
+}
 
 // Gamemode Items
 for (let i = 0; i < GamemodeItems.length; i++) {
