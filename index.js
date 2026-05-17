@@ -17,7 +17,7 @@ const gamemodes = ["Casual", "Ranked", "Private"];
 
 const defaultMatchCount = 20;
 const matchCountLimit = 50;
-const defaultSeason = 10;
+const defaultSeason = 11;
 
 let previousName = "";
 let previousMatchCount = defaultMatchCount;

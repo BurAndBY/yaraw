@@ -379,6 +379,10 @@ button {
     h2 {
         font-size: 18px;
     }
+    h3 {
+        font-size: 13px;
+        line-height: 1.3;
+    }
     #matchCountChanger {
         width: 100%;
         gap: 12px;
@@ -393,10 +397,6 @@ button {
         margin-top: 0;
         margin-left: 0;
     }
-    .versusContainers {
-        flex-direction: column;
-        gap: 16px;
-    }
     #versus_config1, #versus_config2 {
         flex-wrap: wrap;
     }
@@ -406,12 +406,6 @@ button {
     li {
         display: block;
         width: 100%;
-    }
-    table {
-        float: none;
-        width: 100%;
-        padding-right: 0;
-        margin-bottom: 12px;
     }
     td {
         padding-left: 4px;
@@ -423,6 +417,174 @@ button {
     }
     table {
         float: none !important;
+        width: 100%;
         padding-right: 0 !important;
+        margin-bottom: 12px;
+    }
+    .dataIcon {
+        width: 40px;
+        height: 40px;
+    }
+    .bastionDataIcon {
+        width: 40px;
+        height: 48px;
+    }
+    #nameplatePlayer2 > div:nth-child(3) {
+        margin-top: -18% !important;
+    }
+    #playerModel {
+        width: 100%;
+        height: auto;
+        max-width: 130px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0 6px 20px;
+    }
+    h1 {
+        font-size: 20px;
+    }
+    h2 {
+        font-size: 14px;
+    }
+    h3 {
+        font-size: 12px;
+        line-height: 1.25;
+    }
+    input {
+        font-size: 18px;
+    }
+    #nameplate {
+        width: 100%;
+        margin-bottom: 16px;
+        margin-top: 12px;
+    }
+    #playerModel {
+        width: 100%;
+        height: auto;
+        max-width: 100px;
+    }
+    #playerName {
+        font-size: 16px;
+        margin-top: 6px;
+    }
+    #pbLabel, #winRateLabel {
+        font-size: 13px;
+        padding-right: 12px !important;
+    }
+    .bubble {
+        width: 100% !important;
+        padding: 8px;
+        min-height: 0;
+    }
+    .dataIcon {
+        width: 32px;
+        height: 32px;
+    }
+    .bastionDataIcon {
+        width: 32px;
+        height: 38px;
+    }
+    td {
+        padding-left: 3px;
+    }
+    #matchCountChanger {
+        width: 100%;
+        gap: 6px;
+    }
+    #matchCountChanger h3 {
+        width: 40px;
+        font-size: 13px;
+    }
+    .slider {
+        width: 70px;
+    }
+    #MatchCount, #versus_matchCount1, #versus_matchCount2 {
+        font-size: 12px;
+        width: 22px;
+    }
+    #versus {
+        width: 100%;
+    }
+    #loadingScreen {
+        width: 100%;
+    }
+    #back {
+        width: 70px;
+        height: 30px;
+        font-size: 13px;
+        margin-left: 6px;
+        margin-top: 12px;
+    }
+    .seasonPicker {
+        padding: 5px 8px;
+        gap: 4px;
+    }
+    .seasonPicker select {
+        min-width: 50px;
+        font-size: 11px;
+        padding: 3px 5px;
+    }
+    .seasonPicker label {
+        font-size: 10px;
+    }
+    .gamemodeButton,
+    #versusButton {
+        height: 24px;
+        padding: 3px 8px;
+        font-size: 12px;
+    }
+    #versusSearch {
+        margin-top: 25%;
+    }
+    #versusSearchText {
+        font-size: 16px;
+    }
+    #nameplatePlayer1, #nameplatePlayer2 {
+        width: 100%;
+        margin-bottom: 16px;
+        margin-top: 0;
+        margin-left: 0;
+    }
+    #versus_config1, #versus_config2 {
+        gap: 6px;
+    }
+    #versus_data1, #versus_data2 {
+        width: 100%;
+    }
+    .versusContainers {
+        gap: 8px;
+    }
+    #configUI {
+        gap: 8px;
+    }
+    #playerNameContainer {
+        height: auto !important;
+    }
+    #playerInfoContainer {
+        margin-left: 0 !important;
+    }
+    #nameplatePlayer2 > div:nth-child(3) {
+        margin-top: -22% !important;
+    }
+    #nameplatePlayer2 > div:nth-child(1) {
+        margin-left: 4px !important;
+    }
+    #playerModelContainer {
+        border-width: 1px !important;
+    }
+    #gamemodeContent, #versus_gamemodeContent1, #versus_gamemodeContent2 {
+        margin-top: 80px;
+    }
+    #versus_config1, #versus_config2 {
+        flex-wrap: wrap;
+    }
+    table {
+        margin-bottom: 8px;
+    }
+    #loadingText {
+        font-size: 20px;
     }
 }
