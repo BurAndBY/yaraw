@@ -615,8 +615,8 @@ async function accessVersusByURL(player1, player2) {
     Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
     Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
 
-    Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + player1 + "/face";
-    Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + player2 + "/face";
+    Versus_PlayerModel1.src = "https://render.crafty.gg/3d/bust/" + player1;
+    Versus_PlayerModel2.src = "https://render.crafty.gg/3d/bust/" + player2;
 
     ign = player1;
     originalIGN = player1;
@@ -1507,7 +1507,7 @@ if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
     PlayerName.value = decodeURIComponent(currentPath);
-    PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + PlayerName.value + "/face";
+    PlayerModel.src = "https://render.crafty.gg/3d/bust/" + PlayerName.value;
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches_External();
 } else if (currentPath == "versus") {
@@ -1542,7 +1542,7 @@ PlayerName.addEventListener("blur", function() {
     previousName = encodeURIComponent(text);
     PlayerName.placeholder = PlayerName.value;
     PlayerName.value = "";
-    PlayerModel.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    PlayerModel.src = "https://render.crafty.gg/3d/bust/" + text;
     dataSection.style.display = "block";
     versusToggle = false;
     VersusSearch.style.display = "none";
@@ -1924,7 +1924,7 @@ Versus_PlayerName1.addEventListener("blur", function() {
     previousName = text;
     Versus_PlayerName1.placeholder = Versus_PlayerName1.value;
     Versus_PlayerName1.value = "";
-    Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    Versus_PlayerModel1.src = "https://render.crafty.gg/3d/bust/" + text;
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
     versus1ChangeStats();
@@ -1955,7 +1955,7 @@ Versus_PlayerName2.addEventListener("blur", function() {
     previousVersusIGN = text;
     Versus_PlayerName2.placeholder = Versus_PlayerName2.value;
     Versus_PlayerName2.value = "";
-    Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+    Versus_PlayerModel2.src = "https://render.crafty.gg/3d/bust/" + text;
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
     versus_call_Ranked_GetUserMatches();
@@ -2173,8 +2173,8 @@ VersusSearchText.addEventListener("blur", async function() {
             }
         }
 
-        Versus_PlayerModel1.src = "https://starlightskins.lunareclipse.studio/render/default/" + ign + "/face";
-        Versus_PlayerModel2.src = "https://starlightskins.lunareclipse.studio/render/default/" + text + "/face";
+        Versus_PlayerModel1.src = "https://render.crafty.gg/3d/bust/" + ign;
+        Versus_PlayerModel2.src = "https://render.crafty.gg/3d/bust/" + text;
 
         call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
