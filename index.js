@@ -177,6 +177,7 @@ const Nameplate = document.getElementById("nameplate");
 const PlayerName = document.getElementById("playerName");
 const PbLabel = document.getElementById("pbLabel");
 const WinRateLabel = document.getElementById("winRateLabel");
+const EloLabel = document.getElementById("eloLabel");
 const PlayerModel = document.getElementById("playerModel");
 const NameplateParrot = document.getElementById("nameplateParrot");
 
@@ -210,6 +211,7 @@ const VersusSearchText = document.getElementById("versusSearchText");
 const Versus_NameplatePlayer1 = document.getElementById("nameplatePlayer1");
 const Versus_WinRateLabel1 = document.getElementById("versus_winRateLabel1");
 const Versus_PbLabel1 = document.getElementById("versus_pbLabel1");
+const Versus_EloLabel1 = document.getElementById("versus_eloLabel1");
 const Versus_PlayerName1 = document.getElementById("versus_playerName1");
 const Versus_PlayerModel1 = document.getElementById("versus_playerModel1");
 
@@ -229,6 +231,7 @@ const Versus_MatchCountSlider2 = document.getElementById("versus_matchCountSlide
 const Versus_NameplatePlayer2 = document.getElementById("nameplatePlayer2");
 const Versus_WinRateLabel2 = document.getElementById("versus_winRateLabel2");
 const Versus_PbLabel2 = document.getElementById("versus_pbLabel2");
+const Versus_EloLabel2 = document.getElementById("versus_eloLabel2");
 const Versus_PlayerName2 = document.getElementById("versus_playerName2");
 const Versus_PlayerModel2 = document.getElementById("versus_playerModel2");
 
@@ -484,6 +487,47 @@ function percentageCalc(e1, e2) {
     }
 
     return result.toFixed(1) + "%";
+}
+
+function getRankedElo(userData) {
+    return userData?.data?.statistics?.season?.eloRate
+        ?? userData?.data?.statistics?.season?.elo
+        ?? userData?.data?.statistics?.total?.eloRate
+        ?? userData?.data?.eloRate
+        ?? userData?.data?.elo
+        ?? null;
+}
+
+function getEloTier(elo) {
+    if (elo > 2000) return "netherite";
+    if (elo > 1500) return "diamond";
+    if (elo > 1200) return "emerald";
+    if (elo > 900) return "gold";
+    if (elo > 600) return "iron";
+    return "coal";
+}
+
+function setEloLabel(label, elo) {
+    if (!label) return;
+
+    const icon = label.querySelector(".eloIcon");
+    const text = label.querySelector(".eloText");
+    const value = Number(elo);
+
+    if (!Number.isFinite(value)) {
+        if (icon) {
+            icon.className = "eloIcon";
+            icon.hidden = true;
+        }
+        if (text) text.textContent = "Elo: N/A";
+        return;
+    }
+
+    if (icon) {
+        icon.hidden = false;
+        icon.className = "eloIcon eloIcon-" + getEloTier(value);
+    }
+    if (text) text.textContent = "Elo: " + Math.round(value);
 }
 
 function randomiseParrot(parrot) {
@@ -1104,7 +1148,7 @@ async function call_Ranked_GetUserMatches_External() {
 
         playerModel.style.visibility = "visible";
         PlayerNameContainer.style.display = "inline";
-        playerInfoContainer.style.display = "inline";
+        playerInfoContainer.style.display = "flex";
         NameplateLoading.style.display = "none";
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches_External': ", error);
@@ -1126,10 +1170,11 @@ async function call_Ranked_GetUser() {
         if (statusCode != 200) {
             playerModel.style.visibility = "visible";
             PlayerNameContainer.style.display = "inline";
-            playerInfoContainer.style.display = "inline";
+            playerInfoContainer.style.display = "flex";
             NameplateLoading.style.display = "none";
             PbLabel.textContent = "PB: N/A";
             WinRateLabel.textContent = "W/L%: N/A";
+            setEloLabel(EloLabel, null);
             PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
             switch (statusCode) {
                 case 400:
@@ -1146,9 +1191,11 @@ async function call_Ranked_GetUser() {
         const pb = data["data"]["statistics"]["season"]["bestTime"]["ranked"];
         const wins = data["data"]["statistics"]["season"]["wins"]["ranked"];
         const losses = data["data"]["statistics"]["season"]["loses"]["ranked"];
+        const elo = getRankedElo(data);
 
         PageTitle.textContent = data["data"]["nickname"] + " | Ranked Analysis";
         WinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
+        setEloLabel(EloLabel, elo);
         uuid = data["data"]["uuid"];
         PbLabel.textContent = "PB: " + msToMinSecs(pb);
         PlayerName.textContent = data["data"]["nickname"];
@@ -1168,6 +1215,7 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
         if (statusCode != 200) {
             versusPbLabel.textContent = "PB: N/A";
             versusWinRateLabel.textContent = "W/L%: N/A";
+            setEloLabel(playerNum == 1 ? Versus_EloLabel2 : Versus_EloLabel1, null);
             BackButton.style.display = "block";
             switch (statusCode) {
                 case 400:
@@ -1184,9 +1232,11 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
         const pb = data["data"]["statistics"]["season"]["bestTime"]["ranked"];
         const wins = data["data"]["statistics"]["season"]["wins"]["ranked"];
         const losses = data["data"]["statistics"]["season"]["loses"]["ranked"];
+        const elo = getRankedElo(data);
 
         versusWinRateLabel.textContent = "W/L%: " + percentageCalc(wins, wins + losses);
         versusPbLabel.textContent = "PB: " + msToMinSecs(pb);
+        setEloLabel(playerNum == 1 ? Versus_EloLabel2 : Versus_EloLabel1, elo);
         versusPlayerName.placeholder = data["data"]["nickname"];
         versusPlayerName.value = "";
 
