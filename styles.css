@@ -37,26 +37,46 @@ body {
   position: relative;
 }
 
-body::before {
-  content: "Ranked Analysis";
-  display: block;
+.siteHeader {
   width: min(100%, 56rem);
-  margin: 0 auto 4px;
+  margin: 0 auto 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.viewTabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.viewTab {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  padding: 0 0 9px;
+  border-bottom: 2px solid transparent;
   color: var(--text-muted);
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: 0.08em;
   line-height: 1.5;
+  text-decoration: none;
   text-transform: uppercase;
+  transition: border-color 160ms ease, color 160ms ease;
 }
 
-body::after {
-  content: "mcsr.player.feed.stats";
-  display: block;
-  width: min(100%, 56rem);
-  margin: 0 auto 28px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--line);
+.viewTab:hover,
+.viewTab:focus-visible {
+  color: var(--text);
+  outline: none;
+}
+
+.viewTab[aria-current="page"] {
+  border-bottom-color: var(--accent);
+  color: var(--text-strong);
+}
+
+.siteContext {
+  padding: 9px 0 12px;
   color: var(--text-faint);
   font-size: 12px;
   line-height: 1.5;
@@ -665,13 +685,342 @@ td h3 span {
   font-size: 12px;
 }
 
+#seedInfoView {
+  width: min(100%, 56rem);
+  margin: 0 auto;
+}
+
+#seedInfoView[hidden],
+#rankedAnalysisView[hidden] {
+  display: none;
+}
+
+.seedHero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+  align-items: end;
+  gap: 28px;
+  margin-bottom: 36px;
+  padding: 0 0 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.seedHero h1 {
+  margin-bottom: 7px;
+  color: var(--text-strong);
+}
+
+.seedHero p,
+.seedSectionHeader p {
+  color: var(--text-faint);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.seedField {
+  display: grid;
+  gap: 4px;
+}
+
+.seedField input {
+  padding: 7px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.seedInfoGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 40px 36px;
+}
+
+.seedSection {
+  min-width: 0;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.seedOtherSection {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 36px;
+}
+
+.seedOtherSection > .seedSectionHeader {
+  grid-column: 1 / -1;
+}
+
+.seedSubsection + .seedSubsection {
+  border-left: 1px solid var(--line);
+  padding-left: 36px;
+}
+
+.seedSectionHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 48px;
+  margin-bottom: 18px;
+}
+
+.seedSectionHeader h2 {
+  margin-bottom: 4px;
+  color: var(--text-strong);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.seedToggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 1px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.seedToggle input {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: transparent !important;
+}
+
+.seedToggle input:checked {
+  border-color: var(--accent);
+  background: var(--accent) !important;
+  box-shadow: inset 0 0 0 3px var(--bg);
+}
+
+.seedControl {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.seedControlLabel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 30px;
+}
+
+.seedNumberInput {
+  width: 72px;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-strong);
+  font-size: 13px;
+  text-align: right;
+}
+
+.seedSlider {
+  width: 100%;
+}
+
+.seedButtonRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.seedButtonRow button {
+  min-width: 0;
+  min-height: 30px;
+  padding: 5px 6px;
+  background: var(--bg) !important;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.seedButtonRow button:hover,
+.seedButtonRow button:focus-visible {
+  background: var(--panel-hover) !important;
+  color: var(--text-strong);
+}
+
+.seedPresetRow button {
+  color: var(--text-faint);
+}
+
+.seedRodButtons {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.seedRodButtons button {
+  display: grid;
+  gap: 3px;
+  min-height: 48px;
+}
+
+.seedRodButtons strong {
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.seedRodButtons span {
+  color: var(--text-faint);
+  font-size: 10px;
+}
+
+.seedTableWrap {
+  max-height: 390px;
+  overflow: auto;
+  border-top: 1px solid var(--line);
+}
+
+.seedTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.seedTable tr {
+  display: table-row;
+  min-height: 0;
+  padding: 0;
+}
+
+.seedTable tr:hover {
+  background: var(--panel-hover);
+}
+
+.seedTable th,
+.seedTable td,
+.seedTable td:first-child {
+  display: table-cell;
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 400;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.seedTable th {
+  position: sticky;
+  z-index: 1;
+  top: 0;
+  background: var(--bg);
+  color: var(--text-faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.seedTable th:last-child,
+.seedTable td:last-child {
+  width: 92px;
+  color: var(--text);
+  text-align: right;
+}
+
+.seedItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.seedItem img,
+.seedResultSummary img,
+.seedIcon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.seedItem span {
+  overflow-wrap: anywhere;
+}
+
+.seedResultSummary {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.seedResultSummary strong {
+  color: var(--text-strong);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.seedIconList {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 4px;
+  min-height: 44px;
+  max-height: 184px;
+  padding: 10px 0;
+  overflow: auto;
+}
+
+.seedIconCell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line-soft);
+  background: #111114;
+}
+
+.seedIconCell.isMiss .seedIcon {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.seedIconCell.isBroken::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 1px;
+  background: #ef4444;
+  transform: rotate(-45deg);
+}
+
+.seedMore {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 7px;
+  color: var(--text-faint);
+  font-size: 10px;
+}
+
+.seedEmpty {
+  padding: 14px 6px;
+  color: var(--text-faint);
+  font-size: 11px;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   body {
     padding: 36px 18px 56px;
   }
 
-  body::before,
-  body::after,
+  .siteHeader,
   ul,
   .bubble,
   #nameplate,
@@ -679,6 +1028,14 @@ td h3 span {
   #loadingScreen,
   .versusContainers {
     width: 100% !important;
+  }
+
+  .seedInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .seedOtherSection {
+    grid-column: auto;
   }
 
   .bubble > div:not([id]) {
@@ -701,8 +1058,33 @@ td h3 span {
     padding: 28px 12px 44px;
   }
 
-  body::after {
+  .siteHeader {
     margin-bottom: 20px;
+  }
+
+  .viewTabs {
+    gap: 18px;
+  }
+
+  .seedHero {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .seedOtherSection {
+    display: block;
+  }
+
+  .seedOtherSection > .seedSectionHeader {
+    margin-bottom: 10px;
+  }
+
+  .seedSubsection + .seedSubsection {
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-left: 0;
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
   #playerModel,
@@ -745,6 +1127,10 @@ td h3 span {
 
   .slider {
     width: 96px;
+  }
+
+  .slider.seedSlider {
+    width: 100%;
   }
 
   tr {

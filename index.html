@@ -8,6 +8,15 @@
     </head>
 
     <body>
+        <header class="siteHeader">
+            <nav class="viewTabs" aria-label="Tools">
+                <a class="viewTab" id="rankedAnalysisTab" href="/" aria-current="page">Ranked analysis</a>
+                <a class="viewTab" id="seedInfoTab" href="/?view=seed">Seed info</a>
+            </nav>
+            <p class="siteContext" id="siteContext">mcsr.player.feed.stats</p>
+        </header>
+
+        <main id="rankedAnalysisView">
         <button id="back"><- Back</button>
         <!--Nameplate-->
         <div class="bubble" id="nameplate">
@@ -654,6 +663,125 @@
             </ul>
             </div>
         </div>
+        </main>
+
+        <main id="seedInfoView" hidden>
+            <section class="seedHero">
+                <div>
+                    <h1>Ranked seed info</h1>
+                    <p>Deterministic ranked RNG outcomes for barters, blaze rods, flint, and eyes.</p>
+                </div>
+                <label class="seedField" for="seedInput">
+                    <span>Seed</span>
+                    <input id="seedInput" type="text" inputmode="numeric" autocomplete="off" spellcheck="false">
+                </label>
+            </section>
+
+            <div class="seedInfoGrid">
+                <section class="seedSection" aria-labelledby="bartersHeading">
+                    <div class="seedSectionHeader">
+                        <div>
+                            <h2 id="bartersHeading">Barters</h2>
+                            <p>Ranked piglin barter sequence</p>
+                        </div>
+                        <label class="seedToggle">
+                            <input id="barterFilter" type="checkbox">
+                            <span>Route items only</span>
+                        </label>
+                    </div>
+
+                    <div class="seedControl">
+                        <div class="seedControlLabel">
+                            <label for="goldSlider">Gold ingots</label>
+                            <input class="seedNumberInput" id="goldInput" type="number" min="0" max="500" value="1">
+                        </div>
+                        <input class="slider seedSlider" id="goldSlider" type="range" min="0" max="108" value="1">
+                        <div class="seedButtonRow" aria-label="Adjust gold ingots">
+                            <button type="button" data-gold-delta="-9">-9</button>
+                            <button type="button" data-gold-delta="-1">-1</button>
+                            <button type="button" data-gold-delta="1">+1</button>
+                            <button type="button" data-gold-delta="9">+9</button>
+                        </div>
+                        <div class="seedButtonRow seedPresetRow" aria-label="Gold block presets">
+                            <button type="button" data-gold-blocks="4">4 blocks</button>
+                            <button type="button" data-gold-blocks="6">6 blocks</button>
+                            <button type="button" data-gold-blocks="8">8 blocks</button>
+                            <button type="button" data-gold-blocks="10">10 blocks</button>
+                        </div>
+                    </div>
+
+                    <div class="seedTableWrap">
+                        <table class="seedTable">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Item</th>
+                                    <th scope="col">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="barterItems"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="seedSection" aria-labelledby="blazesHeading">
+                    <div class="seedSectionHeader">
+                        <div>
+                            <h2 id="blazesHeading">Blazes</h2>
+                            <p>No looting</p>
+                        </div>
+                    </div>
+
+                    <div class="seedControl">
+                        <div class="seedControlLabel">
+                            <label for="blazeSlider">Blazes killed</label>
+                            <input class="seedNumberInput" id="blazeInput" type="number" min="0" max="500" value="1">
+                        </div>
+                        <input class="slider seedSlider" id="blazeSlider" type="range" min="0" max="20" value="1">
+                        <div class="seedButtonRow seedRodButtons" aria-label="Select a rod target">
+                            <button type="button" data-rod-target="5"><strong>5 rods</strong><span id="fiveRodsKilled">-</span></button>
+                            <button type="button" data-rod-target="6"><strong>6 rods</strong><span id="sixRodsKilled">-</span></button>
+                            <button type="button" data-rod-target="7"><strong>7 rods</strong><span id="sevenRodsKilled">-</span></button>
+                        </div>
+                    </div>
+
+                    <div class="seedResultSummary">
+                        <img src="public/textures/blaze_rod.png" alt="" aria-hidden="true">
+                        <span>Blaze rods</span>
+                        <strong id="blazeRodAmount">0</strong>
+                    </div>
+                    <div class="seedIconList" id="blazeSequence" aria-label="Blaze drop sequence"></div>
+                </section>
+
+                <section class="seedSection seedOtherSection" aria-labelledby="otherHeading">
+                    <div class="seedSectionHeader">
+                        <div>
+                            <h2 id="otherHeading">Other</h2>
+                            <p>Overworld and stronghold RNG</p>
+                        </div>
+                    </div>
+
+                    <div class="seedSubsection">
+                        <div class="seedResultSummary">
+                            <img src="public/textures/flint.png" alt="" aria-hidden="true">
+                            <span>Gravel for flint</span>
+                            <strong id="flintCount">-</strong>
+                        </div>
+                        <div class="seedIconList" id="flintSequence" aria-label="Flint mining sequence"></div>
+                    </div>
+
+                    <div class="seedSubsection">
+                        <div class="seedResultSummary">
+                            <img src="public/textures/ender_eye.png" alt="" aria-hidden="true">
+                            <span>First five eyes</span>
+                            <strong id="eyeCount">-</strong>
+                        </div>
+                        <div class="seedIconList" id="eyeSequence" aria-label="Eye break sequence"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
         <script src="index.js"></script>
+        <script src="seed-info.js"></script>
     </body>
 </html>

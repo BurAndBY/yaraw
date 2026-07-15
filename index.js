@@ -13,6 +13,13 @@ let versus_gamemodeButtonHover2 = false;
 let versus_gamemodeContentHover1 = false;
 let versus_gamemodeContentHover2 = false;
 
+const API_BASE_URL = "https://api.mcsrranked.com";
+const SKIN_RENDER_BASE_URL = "https://render.crafty.gg/3d/bust/";
+const BUTTON_IDLE_COLOR = "#202F3D";
+const BUTTON_ACTIVE_COLOR = "#507699";
+const BUTTON_HOVER_COLOR = "#354e66";
+const PANEL_IDLE_COLOR = "#18232e";
+
 const gamemodes = ["Casual", "Ranked", "Private"];
 
 const defaultMatchCount = 20;
@@ -47,127 +54,80 @@ const parrots = [
     "gifs/RedParrotDancing.gif"
 ]
 
-let overworlds = {
-    "BURIED_TREASURE": [0, 0],
-    "VILLAGE": [0, 0],
-    "SHIPWRECK": [0, 0],
-    "DESERT_TEMPLE": [0, 0],
-    "RUINED_PORTAL": [0, 0],
+function createOverworldStats() {
+    return {
+        "BURIED_TREASURE": [0, 0],
+        "VILLAGE": [0, 0],
+        "SHIPWRECK": [0, 0],
+        "DESERT_TEMPLE": [0, 0],
+        "RUINED_PORTAL": [0, 0],
+    };
 }
 
-let bastions = { // 0 = time, 1 = no. completed, 2 = no. entered, 3 = deaths, 4 = resets
-    "BRIDGE": [0, 0, 0, 0, 0],
-    "HOUSING": [0, 0, 0, 0, 0],
-    "STABLES": [0, 0, 0, 0, 0],
-    "TREASURE": [0, 0, 0, 0, 0]
+function createBastionStats() {
+    return { // 0 = time, 1 = no. completed, 2 = no. entered, 3 = deaths, 4 = resets
+        "BRIDGE": [0, 0, 0, 0, 0],
+        "HOUSING": [0, 0, 0, 0, 0],
+        "STABLES": [0, 0, 0, 0, 0],
+        "TREASURE": [0, 0, 0, 0, 0]
+    };
 }
 
-let timings = {
-    "overworld": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "nether": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "bastion": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "fortress": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "blind": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "stronghold": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "end": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "completions": [0, 0]
-};
-
-let versus_overworlds2 = {
-    "BURIED_TREASURE": [0, 0],
-    "VILLAGE": [0, 0],
-    "SHIPWRECK": [0, 0],
-    "DESERT_TEMPLE": [0, 0],
-    "RUINED_PORTAL": [0, 0],
+function createTimingStats() {
+    return {
+        "overworld": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "nether": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "bastion": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "fortress": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "blind": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "stronghold": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "end": {
+            "splits": [0, 0],
+            "timestamps": [0, 0],
+            "deaths": 0,
+            "resets": 0
+        },
+        "completions": [0, 0]
+    };
 }
 
-let versus_bastions2 = { // The same as the normal bastions bs
-    "BRIDGE": [0, 0, 0, 0, 0],
-    "HOUSING": [0, 0, 0, 0, 0],
-    "STABLES": [0, 0, 0, 0, 0],
-    "TREASURE": [0, 0, 0, 0, 0]
-}
+let overworlds = createOverworldStats();
+let bastions = createBastionStats();
+let timings = createTimingStats();
 
-let versus_timings2 = {
-    "overworld": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "nether": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "bastion": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "fortress": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "blind": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "stronghold": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "end": {
-        "splits": [0, 0],
-        "timestamps": [0, 0],
-        "deaths": 0,
-        "resets": 0
-    },
-    "completions": [0, 0]
-};
+let versus_overworlds2 = createOverworldStats();
+let versus_bastions2 = createBastionStats();
+let versus_timings2 = createTimingStats();
 
 // Elements
 const PageTitle = document.getElementById("pageTitle");
@@ -489,6 +449,113 @@ function percentageCalc(e1, e2) {
     return result.toFixed(1) + "%";
 }
 
+function rankedApiUrl(path) {
+    return API_BASE_URL + path;
+}
+
+function skinRenderUrl(username) {
+    return SKIN_RENDER_BASE_URL + encodeURIComponent(username);
+}
+
+function setStatusError(statusCode) {
+    PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis";
+
+    switch (statusCode) {
+        case 400:
+            LoadingText.textContent = "Invalid IGN!";
+            break;
+        case 429:
+            LoadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
+            break;
+    }
+}
+
+function setLoadingVisible(isVisible) {
+    LoadingText.style.display = isVisible ? "block" : "none";
+    LoadingParrot.style.display = isVisible ? "inline" : "none";
+}
+
+function setButtonArrow(button, isOpen) {
+    const arrowClass = isOpen ? "up" : "down";
+    const marginTop = isOpen ? "6px" : "3px";
+    button.innerHTML = button.textContent + '<i style="float: right;margin-top: ' + marginTop + ';" class="arrow ' + arrowClass + '"></i>';
+}
+
+function setGamemodeButtonText(button, modeIndex) {
+    button.innerHTML = gamemodes[modeIndex - 1] + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+}
+
+function openGamemodeDropdown(button, content) {
+    button.style.backgroundColor = BUTTON_ACTIVE_COLOR;
+    content.style.display = "block";
+    setButtonArrow(button, true);
+}
+
+function closeGamemodeDropdown(button, content, backgroundColor = BUTTON_IDLE_COLOR) {
+    content.style.display = "none";
+    button.style.backgroundColor = backgroundColor;
+    setButtonArrow(button, false);
+}
+
+function syncGamemodeItems(items, activeMode) {
+    for (let i = 0; i < items.length; i++) {
+        items[i].style.backgroundColor = i + 1 === activeMode ? BUTTON_ACTIVE_COLOR : PANEL_IDLE_COLOR;
+    }
+}
+
+function clampMatchCount(value) {
+    if (!/^\d+$/.test(value)) return 1;
+    return Math.min(Math.max(parseInt(value, 10), 1), matchCountLimit);
+}
+
+function bindMatchCountControl({ input, slider, getPrevious, setPrevious, setValue, onCommit }) {
+    function commitValue(value) {
+        const nextValue = clampMatchCount(String(value));
+        slider.value = nextValue;
+        input.placeholder = String(nextValue);
+        setValue(nextValue);
+
+        if (nextValue === getPrevious()) return;
+        setPrevious(nextValue);
+        onCommit();
+    }
+
+    input.addEventListener("blur", function() {
+        input.style.backgroundColor = PANEL_IDLE_COLOR;
+        if (input.value === "") return;
+
+        commitValue(input.value);
+        input.value = "";
+    });
+
+    input.addEventListener("keydown", function(event) {
+        if (event.key == "Enter") {
+            event.preventDefault();
+            input.blur();
+        }
+
+        if (event.key == "Escape") {
+            event.preventDefault();
+            input.value = "";
+            input.blur();
+        }
+    });
+
+    slider.addEventListener("input", function() {
+        const nextValue = clampMatchCount(String(slider.value));
+        input.placeholder = String(nextValue);
+        setValue(nextValue);
+    });
+
+    slider.addEventListener("mouseup", function() {
+        commitValue(slider.value);
+    });
+
+    slider.addEventListener("touchend", function() {
+        commitValue(slider.value);
+    });
+}
+
 function getRankedElo(userData) {
     return userData?.data?.statistics?.season?.eloRate
         ?? userData?.data?.statistics?.season?.elo
@@ -539,8 +606,8 @@ function randomiseParrot(parrot) {
 }
 
 function calculateDiff(time1, time2, label) {
-    result = Math.abs(time1 - time2);
-    converted = msToMinSecs(result);
+    const result = Math.abs(time1 - time2);
+    const converted = msToMinSecs(result);
 
     if (converted == "N/A") {
         label.textContent = " (N/A)";
@@ -561,7 +628,7 @@ function configureInVersusMode() {
     if (versusToggle) {
         versusToggle = false;
         VersusSearch.style.display = "none";
-        VersusButton.style.backgroundColor = "#202F3D";
+        VersusButton.style.backgroundColor = BUTTON_IDLE_COLOR;
         const text = PlayerName.innerText.trim();
         if (text) {
             history.pushState({}, '', '/' + encodeURIComponent(text));
@@ -635,11 +702,10 @@ async function versus1ChangeStats() {
 
 async function accessVersusByURL(player1, player2) {
     randomiseParrot(0);
-    loadingText.textContent = "Loading . .";
-    loadingText.style.marginTop = "40%";
+    LoadingText.textContent = "Loading . .";
+    LoadingText.style.marginTop = "40%";
 
-    LoadingText.style.display = "block";
-    LoadingParrot.style.display = "inline";
+    setLoadingVisible(true);
 
     Nameplate.style.display = "none";
     configUI.style.display = "none";
@@ -656,11 +722,11 @@ async function accessVersusByURL(player1, player2) {
 
     versus_gamemode2 = gamemode;
 
-    Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
-    Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+    setGamemodeButtonText(Versus_GamemodeButton1, gamemode);
+    setGamemodeButtonText(Versus_GamemodeButton2, gamemode);
 
-    Versus_PlayerModel1.src = "https://render.crafty.gg/3d/bust/" + player1;
-    Versus_PlayerModel2.src = "https://render.crafty.gg/3d/bust/" + player2;
+    Versus_PlayerModel1.src = skinRenderUrl(player1);
+    Versus_PlayerModel2.src = skinRenderUrl(player2);
 
     ign = player1;
     originalIGN = player1;
@@ -689,26 +755,17 @@ async function accessVersusByURL(player1, player2) {
 
     dataSection.style.display = "none";
 
-    LoadingText.style.display = "none";
-    LoadingParrot.style.display = "none";
+    setLoadingVisible(false);
 }
 
 // Calling APIs
 async function call_Ranked_GetMatch(matchID) {
     try {
-        const response = await fetch("https://api.mcsrranked.com/matches/" + matchID);
+        const response = await fetch(rankedApiUrl("/matches/" + matchID));
         const statusCode = response.status;
 
         if (statusCode != 200) {
-            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
+            setStatusError(statusCode);
             return;
         }
 
@@ -841,19 +898,11 @@ async function call_Ranked_GetMatch(matchID) {
 
 async function versus_call_Ranked_GetMatch2(matchID) {
     try {
-        const response = await fetch("https://api.mcsrranked.com/matches/" + matchID);
+        const response = await fetch(rankedApiUrl("/matches/" + matchID));
         const statusCode = response.status;
 
         if (statusCode != 200) {
-            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
+            setStatusError(statusCode);
             return;
         }
 
@@ -978,7 +1027,6 @@ async function versus_call_Ranked_GetMatch2(matchID) {
         if (finished) {
             versus_timings2["end"]["splits"][0] += finalTime - timestamps["enter_end"];
             versus_timings2["end"]["splits"][1] += 1;
-            console.log("S");
         }
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetMatch': ", error);
@@ -986,82 +1034,17 @@ async function versus_call_Ranked_GetMatch2(matchID) {
 }
 
 async function call_Ranked_GetMatches_Internal() {
-    const response = await fetch("https://api.mcsrranked.com/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount + "&season=" + season);
+    const response = await fetch(rankedApiUrl("/users/" + ign + "/matches?type=" + gamemode + "&count=" + matchCount + "&season=" + season));
     const statusCode = response.status;
 
-    promises = [];
+    const promises = [];
 
-    overworlds = {
-        "BURIED_TREASURE": [0, 0],
-        "VILLAGE": [0, 0],
-        "SHIPWRECK": [0, 0],
-        "DESERT_TEMPLE": [0, 0],
-        "RUINED_PORTAL": [0, 0],
-    }
-
-    bastions = {
-        "BRIDGE": [0, 0, 0, 0, 0],
-        "HOUSING": [0, 0, 0, 0, 0],
-        "STABLES": [0, 0, 0, 0, 0],
-        "TREASURE": [0, 0, 0, 0, 0]
-    }
-
-    timings = {
-        "overworld": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "nether": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "bastion": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "fortress": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "blind": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "stronghold": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "end": {
-            "splits": [0, 0],
-            "timestamps": [0, 0],
-            "deaths": 0,
-            "resets": 0
-        },
-        "completions": [0, 0]
-    };
+    overworlds = createOverworldStats();
+    bastions = createBastionStats();
+    timings = createTimingStats();
 
     if (statusCode != 200) {
-        PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
-        switch (statusCode) {
-            case 400:
-                loadingText.textContent = "Invalid IGN!";
-                break;
-            case 429:
-                loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                break;
-        }
+        setStatusError(statusCode);
         return;
     }
 
@@ -1132,23 +1115,22 @@ async function call_Ranked_GetMatches_Internal() {
 async function call_Ranked_GetUserMatches_External() {
     try {
         randomiseParrot(0);
-        loadingText.textContent = "Loading . .";
+        LoadingText.textContent = "Loading . .";
 
         dataSection.style.display = "none";
         configUI.style.display = "none";
-        LoadingText.style.display = "block";
-        LoadingParrot.style.display = "inline";
+        setLoadingVisible(true);
 
         await call_Ranked_GetMatches_Internal();
 
-        loadingText.style.display = "none";
+        LoadingText.style.display = "none";
         LoadingParrot.style.display = "none";
         dataSection.style.display = "block";
         configUI.style.display = "flex";
 
-        playerModel.style.visibility = "visible";
+        PlayerModel.style.visibility = "visible";
         PlayerNameContainer.style.display = "inline";
-        playerInfoContainer.style.display = "flex";
+        PlayerInfoContainer.style.display = "flex";
         NameplateLoading.style.display = "none";
     } catch (error) {
         console.error("ERROR IN 'call_Ranked_GetUserMatches_External': ", error);
@@ -1159,31 +1141,23 @@ async function call_Ranked_GetUser() {
     try {
         randomiseParrot(1);
 
-        playerModel.style.visibility = "hidden";
+        PlayerModel.style.visibility = "hidden";
         PlayerNameContainer.style.display = "none";
-        playerInfoContainer.style.display = "none";
+        PlayerInfoContainer.style.display = "none";
         NameplateLoading.style.display = "inline";
 
-        const response = await fetch("https://api.mcsrranked.com/users/" + ign);
+        const response = await fetch(rankedApiUrl("/users/" + ign));
         const statusCode = response.status;
 
         if (statusCode != 200) {
-            playerModel.style.visibility = "visible";
+            PlayerModel.style.visibility = "visible";
             PlayerNameContainer.style.display = "inline";
-            playerInfoContainer.style.display = "flex";
+            PlayerInfoContainer.style.display = "flex";
             NameplateLoading.style.display = "none";
             PbLabel.textContent = "PB: N/A";
             WinRateLabel.textContent = "W/L%: N/A";
             setEloLabel(EloLabel, null);
-            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis"; 
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
+            setStatusError(statusCode);
             return;
         }
 
@@ -1209,7 +1183,7 @@ async function call_Ranked_GetUser() {
 
 async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versusWinRateLabel, playerNum, playerName) {
     try {
-        const response = await fetch("https://api.mcsrranked.com/users/" + playerName);
+        const response = await fetch(rankedApiUrl("/users/" + playerName));
         const statusCode = response.status;
 
         if (statusCode != 200) {
@@ -1217,14 +1191,7 @@ async function call_Ranked_GetUser_Versus(versusPlayerName, versusPbLabel, versu
             versusWinRateLabel.textContent = "W/L%: N/A";
             setEloLabel(playerNum == 1 ? Versus_EloLabel2 : Versus_EloLabel1, null);
             BackButton.style.display = "block";
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
+            setStatusError(statusCode);
             return;
         }
 
@@ -1436,85 +1403,19 @@ async function versus_call_Ranked_GetUserMatches() {
         Versus_Data1.style.display = "none";
         Versus_Data2.style.display = "none";
 
-        LoadingText.style.display = "block";
-        LoadingParrot.style.display = "inline";
+        setLoadingVisible(true);
 
-        const response = await fetch("https://api.mcsrranked.com/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2 + "&season=" + season);
+        const response = await fetch(rankedApiUrl("/users/" + versusIGN + "/matches?type=" + versus_gamemode2 + "&count=" + versus_matchCount2 + "&season=" + season));
         const statusCode = response.status;
 
-        promises = [];
+        const promises = [];
 
-        versus_overworlds2 = {
-            "BURIED_TREASURE": [0, 0],
-            "VILLAGE": [0, 0],
-            "SHIPWRECK": [0, 0],
-            "DESERT_TEMPLE": [0, 0],
-            "RUINED_PORTAL": [0, 0],
-        }
-
-        versus_bastions2 = {
-            "BRIDGE": [0, 0, 0, 0, 0],
-            "HOUSING": [0, 0, 0, 0, 0],
-            "STABLES": [0, 0, 0, 0, 0],
-            "TREASURE": [0, 0, 0, 0, 0]
-        }
-
-        versus_timings2 = {
-            "overworld": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "nether": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "bastion": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "fortress": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "blind": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "stronghold": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "end": {
-                "splits": [0, 0],
-                "timestamps": [0, 0],
-                "deaths": 0,
-                "resets": 0
-            },
-            "completions": [0, 0]
-        };
+        versus_overworlds2 = createOverworldStats();
+        versus_bastions2 = createBastionStats();
+        versus_timings2 = createTimingStats();
 
         if (statusCode != 200) {
-            PageTitle.textContent = "Error code: " + statusCode + " | Ranked Analysis";
-            switch (statusCode) {
-                case 400:
-                    loadingText.textContent = "Invalid IGN!";
-                    break;
-                case 429:
-                    loadingText.textContent = "Too many requests being made! Please wait a few minutes before proceeding!";
-                    break;
-            }
+            setStatusError(statusCode);
             return;
         }
 
@@ -1538,8 +1439,7 @@ async function versus_call_Ranked_GetUserMatches() {
         Versus_Data1.style.display = "block";
         Versus_Data2.style.display = "block";
 
-        LoadingText.style.display = "none";
-        LoadingParrot.style.display = "none";
+        setLoadingVisible(false);
 
         versus_display_info();
     } catch (error) {
@@ -1549,27 +1449,30 @@ async function versus_call_Ranked_GetUserMatches() {
 
 // On Page load (if in a subdirectory)
 const currentPath = window.location.pathname.slice(1);
-console.log(window.location.pathname.slice(1));
+const seedInfoRequested = new URLSearchParams(window.location.search).get("view") === "seed";
 
 setSeasonValue(defaultSeason);
 
-if (currentPath && currentPath != "versus") {
+if (seedInfoRequested) {
+    PageTitle.textContent = "Seed Info | Ranked Analysis";
+} else if (currentPath && currentPath != "versus") {
     ign = currentPath;
     previousName = ign;
     PlayerName.value = decodeURIComponent(currentPath);
-    PlayerModel.src = "https://render.crafty.gg/3d/bust/" + PlayerName.value;
+    PlayerModel.src = skinRenderUrl(PlayerName.value);
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches_External();
 } else if (currentPath == "versus") {
-    const searchQuery = window.location.search;
-    const keywords = searchQuery.split(/[ ?&=]+/);
+    const params = new URLSearchParams(window.location.search);
+    const player1 = params.get("player1");
+    const player2 = params.get("player2");
 
-    if (!searchQuery || keywords[1] != "player1" || keywords[3] != "player2") {
+    if (!player1 || !player2) {
         history.pushState({}, '', '/');
         window.location.reload();
+    } else {
+        accessVersusByURL(player1, player2);
     }
-
-    accessVersusByURL(keywords[2], keywords[4]);    
 } else {
     history.pushState({}, '', '/');
     dataSection.style.display = "none";
@@ -1592,11 +1495,11 @@ PlayerName.addEventListener("blur", function() {
     previousName = encodeURIComponent(text);
     PlayerName.placeholder = PlayerName.value;
     PlayerName.value = "";
-    PlayerModel.src = "https://render.crafty.gg/3d/bust/" + text;
+    PlayerModel.src = skinRenderUrl(text);
     dataSection.style.display = "block";
     versusToggle = false;
     VersusSearch.style.display = "none";
-    VersusButton.style.backgroundColor = "#202F3D";
+    VersusButton.style.backgroundColor = BUTTON_IDLE_COLOR;
     call_Ranked_GetUser();
     call_Ranked_GetUserMatches_External();
 })
@@ -1609,37 +1512,33 @@ PlayerName.addEventListener("keydown", function(event) {
 
     if (event.key == "Escape") {
         event.preventDefault();
-        playerName.value = ign;
-        playerName.blur();
+        PlayerName.value = ign;
+        PlayerName.blur();
     }
 })
 
 // Gamemode button
 GamemodeButton.addEventListener("click", function() {
-    GamemodeButton.style.backgroundColor = "#507699";
     if (GamemodeContent.style.display == "block") {
-        GamemodeContent.style.display = "none";
         gamemodeColorLock = false;
-        GamemodeButton.style.backgroundColor = "#354e66";
-        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        closeGamemodeDropdown(GamemodeButton, GamemodeContent, BUTTON_HOVER_COLOR);
     } else {
-        GamemodeContent.style.display = "block";
         gamemodeColorLock = true;
-        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
+        openGamemodeDropdown(GamemodeButton, GamemodeContent);
     }
 })
 
 GamemodeButton.addEventListener("mouseover", function() {
     gamemodeButtonHover = true;
     if (!gamemodeColorLock) {
-        GamemodeButton.style.backgroundColor = "#354e66";
+        GamemodeButton.style.backgroundColor = BUTTON_HOVER_COLOR;
     }
 })
 
 GamemodeButton.addEventListener("mouseout", function() {
     gamemodeButtonHover = false;
     if (!gamemodeColorLock) {
-        GamemodeButton.style.backgroundColor = "#202F3D";
+        GamemodeButton.style.backgroundColor = BUTTON_IDLE_COLOR;
     }
 })
 
@@ -1664,32 +1563,30 @@ if (Versus_SeasonSelect2) {
 // Gamemode Items
 for (let i = 0; i < GamemodeItems.length; i++) {
     if (GamemodeItems[i].textContent == GamemodeButton.textContent) {
-        GamemodeItems[i].style.backgroundColor = "#507699";
+        GamemodeItems[i].style.backgroundColor = BUTTON_ACTIVE_COLOR;
     }
 
     GamemodeItems[i].addEventListener("mouseover", function() {
         if (i + 1 != gamemode) {
-            GamemodeItems[i].style.backgroundColor = "#354e66";
+            GamemodeItems[i].style.backgroundColor = BUTTON_HOVER_COLOR;
         }
     })
 
     GamemodeItems[i].addEventListener("mouseout", function() {
         if (i + 1 != gamemode) {
-            GamemodeItems[i].style.backgroundColor = "#18232e";
+            GamemodeItems[i].style.backgroundColor = PANEL_IDLE_COLOR;
         }
     })
 
     GamemodeItems[i].addEventListener("click", function() {
         gamemodeColorLock = false;
         gamemodeContentHover = false;
-        GamemodeContent.style.display = "none";
-        GamemodeButton.style.backgroundColor = "#202F3D";
-        GamemodeButton.innerHTML = GamemodeButton.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        closeGamemodeDropdown(GamemodeButton, GamemodeContent);
         if (i + 1 == gamemode) return;
-        GamemodeItems[i].style.backgroundColor = "#507699";
-        GamemodeItems[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
-        gamemode = i + 1; // Surely this works prayge
-        GamemodeButton.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        GamemodeItems[i].style.backgroundColor = BUTTON_ACTIVE_COLOR;
+        GamemodeItems[gamemode - 1].style.backgroundColor = PANEL_IDLE_COLOR;
+        gamemode = i + 1;
+        setGamemodeButtonText(GamemodeButton, gamemode);
         configureInVersusMode()
         call_Ranked_GetUserMatches_External();
     })
@@ -1699,75 +1596,59 @@ document.addEventListener("keydown", function(event) {
     if (event.key == "Escape") {
         if (GamemodeContent.style.display == "block") {
             event.preventDefault();
-            GamemodeContent.style.display = "none";
             gamemodeColorLock = false;
-            GamemodeButton.style.backgroundColor = "#202F3D";
-            GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+            closeGamemodeDropdown(GamemodeButton, GamemodeContent);
         }
         if (Versus_GamemodeContent1.style.display == "block") {
             event.preventDefault();
-            Versus_GamemodeContent1.style.display = "none";
             versus_gamemodeColorLock1 = false;
-            Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
-            Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+            closeGamemodeDropdown(Versus_GamemodeButton1, Versus_GamemodeContent1);
         }
         if (Versus_GamemodeContent2.style.display == "block") {
             event.preventDefault();
-            Versus_GamemodeContent2.style.display = "none";
             versus_gamemodeColorLock2 = false;
-            Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
-            Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+            closeGamemodeDropdown(Versus_GamemodeButton2, Versus_GamemodeContent2);
         }
     }
 })
 
 document.addEventListener("mouseup", function(event) {
     if (GamemodeContent.style.display == "block" && !gamemodeContentHover && !gamemodeButtonHover) {
-        GamemodeContent.style.display = "none";
         gamemodeColorLock = false;
-        GamemodeButton.style.backgroundColor = "#202F3D";
-        GamemodeButton.innerHTML = GamemodeButton.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        closeGamemodeDropdown(GamemodeButton, GamemodeContent);
     }
     if (Versus_GamemodeContent1.style.display == "block" && !versus_gamemodeContentHover1 && !versus_gamemodeButtonHover1) {
-        Versus_GamemodeContent1.style.display = "none";
         versus_gamemodeColorLock1 = false;
-        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
-        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        closeGamemodeDropdown(Versus_GamemodeButton1, Versus_GamemodeContent1);
     }
     if (Versus_GamemodeContent2.style.display == "block" && !versus_gamemodeContentHover2 && !versus_gamemodeButtonHover2) {
-        Versus_GamemodeContent2.style.display = "none";
         versus_gamemodeColorLock2 = false;
-        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
-        Versus_GamemodeContent2.innerHTML = Versus_GamemodeContent2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        closeGamemodeDropdown(Versus_GamemodeButton2, Versus_GamemodeContent2);
     }
 })
 
 // Versus 1 Gamemode Button
 Versus_GamemodeButton1.addEventListener("click", function() {
-    Versus_GamemodeButton1.style.backgroundColor = "#507699";
     if (Versus_GamemodeContent1.style.display == "block") {
-        Versus_GamemodeContent1.style.display = "none";
-        gamemodeColorLock = false;
-        Versus_GamemodeButton1.style.backgroundColor = "#354e66";
-        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        versus_gamemodeColorLock1 = false;
+        closeGamemodeDropdown(Versus_GamemodeButton1, Versus_GamemodeContent1, BUTTON_HOVER_COLOR);
     } else {
-        Versus_GamemodeContent1.style.display = "block";
-        gamemodeColorLock = true;
-        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
+        versus_gamemodeColorLock1 = true;
+        openGamemodeDropdown(Versus_GamemodeButton1, Versus_GamemodeContent1);
     }
 })
 
 Versus_GamemodeButton1.addEventListener("mouseover", function() {
     versus_gamemodeButtonHover1 = true;
     if (!versus_gamemodeColorLock1) {
-        Versus_GamemodeButton1.style.backgroundColor = "#354e66";
+        Versus_GamemodeButton1.style.backgroundColor = BUTTON_HOVER_COLOR;
     }
 })
 
 Versus_GamemodeButton1.addEventListener("mouseout", function() {
     versus_gamemodeButtonHover1 = false;
     if (!versus_gamemodeColorLock1) {
-        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton1.style.backgroundColor = BUTTON_IDLE_COLOR;
     }
 })
 
@@ -1782,62 +1663,56 @@ Versus_GamemodeContent1.addEventListener("mouseout", function() {
 // Versus 1 Gamemode Items
 for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
     if (Versus_GamemodeItems1[i].textContent == Versus_GamemodeButton1.textContent) {
-        Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
+        Versus_GamemodeItems1[i].style.backgroundColor = BUTTON_ACTIVE_COLOR;
     }
 
     Versus_GamemodeItems1[i].addEventListener("mouseover", function() {
         if (i + 1 != gamemode) {
-            Versus_GamemodeItems1[i].style.backgroundColor = "#354e66";
+            Versus_GamemodeItems1[i].style.backgroundColor = BUTTON_HOVER_COLOR;
         }
     })
 
     Versus_GamemodeItems1[i].addEventListener("mouseout", function() {
         if (i + 1 != gamemode) {
-            Versus_GamemodeItems1[i].style.backgroundColor = "#18232e";
+            Versus_GamemodeItems1[i].style.backgroundColor = PANEL_IDLE_COLOR;
         }
     })
 
     Versus_GamemodeItems1[i].addEventListener("click", function() {
         versus_gamemodeColorLock1 = false;
         versus_gamemodeContentHover1 = false;
-        Versus_GamemodeContent1.style.display = "none";
-        Versus_GamemodeButton1.style.backgroundColor = "#202F3D";
-        Versus_GamemodeButton1.innerHTML = Versus_GamemodeButton1.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        closeGamemodeDropdown(Versus_GamemodeButton1, Versus_GamemodeContent1);
         if (i + 1 == gamemode) return;
-        Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
-        Versus_GamemodeItems1[gamemode - 1].style.backgroundColor = "#18232e";
-        gamemode = i + 1; // Surely this works prayge
-        Versus_GamemodeButton1.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        Versus_GamemodeItems1[i].style.backgroundColor = BUTTON_ACTIVE_COLOR;
+        Versus_GamemodeItems1[gamemode - 1].style.backgroundColor = PANEL_IDLE_COLOR;
+        gamemode = i + 1;
+        setGamemodeButtonText(Versus_GamemodeButton1, gamemode);
         versus1ChangeStats();
     })
 }
 
 // Versus 2 Gamemode Button
 Versus_GamemodeButton2.addEventListener("click", function() {
-    Versus_GamemodeButton2.style.backgroundColor = "#507699";
     if (Versus_GamemodeContent2.style.display == "block") {
-        Versus_GamemodeContent2.style.display = "none";
-        gamemodeColorLock = false;
-        Versus_GamemodeButton2.style.backgroundColor = "#354e66";
-        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 3px;" class="arrow down"></i>';
+        versus_gamemodeColorLock2 = false;
+        closeGamemodeDropdown(Versus_GamemodeButton2, Versus_GamemodeContent2, BUTTON_HOVER_COLOR);
     } else {
-        Versus_GamemodeContent2.style.display = "block";
-        gamemodeColorLock = true;
-        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + '<i style="float: right;margin-top: 6px;" class="arrow up"></i>';
+        versus_gamemodeColorLock2 = true;
+        openGamemodeDropdown(Versus_GamemodeButton2, Versus_GamemodeContent2);
     }
 })
 
 Versus_GamemodeButton2.addEventListener("mouseover", function() {
     versus_gamemodeButtonHover2 = true;
     if (!versus_gamemodeColorLock2) {
-        Versus_GamemodeButton2.style.backgroundColor = "#354e66";
+        Versus_GamemodeButton2.style.backgroundColor = BUTTON_HOVER_COLOR;
     }
 })
 
 Versus_GamemodeButton2.addEventListener("mouseout", function() {
     versus_gamemodeButtonHover2 = false;
     if (!versus_gamemodeColorLock2) {
-        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
+        Versus_GamemodeButton2.style.backgroundColor = BUTTON_IDLE_COLOR;
     }
 })
 
@@ -1852,111 +1727,58 @@ Versus_GamemodeContent2.addEventListener("mouseout", function() {
 // Versus 2 Gamemode Items
 for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
     if (Versus_GamemodeItems2[i].textContent == Versus_GamemodeButton2.textContent) {
-        Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
+        Versus_GamemodeItems2[i].style.backgroundColor = BUTTON_ACTIVE_COLOR;
     }
 
     Versus_GamemodeItems2[i].addEventListener("mouseover", function() {
         if (i + 1 != versus_gamemode2) {
-            Versus_GamemodeItems2[i].style.backgroundColor = "#354e66";
+            Versus_GamemodeItems2[i].style.backgroundColor = BUTTON_HOVER_COLOR;
         }
     })
 
     Versus_GamemodeItems2[i].addEventListener("mouseout", function() {
         if (i + 1 != versus_gamemode2) {
-            Versus_GamemodeItems2[i].style.backgroundColor = "#18232e";
+            Versus_GamemodeItems2[i].style.backgroundColor = PANEL_IDLE_COLOR;
         }
     })
 
     Versus_GamemodeItems2[i].addEventListener("click", function() {
         versus_gamemodeColorLock2 = false;
         versus_gamemodeContentHover2 = false;
-        Versus_GamemodeContent2.style.display = "none";
-        Versus_GamemodeButton2.style.backgroundColor = "#202F3D";
-        Versus_GamemodeButton2.innerHTML = Versus_GamemodeButton2.textContent + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        closeGamemodeDropdown(Versus_GamemodeButton2, Versus_GamemodeContent2);
         if (i + 1 == versus_gamemode2) return;
-        Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
-        Versus_GamemodeItems2[versus_gamemode2 - 1].style.backgroundColor = "#18232e";
-        versus_gamemode2 = i + 1; // Surely this works prayge
-        Versus_GamemodeButton2.innerHTML = gamemodes[i] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>";
+        Versus_GamemodeItems2[i].style.backgroundColor = BUTTON_ACTIVE_COLOR;
+        Versus_GamemodeItems2[versus_gamemode2 - 1].style.backgroundColor = PANEL_IDLE_COLOR;
+        versus_gamemode2 = i + 1;
+        setGamemodeButtonText(Versus_GamemodeButton2, versus_gamemode2);
         versus_call_Ranked_GetUserMatches();
     })
 }
 
 // Match Count Slider
-MatchCount.addEventListener("blur", function() {
-    MatchCount.style.backgroundColor = "#18232e";
-    let newText = MatchCount.value;
-    if (newText == "") return;
-    if (/^\d+$/.test(newText) == false) {
-        // Has letters or number exceeds limit
-        newText = "1";
-    } else if (parseInt(newText) >= matchCountLimit) {
-        newText = String(matchCountLimit);
-    } else if (parseInt(newText) <= 0) {
-        newText = "1";
+bindMatchCountControl({
+    input: MatchCount,
+    slider: MatchCountSlider,
+    getPrevious: () => previousMatchCount,
+    setPrevious: value => previousMatchCount = value,
+    setValue: value => matchCount = value,
+    onCommit: () => {
+        configureInVersusMode();
+        call_Ranked_GetUserMatches_External();
     }
-    if (parseInt(newText) == previousMatchCount) return;
-    MatchCountSlider.value = parseInt(newText);
-    previousMatchCount = parseInt(newText);
-    matchCount = parseInt(newText);
-    MatchCount.placeholder = newText;
-    MatchCount.value = "";
-    configureInVersusMode()
-    call_Ranked_GetUserMatches_External();
-})
-
-MatchCount.addEventListener("keydown", function(event) {
-    if (event.key == "Enter") {
-        event.preventDefault();
-        MatchCount.blur();
-    }
-    if (event.key == "Escape") {
-        event.preventDefault();
-        MatchCount.value = "";
-        MatchCount.blur();
-    }
-})
-
-MatchCountSlider.addEventListener("input", function() {
-    MatchCount.placeholder = MatchCountSlider.value;
-    matchCount = matchCountSlider.value;
-})
-
-MatchCountSlider.addEventListener("mouseup", function() {
-    if (MatchCountSlider.value >= matchCountLimit) {
-        MatchCountSlider.value = matchCountLimit;
-        matchCount = matchCountLimit;
-        MatchCount.placeholder = String(matchCountLimit);
-    }
-    if (MatchCountSlider.value == previousMatchCount) return;
-    previousMatchCount = MatchCountSlider.value;
-    configureInVersusMode()
-    call_Ranked_GetUserMatches_External();
-})
-
-MatchCountSlider.addEventListener("touchend", function() {
-    if (MatchCountSlider.value >= matchCountLimit) {
-        MatchCountSlider.value = matchCountLimit;
-        matchCount = matchCountLimit;
-        MatchCount.placeholder = String(matchCountLimit);
-    }
-    if (MatchCountSlider.value == previousMatchCount) return;
-    previousMatchCount = matchCountSlider.value;
-    configureInVersusMode()
-    call_Ranked_GetUserMatches_External();
-})
+});
 
 // Home Button
 BackButton.addEventListener("mouseover", function() {
-    BackButton.style.backgroundColor = "#354e66";
+    BackButton.style.backgroundColor = BUTTON_HOVER_COLOR;
 })
 
 BackButton.addEventListener("mouseout", function() {
-    BackButton.style.backgroundColor = "#18232e";
+    BackButton.style.backgroundColor = PANEL_IDLE_COLOR;
 })
 
 BackButton.addEventListener("click", function() {
-    BackButton.style.backgroundColor = "#507699";
+    BackButton.style.backgroundColor = BUTTON_ACTIVE_COLOR;
     history.pushState({}, '', '/' + originalIGN);
     window.location.reload();
 })
@@ -1974,7 +1796,7 @@ Versus_PlayerName1.addEventListener("blur", function() {
     previousName = text;
     Versus_PlayerName1.placeholder = Versus_PlayerName1.value;
     Versus_PlayerName1.value = "";
-    Versus_PlayerModel1.src = "https://render.crafty.gg/3d/bust/" + text;
+    Versus_PlayerModel1.src = skinRenderUrl(text);
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
     versus1ChangeStats();
@@ -2005,7 +1827,7 @@ Versus_PlayerName2.addEventListener("blur", function() {
     previousVersusIGN = text;
     Versus_PlayerName2.placeholder = Versus_PlayerName2.value;
     Versus_PlayerName2.value = "";
-    Versus_PlayerModel2.src = "https://render.crafty.gg/3d/bust/" + text;
+    Versus_PlayerModel2.src = skinRenderUrl(text);
     LoadingText.textContent = "Loading . .";
     call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
     versus_call_Ranked_GetUserMatches();
@@ -2025,151 +1847,47 @@ Versus_PlayerName2.addEventListener("keydown", function(event) {
 })
 
 // Versus Match Count Sliders
-Versus_MatchCount1.addEventListener("blur", function() {
-    Versus_MatchCount1.style.backgroundColor = "#18232e";
-    let newText = Versus_MatchCount1.value;
-    if (newText == "") return;
-    if (/^\d+$/.test(newText) == false) {
-        // Has letters or number exceeds limit
-        newText = "1";
-    } else if (parseInt(newText) >= matchCountLimit) {
-        newText = String(matchCountLimit);
-    } else if (parseInt(newText) <= 0) {
-        newText = "1";
-    }
-    Versus_MatchCount1.placeholder = newText;
-    Versus_MatchCount1.value = "";
-    if (parseInt(newText) == versus_previousMatchCount1) return;
-    Versus_MatchCountSlider1.value = parseInt(newText);
-    matchCount = parseInt(newText); 
-    versus_previousMatchCount1 = parseInt(newText);
-    versus1ChangeStats();
-})
+bindMatchCountControl({
+    input: Versus_MatchCount1,
+    slider: Versus_MatchCountSlider1,
+    getPrevious: () => versus_previousMatchCount1,
+    setPrevious: value => versus_previousMatchCount1 = value,
+    setValue: value => matchCount = value,
+    onCommit: versus1ChangeStats
+});
 
-Versus_MatchCount1.addEventListener("keydown", function(event) {
-    if (event.key == "Enter") {
-        event.preventDefault();
-        Versus_MatchCount1.blur();
-    }
-
-    if (event.key == "Escape") {
-        event.preventDefault();
-        Versus_MatchCount1.value = "";
-        Versus_MatchCount1.blur();
-    }
-})
-
-Versus_MatchCountSlider1.addEventListener("input", function() {
-    Versus_MatchCount1.placeholder = Versus_MatchCountSlider1.value;
-    matchCount = Versus_MatchCountSlider1.value;
-})
-
-Versus_MatchCountSlider1.addEventListener("mouseup", function() {
-    if (Versus_MatchCountSlider1.value >= matchCountLimit) {
-        Versus_MatchCountSlider1.value = matchCountLimit;
-        matchCount = matchCountLimit;
-        Versus_MatchCount1.placeholder = String(matchCountLimit);
-    }
-    if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
-    versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
-    versus1ChangeStats();
-})
-
-Versus_MatchCountSlider1.addEventListener("touchend", function() {
-    if (Versus_MatchCountSlider1.value >= matchCountLimit) {
-        Versus_MatchCountSlider1.value = matchCountLimit;
-        matchCount = matchCountLimit;
-        Versus_MatchCount1.placeholder = String(matchCountLimit);
-    }
-    if (Versus_MatchCountSlider1.value == versus_previousMatchCount1) return;
-    versus_previousMatchCount1 = Versus_MatchCountSlider1.value;
-    versus1ChangeStats();
-})
-
-Versus_MatchCount2.addEventListener("blur", function() {
-    Versus_MatchCount2.style.backgroundColor = "#18232e";
-    let newText = Versus_MatchCount2.value;
-    if (newText == "") return;
-    if (/^\d+$/.test(newText) == false) {
-        // Has letters or number exceeds limit
-        newText = "1";
-    } else if (parseInt(newText) > matchCountLimit) {
-        newText = String(matchCountLimit);
-    } else if (parseInt(newText) <= 0) {
-        newText = "1";
-    }
-    Versus_MatchCount2.placeholder = newText;
-    Versus_MatchCount2.value = "";
-    if (parseInt(newText) == versus_previousMatchCount2) return;
-    Versus_MatchCountSlider2.value = parseInt(newText);
-    versus_matchCount2 = parseInt(newText);
-    versus_previousMatchCount2 = parseInt(newText);
-    versus_call_Ranked_GetUserMatches();
-})
-
-Versus_MatchCount2.addEventListener("keydown", function(event) {
-    if (event.key == "Enter") {
-        event.preventDefault();
-        Versus_MatchCount2.blur();
-    }
-
-    if (event.key == "Escape") {
-        event.preventDefault();
-        Versus_MatchCount2.value = "";
-        Versus_MatchCount2.blur();
-    }
-})
-
-Versus_MatchCountSlider2.addEventListener("input", function() {
-    Versus_MatchCount2.placeholder = Versus_MatchCountSlider2.value;
-    versus_matchCount2 = Versus_MatchCountSlider2.value;
-})
-
-Versus_MatchCountSlider2.addEventListener("mouseup", function() {
-    if (Versus_MatchCountSlider2.value >= matchCountLimit) {
-        Versus_MatchCountSlider2.value = matchCountLimit;
-        versus_matchCount2 = matchCountLimit;
-        Versus_MatchCount2.placeholder = String(matchCountLimit);
-    }
-    if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
-    versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
-    versus_call_Ranked_GetUserMatches();
-})
-
-Versus_MatchCountSlider2.addEventListener("touchend", function() {
-    if (Versus_MatchCountSlider2.value >= matchCountLimit) {
-        Versus_MatchCountSlider2.value = matchCountLimit;
-        versus_matchCount2 = matchCountLimit;
-        Versus_MatchCount2.placeholder = String(matchCountLimit);
-    }
-    if (Versus_MatchCountSlider2.value == versus_previousMatchCount2) return;
-    versus_previousMatchCount2 = Versus_MatchCountSlider2.value;
-    versus_call_Ranked_GetUserMatches();
-})
+bindMatchCountControl({
+    input: Versus_MatchCount2,
+    slider: Versus_MatchCountSlider2,
+    getPrevious: () => versus_previousMatchCount2,
+    setPrevious: value => versus_previousMatchCount2 = value,
+    setValue: value => versus_matchCount2 = value,
+    onCommit: versus_call_Ranked_GetUserMatches
+});
 
 // Versus Button
 VersusButton.addEventListener("mouseover", function() {
     if (!versusToggle) {
-        VersusButton.style.backgroundColor = "#354e66";
+        VersusButton.style.backgroundColor = BUTTON_HOVER_COLOR;
     }
 })
 
 VersusButton.addEventListener("mouseout", function() {
     if (!versusToggle) {
-        VersusButton.style.backgroundColor = "#202F3D";
+        VersusButton.style.backgroundColor = BUTTON_IDLE_COLOR;
     }
 })
 
 VersusButton.addEventListener("click", function() {
     versusToggle = !versusToggle;
     if (versusToggle) {
-        VersusButton.style.backgroundColor = "#507699";
+        VersusButton.style.backgroundColor = BUTTON_ACTIVE_COLOR;
         VersusSearchText.textContent = "(Search for player 2)";
         dataSection.style.display = "none";
         VersusSearch.style.display = "block";
     } else {
         VersusSearch.style.display = "none";
-        VersusButton.style.backgroundColor = "#202F3D";
+        VersusButton.style.backgroundColor = BUTTON_IDLE_COLOR;
         dataSection.style.display = "block";
     }
 })
@@ -2182,8 +1900,8 @@ VersusSearchText.addEventListener("blur", async function() {
     if (text == "") return;
     if (text) {
         randomiseParrot(0);
-        loadingText.textContent = "Loading . .";
-        loadingText.style.marginTop = "40%";
+        LoadingText.textContent = "Loading . .";
+        LoadingText.style.marginTop = "40%";
 
         LoadingText.style.display = "block";
         LoadingParrot.style.display = "inline";
@@ -2204,27 +1922,14 @@ VersusSearchText.addEventListener("blur", async function() {
 
         versus_gamemode2 = gamemode;
 
-        Versus_GamemodeButton1.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
-        Versus_GamemodeButton2.innerHTML = gamemodes[gamemode - 1] + "<i style='float: right;margin-top: 3px;' class='arrow down'></i>"
+        setGamemodeButtonText(Versus_GamemodeButton1, gamemode);
+        setGamemodeButtonText(Versus_GamemodeButton2, gamemode);
 
-        for (let i = 0; i < Versus_GamemodeItems1.length; i++) {
-            if (Versus_GamemodeItems1[i].textContent == Versus_GamemodeButton1.textContent) {
-                Versus_GamemodeItems1[i].style.backgroundColor = "#507699";
-            } else {
-                Versus_GamemodeItems1[i].style.backgroundColor = "#18232e";
-            }
-        }
+        syncGamemodeItems(Versus_GamemodeItems1, gamemode);
+        syncGamemodeItems(Versus_GamemodeItems2, gamemode);
 
-        for (let i = 0; i < Versus_GamemodeItems2.length; i++) {
-            if (Versus_GamemodeItems2[i].textContent == Versus_GamemodeButton2.textContent) {
-                Versus_GamemodeItems2[i].style.backgroundColor = "#507699";
-            } else {
-                Versus_GamemodeItems2[i].style.backgroundColor = "#18232e";
-            }
-        }
-
-        Versus_PlayerModel1.src = "https://render.crafty.gg/3d/bust/" + ign;
-        Versus_PlayerModel2.src = "https://render.crafty.gg/3d/bust/" + text;
+        Versus_PlayerModel1.src = skinRenderUrl(ign);
+        Versus_PlayerModel2.src = skinRenderUrl(text);
 
         call_Ranked_GetUser_Versus(Versus_PlayerName1, Versus_PbLabel1, Versus_WinRateLabel1, 0, ign);
         call_Ranked_GetUser_Versus(Versus_PlayerName2, Versus_PbLabel2, Versus_WinRateLabel2, 1, text);
@@ -2243,8 +1948,7 @@ VersusSearchText.addEventListener("blur", async function() {
         Versus_Data1.style.display = "block";
         Versus_Data2.style.display = "block";
 
-        LoadingText.style.display = "none";
-        LoadingParrot.style.display = "none";
+        setLoadingVisible(false);
     } else {
         history.pushState({}, '', '/' + ign);
     }
