@@ -1,29 +1,41 @@
-Hiiiiii
+# YARAW
 
-This is a web version of Ranked Analysis Tool: (https://github.com/NotE4sy/Ranked-Analysis-Tool) but with a bit more features
+YARAW is a browser-based tool for reviewing Minecraft Speedrunning Ranked match statistics and deterministic ranked seed information.
 
-Like RAT, this is a tool to check a player's average splits, timestamps and death rates for their past x <= 50 matches, including overworld and bastion splits death rates
+It is based on [xFray's RAT-JS](https://github.com/NotE4sy/Ranked-Analysis-Tool) and extends the original project with an updated interface and additional tools.
 
-This was made with vanilla Javascript, HTML and CSS as a project to learn web development
+## Features
 
-To run this project locally, you will need nodejs install onto your computer in order to run a nodejs server
+- Better design
+- Season picker
+- Seed info for barters, blaze rods, flint, and eyes
+- Updated 3D skin provider using `render.crafty.gg`
+- Ranked, casual, private, and versus match analysis
+- Elo display with rank icons
 
-To run a nodejs server, run: ```npx serve . --single``` in your project directory terminal
+## Run Locally
 
-Feel free to contact me on discord @xfrayyy for any bugs and feedback! :D 
+The site uses vanilla HTML, CSS, and JavaScript and has no runtime dependencies.
 
-Current Version: 1.2
+```bash
+npx serve . --single
+```
 
-Version Changelog:
+Then open the local URL printed by `serve`.
 
-1.0 (Initial release)
+## Build
 
-1.1
-- Added Versus Mode
-- Fixed some formatting stuff
+```bash
+npm run build
+```
 
-1.2
-- Added Casual Mode
-- Revamped Gamemode Button to accommodate
-- Realised that input was a thing so optimised the input fields
-- Added 'Reset%' stat
+The production site is written to `dist/`. The build includes only the web application and its required assets; local reference sources such as `mc_src/` are excluded.
+
+## Deployment
+
+The included `vercel.json` builds and deploys `dist/`, with a filesystem-first fallback to `index.html` for player and versus routes.
+
+## Credits
+
+- Original RAT-JS project by xFray
+- Minecraft textures are used for the Seed Info item previews
